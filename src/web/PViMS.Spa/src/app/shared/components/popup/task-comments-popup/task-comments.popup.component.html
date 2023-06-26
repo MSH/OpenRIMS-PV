@@ -1,0 +1,61 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()" #form="ngForm">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width" appearance="outline">
+          <textarea matInput formControlName="comment" placeholder="{{'Comment' | translate }}" rows="4" required></textarea>
+          <mat-hint>{{'Add your comment regarding the task above' | translate}}</mat-hint>
+          <mat-error *ngIf="itemForm.get('comment').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+          <mat-error *ngIf="itemForm.get('comment').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>            
+        </mat-form-field>        
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <span fxFlex></span>
+        <button mat-raised-button class="mr-05" color="accent" [disabled]="itemForm.invalid">{{'Add Comment' | translate}}</button>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div fxFlex="100" class="p-12" *ngIf="task?.comments.length == 0">
+        <span class="text-muted pt-12">Previous Comments</span>
+        <div class="light-gray p-12 text-center rounded">
+          There are currently no comments for this task
+        </div>
+      </div>             
+
+      <div fxFlex="100" class="m-1 p-2" style="height:300px; overflow-y: auto" *ngIf="task?.comments.length > 0">
+        <span class="text-muted pt-12">Previous Comments</span>
+        <div fxLayout="row wrap" fxLayout.lt-sm="column" style="overflow: hidden;">
+          <div fxFlex="100" class="pt-12">
+            <div fxLayout="row wrap" fxLayout.lt-sm="column">
+              <div fxFlex="100" class="border p-12 mt-12" *ngFor="let comment of task?.comments">
+                <div fxFlex="20">
+                  <button mat-mini-fab color="accent" class="topbar-button-right">
+                    {{comment.createdInitials}}
+                  </button>
+                </div>
+                <div fxFlex="80">
+                  <span class="text-muted pt-12 font-weight-bold">{{comment.createdDetail}}</span><br/>
+                  <small class="text-muted">{{comment.comment}}</small>
+                </div>            
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <span fxFlex></span>
+        <button mat-raised-button color="primary" type="button" (click)="dialogRef.close(false)">{{"Close" | translate }}</button>
+      </div>
+    </div>
+  </form>

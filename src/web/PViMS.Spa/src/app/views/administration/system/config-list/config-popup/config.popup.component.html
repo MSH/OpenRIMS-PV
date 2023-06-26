@@ -1,0 +1,68 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="50" class="pr-1">
+          <mat-form-field class="p-8 full-width">
+              <input matInput formControlName="configType" placeholder="{{'Configuration type' | translate }}" readonly>
+          </mat-form-field>        
+      </div>
+
+      <div fxFlex="50" class="pr-1" *ngIf="data.payload.configType == 'E2BVersion'">
+        <mat-form-field class="p-8 full-width">
+          <mat-select formControlName="configValue" placeholder="{{'E2B version' | translate}}">
+            <mat-option value="E2B(R2) ICH Report">E2B(R2) ICH Report</mat-option>
+            <mat-option value="E2B(R3) ICH Report">E2B(R3) ICH Report</mat-option>
+          </mat-select>               
+        </mat-form-field>       
+      </div>   
+
+      <div fxFlex="100" class="pr-1" *ngIf="data.payload.configType == 'WebServiceSubscriberList'">
+        <mat-form-field class="p-8 full-width">
+            <input matInput formControlName="configValue" placeholder="{{'Web service subscriber list' | translate }}">
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="50" class="pr-1" *ngIf="data.payload.configType == 'AssessmentScale'">
+        <mat-form-field class="p-8 full-width">
+          <mat-select formControlName="configValue" placeholder="{{'Assessment scale' | translate}}">
+            <mat-option value="Both Scales">{{"Both Scales" | translate }}</mat-option>
+            <mat-option value="Naranjo Scale">{{"Naranjo Scale" | translate }}</mat-option>
+            <mat-option value="WHO Scale">{{"WHO Scale" | translate }}</mat-option>
+          </mat-select>               
+        </mat-form-field>       
+      </div>
+
+      <div fxFlex="50" class="pr-1" *ngIf="data.payload.configType == 'ReportInstanceNewAlertCount'">
+        <mat-form-field class="p-8 full-width">
+            <input matInput formControlName="configValue" placeholder="{{'Report instance new alert count' | translate }}" type="number">
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="50" class="pr-1" *ngIf="data.payload.configType == 'MedicationOnsetCheckPeriodWeeks'">
+        <mat-form-field class="p-8 full-width">
+            <input matInput formControlName="configValue" placeholder="{{'Medication onset check period in weeks' | translate }}" type="number">
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" class="pr-1" *ngIf="data.payload.configType == 'PharmadexLink'">
+        <mat-form-field class="p-8 full-width">
+            <input matInput formControlName="configValue" placeholder="{{'External URL to Pharmadex' | translate }}">
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="50" class="pr-1" *ngIf="data.payload.configType == 'ReportInstanceFeedbackAlertCount'">
+        <mat-form-field class="p-8 full-width">
+            <input matInput formControlName="configValue" placeholder="{{'Report instance feedback alert count' | translate }}" type="number">
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

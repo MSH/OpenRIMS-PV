@@ -1,0 +1,85 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm">
+
+    <div class="p-12 default-light-bg rounded">
+      <div fxLayout="row wrap" fxLayout.lt-sm="column">
+        <div fxFlex="50" class="pr-1">
+          <mat-form-field class="full-width">
+            <mat-label>{{'Selection key' | translate }}</mat-label>
+            <input matInput formControlName="selectionKey" placeholder="">
+            <mat-error *ngIf="itemForm.get('selectionKey').hasError('required')">
+              {{'This is a required field' | translate}}
+            </mat-error>            
+            <mat-error *ngIf="itemForm.get('selectionKey').hasError('maxlength')">
+              {{'Maximum length exceeded' | translate}}
+            </mat-error>
+            <mat-error *ngIf="itemForm.get('selectionKey').hasError('pattern')">
+              {{'Value contains invalid characters' | translate}} (0-9)
+            </mat-error>              
+          </mat-form-field>        
+        </div>
+  
+        <div fxFlex="50" class="pr-1">
+          <mat-form-field class="full-width">
+            <mat-label>{{'Selection value' | translate }}</mat-label>
+            <input matInput formControlName="dataItemValue">
+            <mat-error *ngIf="itemForm.get('dataItemValue').hasError('required')">
+              {{'This is a required field' | translate}}
+            </mat-error>            
+            <mat-error *ngIf="itemForm.get('dataItemValue').hasError('maxlength')">
+              {{'Maximum length exceeded' | translate}}
+            </mat-error>
+          </mat-form-field>        
+        </div>
+      </div>    
+      <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="end">
+        <button mat-mini-fab (click)="saveValue()"><mat-icon>add</mat-icon></button>
+      </div>    
+    </div>
+
+  </form>
+
+  <div class="ml-05 mr-05 mt-05 pb-1" style="height: 350px; overflow-y: auto;">
+    <div class="p-12 table-container">
+        <mat-table [dataSource]="viewModel?.selectionGrid?.records"
+                [@animate]="{value:'50'}">
+
+        <ng-container matColumnDef="selection-key">
+            <mat-header-cell *matHeaderCellDef>{{'Key' | translate}}</mat-header-cell>
+            <mat-cell *matCellDef="let record">
+                {{record.selectionKey}}
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="value">
+          <mat-header-cell *matHeaderCellDef>{{'Value' | translate}}</mat-header-cell>
+          <mat-cell *matCellDef="let record">
+              {{record.value}}
+          </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <mat-header-cell *matHeaderCellDef>{{'Actions' | translate}}</mat-header-cell>
+          <mat-cell *matCellDef="let record">
+            <button mat-icon-button color="warn" matTooltip="{{'Delete Value' | translate}}"
+                (click)="deleteValue(record)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </mat-cell>                    
+        </ng-container>                        
+      
+        <mat-header-row *matHeaderRowDef="viewModel?.selectionGrid?.displayedColumns; sticky:true"></mat-header-row>
+        <mat-row *matRowDef="let record; columns: viewModel?.selectionGrid?.displayedColumns;" matRipple></mat-row>
+      </mat-table>
+    </div>
+  </div>
+
+  <div fxLayout="row wrap" fxLayout.lt-sm="column">
+    <div fxFlex="100" class="mt-1">
+      <span fxFlex></span>
+      <button mat-raised-button color="primary" type="button" (click)="dialogRef.close(false)">{{"Close" | translate }}</button>
+    </div>
+  </div>

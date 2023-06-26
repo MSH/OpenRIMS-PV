@@ -1,0 +1,1163 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<mat-card class="p-8">
+  
+  <mat-card-title class="">
+    <div class="card-title-text">
+      <button mat-raised-button (click)="goBack()" color="accent" class="mr-48">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      
+      {{'Form C.Header' | translate}}
+
+      <button mat-button color="" class="mr-48" (click)="openGuidelinesPopup()">
+        <mat-icon>help</mat-icon>
+      </button>      
+    </div>
+  </mat-card-title>
+
+  <form [formGroup]="viewModelForm">
+    <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="end" class="mr-32" *ngIf="this.id > 0 && !isSynched">
+      <mat-form-field floatLabel="always" appearance="none">
+        <mat-slide-toggle formControlName="formCompleted">
+          {{'Form Completed' | translate}}
+        </mat-slide-toggle>
+        <textarea matInput hidden></textarea>                    
+      </mat-form-field>
+    </div>
+  </form>      
+
+  <mat-card-content class="m-1 p-2 height-100vh-280px" style="overflow-y: auto">
+    <mat-card-title class="text-center" *ngIf="isComplete && !isSynched">
+      <div class="card-title-text mat-bg-accent p-24">
+        {{'Form is complete message' | translate }}
+      </div>
+    </mat-card-title>
+    <mat-card-title class="text-center" *ngIf="isSynched">
+      <div class="card-title-text mat-bg-warn p-24">
+        {{'Form is synched message' | translate }}
+      </div>
+    </mat-card-title>        
+
+    <mat-vertical-stepper [linear]="this.id == 0">
+      <mat-step [stepControl]="viewPatientModelForm">
+        <form [formGroup]="viewPatientModelForm">
+          <ng-template matStepLabel>{{'Patient Information' | translate}}</ng-template>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="treatmentSiteId" placeholder="{{'Treatment site' | translate}}" required>
+                    <mat-option *ngFor="let facility of facilityList" [value]="facility.facilityName">
+                        {{facility.facilityName}}
+                    </mat-option>
+                </mat-select>                        
+                <mat-error>
+                  {{'This is a required field' | translate}}
+                </mat-error>            
+              </mat-form-field>
+            </div>
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="asmNumber" placeholder="{{'Medical record number' | translate}}" required>
+                <mat-error *ngIf="viewPatientModelForm.get('asmNumber').hasError('required')">
+                  {{'This is a required field' | translate}}
+                </mat-error>
+                <mat-error *ngIf="viewPatientModelForm.get('asmNumber').hasError('maxlength')">
+                  {{'Maximum length exceeded' | translate}}
+                </mat-error>            
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="patientFirstName" placeholder="{{'First name' | translate}}">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="patientLastName" placeholder="{{'Last name' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div>
+            <button mat-raised-button matStepperNext class="mr-12">{{'Next' | translate}}</button>
+            <button mat-raised-button color="accent" (click)="saveForm()" [disabled]="viewPatientModelForm.invalid || isSynched"><mat-icon class="mr-4">save</mat-icon>{{'Save and exit' | translate}}</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <mat-step [stepControl]="viewObstetricModelForm">
+        <form [formGroup]="viewObstetricModelForm">
+          <ng-template matStepLabel>{{'Obstetric History' | translate}}</ng-template>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="firstPregnancy" placeholder="{{'First pregnancy' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Yes">  
+                    {{'Yes' | translate}}
+                  </mat-option>
+                  <mat-option value="No">
+                    {{'No' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="previousChildrenAbnormality" placeholder="{{'Previous children abnormality' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Yes">  
+                    {{'Yes' | translate}}
+                  </mat-option>
+                  <mat-option value="No">
+                    {{'No' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="previousChildrenAbnormalityDescription" placeholder="{{'Previous children abnormality description' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="immediateFamilyAbnormality" placeholder="{{'Immediate family abnormality' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Yes">  
+                    {{'Yes' | translate}}
+                  </mat-option>
+                  <mat-option value="No">
+                    {{'No' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="immediateFamilyAbnormalityWho" placeholder="{{'Immediate family abnormality who' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Participants mother">  
+                    {{'Participants mother' | translate}}
+                  </mat-option>
+                  <mat-option value="Participants father">
+                    {{'Participants father' | translate}}
+                  </mat-option>
+                  <mat-option value="Participants sister">
+                    {{'Participants sister' | translate}}
+                  </mat-option>
+                  <mat-option value="Participants brother">
+                    {{'Participants brother' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="immediateFamilyAbnormalityDescription" placeholder="{{'Immediate family abnormality description' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>            
+
+          <div fxLayout="row">
+            <button mat-raised-button matStepperPrevious class="mr-12">{{'Previous' | translate}}</button>
+            <button mat-raised-button matStepperNext class="mr-12">{{'Next' | translate}}</button>
+            <button mat-raised-button color="accent" (click)="saveForm()" [disabled]="isSynched"><mat-icon class="mr-4">save</mat-icon>{{'Save and exit' | translate}}</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <mat-step [stepControl]="viewBirthResultModelForm">
+        <form [formGroup]="viewBirthResultModelForm">
+          <ng-template matStepLabel>{{'Result of Childbirth' | translate}}</ng-template>
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="deliveryDate" placeholder="{{'Date of delivery' | translate}}" [matDatepicker]="deliveryDatepicker">
+                <mat-datepicker-toggle matSuffix [for]="deliveryDatepicker"></mat-datepicker-toggle>
+              </mat-form-field>
+              <mat-datepicker #deliveryDatepicker></mat-datepicker> 
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="placeDelivery" placeholder="{{'Place of delivery' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Home">  
+                    {{'Home' | translate}}
+                  </mat-option>
+                  <mat-option value="Health unit">
+                    {{'Health unit' | translate}}
+                  </mat-option>
+                  <mat-option value="In transit">
+                    {{'In transit' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="placeDeliverySpecify" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="typeDelivery" placeholder="{{'Type of delivery' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal vaginal">  
+                    {{'Normal vaginal' | translate}}
+                  </mat-option>
+                  <mat-option value="Forceps">
+                    {{'Forceps' | translate}}
+                  </mat-option>
+                  <mat-option value="Caesarian">
+                    {{'Caesarian' | translate}}
+                  </mat-option>
+                  <mat-option value="Vacuum">
+                    {{'Vacuum' | translate}}
+                  </mat-option>
+                  <mat-option value="Unknown">
+                    {{'Unknown' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="gestAgeUntilDeliveryWeeks" placeholder="{{'Gestational age until delivery (weeks)' | translate}}" type="number">
+                <mat-hint>{{'Valid between ' | translate}} 4 and 44</mat-hint>
+                <mat-error>
+                  {{'Value out of range' | translate}}
+                </mat-error>            
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="gestAgeUntilDeliveryDays" placeholder="{{'Gestational age until delivery (days)' | translate}}" type="number">
+                <mat-hint>{{'Valid between ' | translate}} 0 and 308</mat-hint>
+                <mat-error>
+                  {{'Value out of range' | translate}}
+                </mat-error>            
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="methodEvaluatePregnancy" placeholder="{{'Method evaluating pregnancy' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Ultrasound">  
+                    {{'Ultrasound' | translate}}
+                  </mat-option>
+                  <mat-option value="DUM">
+                    {{'DUM' | translate}}
+                  </mat-option>
+                  <mat-option value="Height of the uterine fundus">
+                    {{'Height of the uterine fundus' | translate}}
+                  </mat-option>
+                  <mat-option value="Ballard/Dubowitz score">
+                    {{'Ballard/Dubowitz score' | translate}}
+                  </mat-option>
+                  <mat-option value="Unknown">
+                    {{'Unknown' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+            </div>
+          </div> 
+          
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="outcomePregnancy" placeholder="{{'Outcome pregnancy' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Live">  
+                    {{'Live' | translate}}
+                  </mat-option>
+                  <mat-option value="Intra-uterine death/stillbirth (≥28 weeks)">  
+                    {{'Intra-uterine death/stillbirth (≥28 weeks)' | translate}}
+                  </mat-option>
+                  <mat-option value="Macerated stillbirth (skin intact)">
+                    {{'Macerated stillbirth (skin intact)' | translate}}
+                  </mat-option>
+                  <mat-option value="Fresh stillbirth (normal appearance and intact skin)">
+                    {{'Fresh stillbirth (normal appearance and intact skin)' | translate}}
+                  </mat-option>
+                  <mat-option value="Neonatal death (after 1 breath)">
+                    {{'Neonatal death (after 1 breath)' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="numberBabies" placeholder="{{'Number babies' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Single">  
+                    {{'Single' | translate}}
+                  </mat-option>
+                  <mat-option value="Twins">
+                    {{'Twins' | translate}}
+                  </mat-option>
+                  <mat-option value="Triplets">
+                    {{'Triplets' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="numberBabiesOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>              
+            </div>
+          </div>             
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="whoAttendedBirth" placeholder="{{'Who attended the birth' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="No one">  
+                    {{'No one' | translate}}
+                  </mat-option>
+                  <mat-option value="Distant family member or neighbor">
+                    {{'Distant family member or neighbor' | translate}}
+                  </mat-option>
+                  <mat-option value="Traditional midwife">
+                    {{'Traditional midwife' | translate}}
+                  </mat-option>
+                  <mat-option value="Health technician (doctor, nurse, midwife)">
+                    {{'Health technician (doctor, nurse, midwife)' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+            </div>
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="whoAttendedSpecify" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>              
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="deliveryInduced" placeholder="{{'Delivery was induced' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="No">  
+                    {{'No' | translate}}
+                  </mat-option>
+                  <mat-option value="Yes">
+                    {{'Yes' | translate}}
+                  </mat-option>
+                  <mat-option value="Drugged">
+                    {{'Drugged' | translate}}
+                  </mat-option>
+                  <mat-option value="Unknown">
+                    {{'Unknown' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="howBabyBorn" placeholder="{{'How was the baby born' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Head presentation">  
+                    {{'Head presentation' | translate}}
+                  </mat-option>
+                  <mat-option value="Breech presentation">
+                    {{'Breech presentation' | translate}}
+                  </mat-option>
+                  <mat-option value="Unknown">
+                    {{'Unknown' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="howBabyBornSpecify" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>              
+            </div>
+          </div>            
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="complication" placeholder="{{'Complications during childbirth' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Hemorrhage">  
+                    {{'Hemorrhage' | translate}}
+                  </mat-option>
+                  <mat-option value="Pre-eclampsia">
+                    {{'Pre-eclampsia' | translate}}
+                  </mat-option>
+                  <mat-option value="Unknown">
+                    {{'Unknown' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="complicationSpecify" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>              
+            </div>
+          </div>            
+
+          <div fxLayout="row">
+            <button mat-raised-button matStepperPrevious class="mr-12">{{'Previous' | translate}}</button>
+            <button mat-raised-button matStepperNext class="mr-12">{{'Next' | translate}}</button>
+            <button mat-raised-button color="accent" (click)="saveForm()" [disabled]="isSynched"><mat-icon class="mr-4">save</mat-icon>{{'Save and exit' | translate}}</button>
+          </div>
+        </form>
+      </mat-step>
+
+      <mat-step [stepControl]="viewSurfaceExamModelForm">
+        <form [formGroup]="viewSurfaceExamModelForm">
+          <ng-template matStepLabel>{{'Surface Examination' | translate}}</ng-template>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="babyName" placeholder="{{'Baby name' | translate}}">
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="babyASMNumber" placeholder="{{'Baby ASM number' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="babyAgeDays" placeholder="{{'Baby age (days)' | translate}}" type="number">
+                <mat-hint>{{'Valid between ' | translate}} 0 and 99</mat-hint>
+                <mat-error>
+                  {{'Value out of range' | translate}}
+                </mat-error>            
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="babyGender" placeholder="{{'Baby gender' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="F">
+                    {{'Female' | translate}}
+                  </mat-option>
+                  <mat-option value="M">
+                    {{'Male' | translate}}
+                  </mat-option>
+                  <mat-option value="A">
+                    {{'Ambiguous' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="babyLength" placeholder="{{'Baby length (cm)' | translate}}" type="number">
+                <mat-hint>{{'Valid between ' | translate}} 0 and 65</mat-hint>
+                <mat-error>
+                  {{'Value out of range' | translate}}
+                </mat-error>            
+              </mat-form-field>
+            </div>
+
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="headCircumference" placeholder="{{'Head circumference (cm)' | translate}}" type="number">
+                <mat-hint>{{'Valid between ' | translate}} 0 and 44</mat-hint>
+                <mat-error>
+                  {{'Value out of range' | translate}}
+                </mat-error>            
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="birthWeight" placeholder="{{'Birth weight (g)' | translate}}" type="number">
+                <mat-hint>{{'Valid between ' | translate}} 0 and 8000</mat-hint>
+                <mat-error>
+                  {{'Value out of range' | translate}}
+                </mat-error>            
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="headInspectionTest" placeholder="{{'Head inspection' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="headInspectionObservation" placeholder="{{'Observation' | translate}}" multiple>
+                  <mat-option value="Craniosinostositis">
+                    {{'Craniosinostositis' | translate}}
+                  </mat-option>
+                  <mat-option value="Hydrocephalus">
+                    {{'Hydrocephalus' | translate}}
+                  </mat-option>
+                  <mat-option value="Microcephaly">
+                    {{'Microcephaly' | translate}}
+                  </mat-option>
+                  <mat-option value="Macrocephaly">
+                    {{'Macrocephaly' | translate}}
+                  </mat-option>
+                  <mat-option value="Anencephaly">
+                    {{'Anencephaly' | translate}}
+                  </mat-option>
+                  <mat-option value="Encephaloceles">
+                    {{'Encephaloceles' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <div class="pb-1">
+                <mat-form-field class="p-8 full-width">
+                  <input matInput formControlName="headInspectionOther" placeholder="{{'Please specify' | translate}}">
+                </mat-form-field>
+              </div>
+            </div>
+          </div>            
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="faceExaminationTest" placeholder="{{'Face examination' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="faceExaminationObservation" placeholder="{{'Observation' | translate}}" multiple>
+                  <mat-option value="Small chin">
+                    {{'Small chin' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="faceExaminationOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="eyeExaminationTest" placeholder="{{'Eye examination' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="eyeExaminationObservation" placeholder="{{'Observation' | translate}}" multiple>
+                  <mat-option value="Hypotelorism">
+                    {{'Hypotelorism' | translate}}
+                  </mat-option>
+                  <mat-option value="Hypertelorism">
+                    {{'Hypertelorism' | translate}}
+                  </mat-option>
+                  <mat-option value="Cataracts">
+                    {{'Cataracts' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="eyeExaminationOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="mouthExaminationTest" placeholder="{{'Mouth examination' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="mouthExaminationObservation" placeholder="{{'Observation' | translate}}" multiple>
+                  <mat-option value="Cleft lip">
+                    {{'Cleft lip' | translate}}
+                  </mat-option>
+                  <mat-option value="Cleft palate">
+                    {{'Cleft palate' | translate}}
+                  </mat-option>
+                  <mat-option value="Philtrum mole">
+                    {{'Philtrum mole' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="mouthExaminationOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="noseExaminationTest" placeholder="{{'Nose examination' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="noseExaminationObservation" placeholder="{{'Observation' | translate}}" multiple>
+                  <mat-option value="Choanal atresia">
+                    {{'Choanal atresia' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="noseExaminationOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="earExaminationTest" placeholder="{{'Ear examination' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="earExaminationObservation" placeholder="{{'Observation' | translate}}" multiple>
+                  <mat-option value="Microtia">
+                    {{'Microtia' | translate}}
+                  </mat-option>
+                  <mat-option value="Earring">
+                    {{'Earring' | translate}}
+                  </mat-option>
+                  <mat-option value="Hole">
+                    {{'Hole' | translate}}
+                  </mat-option>
+                  <mat-option value="Low ear">
+                    {{'Low ear' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="earExaminationOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="trunkExaminationTest" placeholder="{{'Trunk examination' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="trunkExaminationObservation" placeholder="{{'Observation' | translate}}" multiple>
+                  <mat-option value="Tracking">
+                    {{'Tracking' | translate}}
+                  </mat-option>
+                  <mat-option value="Nasal enlargement">
+                    {{'Nasal enlargement' | translate}}
+                  </mat-option>
+                  <mat-option value="Tracheal tug">
+                    {{'Tracheal tug' | translate}}
+                  </mat-option>
+                  <mat-option value="Shake the head">
+                    {{'Shake the head' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="trunkExaminationOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="abdomenExaminationTest" placeholder="{{'Abdomen examination' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="abdomenExaminationObservation" placeholder="{{'Observation' | translate}}" multiple>
+                  <mat-option value="Umbilical hernia">
+                    {{'Umbilical hernia' | translate}}
+                  </mat-option>
+                  <mat-option value="Gastroschisis">
+                    {{'Gastroschisis' | translate}}
+                  </mat-option>
+                  <mat-option value="Omphalocele">
+                    {{'Omphalocele' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="abdomenExaminationOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="memberExaminationTest" placeholder="{{'Member examination' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="memberExaminationObservation" placeholder="{{'Observation' | translate}}" multiple>
+                  <mat-option value="Shortening of the arm">
+                    {{'Shortening of the arm' | translate}}
+                  </mat-option>
+                  <mat-option value="Shortening of the leg">
+                    {{'Shortening of the leg' | translate}}
+                  </mat-option>
+                  <mat-option value="Bent limbs">
+                    {{'Bent limbs' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="memberExaminationOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="handExaminationTest" placeholder="{{'Hand examination' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="handExaminationObservation" placeholder="{{'Observation' | translate}}" multiple>
+                  <mat-option value="Extra finger">
+                    {{'Extra finger' | translate}}
+                  </mat-option>
+                  <mat-option value="Polydactyly">
+                    {{'Polydactyly' | translate}}
+                  </mat-option>
+                  <mat-option value="Fused finger">
+                    {{'Fused finger' | translate}}
+                  </mat-option>
+                  <mat-option value="Missing finger">
+                    {{'Missing finger' | translate}}
+                  </mat-option>
+                  <mat-option value="Single palmar crease">
+                    {{'Single palmar crease' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="handExaminationOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="footExaminationTest" placeholder="{{'Foot examination' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="footExaminationObservation" placeholder="{{'Observation' | translate}}" multiple>
+                  <mat-option value="Missing toe">
+                    {{'Missing toe' | translate}}
+                  </mat-option>
+                  <mat-option value="Extra toe">
+                    {{'Extra toe' | translate}}
+                  </mat-option>
+                  <mat-option value="Polydactyly">
+                    {{'Polydactyly' | translate}}
+                  </mat-option>
+                  <mat-option value="Club foot">
+                    {{'Club foot' | translate}}
+                  </mat-option>
+                  <mat-option value="Vacant foot">
+                    {{'Vacant foot' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="footExaminationOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="genitoExaminationTest" placeholder="{{'Genito-urinary' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="genitoExaminationObservation" placeholder="{{'Observation' | translate}}" multiple>
+                  <mat-option value="Hypospadias">
+                    {{'Hypospadias' | translate}}
+                  </mat-option>
+                  <mat-option value="Empty scrotum">
+                    {{'Empty scrotum' | translate}}
+                  </mat-option>
+                  <mat-option value="Ambiguous">
+                    {{'Ambiguous' | translate}}
+                  </mat-option>
+                  <mat-option value="Absence of urethral orifice">
+                    {{'Absence of urethral orifice' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="genitoExaminationOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="anusExaminationTest" placeholder="{{'Anus examination' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="anusExaminationObservation" placeholder="{{'Observation' | translate}}" multiple>
+                  <mat-option value="Imperforated anus">
+                    {{'Imperforated anus' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="anusExaminationOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="columnExaminationTest" placeholder="{{'Column / sacrum' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="columnExaminationObservation" placeholder="{{'Observation' | translate}}" multiple>
+                  <mat-option value="Spina bifida">
+                    {{'Spina bifida' | translate}}
+                  </mat-option>
+                  <mat-option value="Sacral skin tag">
+                    {{'Sacral skin tag' | translate}}
+                  </mat-option>
+                  <mat-option value="Dents">
+                    {{'Dents' | translate}}
+                  </mat-option>
+                  <mat-option value="Hair locks">
+                    {{'Hair locks' | translate}}
+                  </mat-option>
+                  <mat-option value="Saccrococcygeal teratoma">
+                    {{'Saccrococcygeal teratoma' | translate}}
+                  </mat-option>
+                  <mat-option value="Myelomeningocele">
+                    {{'Myelomeningocele' | translate}}
+                  </mat-option>
+                  <mat-option value="Other">
+                    {{'Other' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="columnExaminationOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start" class="mb-12">
+            <div fxFlex="100" class="pr-1 grey-200 border rounded">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="skinExaminationTest" placeholder="{{'Skin examination' | translate}}">
+                  <mat-option value=""></mat-option>
+                  <mat-option value="Normal">
+                    {{'Normal' | translate}}
+                  </mat-option>
+                  <mat-option value="Suspected anomaly">
+                    {{'Suspected anomaly' | translate}}
+                  </mat-option>
+                </mat-select>                        
+              </mat-form-field>
+
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="skinExaminationOther" placeholder="{{'Please specify' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="anomaly" placeholder="{{'If any unusual anomalies diagnosed during delivery, describe' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="comments" placeholder="{{'Comments and observations' | translate}}">
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.5%" fxLayoutAlign="start">
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="nameClinician" placeholder="{{'Name of clinician' | translate}}">
+              </mat-form-field>              
+            </div>
+            
+            <div fxFlex="50" class="pr-1">
+              <div fxFlex="100" class="pr-1">
+                <mat-form-field class="p-8 full-width">
+                  <input matInput formControlName="currentDate" placeholder="{{'Current date' | translate}}" [matDatepicker]="currentDatepicker">
+                  <mat-datepicker-toggle matSuffix [for]="currentDatepicker"></mat-datepicker-toggle>
+                </mat-form-field>
+                <mat-datepicker #currentDatepicker></mat-datepicker>
+              </div>
+            </div>
+          </div>
+
+          <div fxLayout="row">
+            <button mat-raised-button matStepperPrevious class="mr-12">{{'Previous' | translate}}</button>
+            <button mat-raised-button color="accent" (click)="saveForm()" [disabled]="isSynched" class="mr-12"><mat-icon class="mr-4">save</mat-icon>{{'Save and exit' | translate}}</button>
+            <button mat-raised-button color="primary" (click)="completeForm()" [disabled]="isSynched"><mat-icon class="mr-4">save</mat-icon>{{'Complete and exit' | translate}}</button>
+          </div>
+        </form>
+      </mat-step>
+
+    </mat-vertical-stepper>
+
+  </mat-card-content>
+</mat-card>

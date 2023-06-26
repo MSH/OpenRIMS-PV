@@ -1,0 +1,31 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1">
+        <input type="file" class="p-8 full-width" placeholder="{{'Please select the file to upload' | translate }}" required
+        (change)="handleFileInput($event.target.files)" accept=".xls,.xlsx,.doc,.docx,.pdf,.jpg,.jpeg,.png,.bmp,.xml">
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+            <input matInput formControlName="description" placeholder="{{'Description' | translate }}">
+            <mat-hint>{{'Maximum length' | translate}} 100</mat-hint>
+            <mat-error *ngIf="itemForm.get('description').hasError('maxlength')">
+              {{'Maximum length exceeded' | translate}}
+            </mat-error>            
+            <mat-error *ngIf="itemForm.get('description').hasError('pattern')">
+              {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space)
+            </mat-error>            
+        </mat-form-field>        
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="fileToUpload == null || itemForm.invalid">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

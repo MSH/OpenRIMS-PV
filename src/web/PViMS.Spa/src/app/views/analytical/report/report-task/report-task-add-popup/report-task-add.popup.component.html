@@ -1,0 +1,94 @@
+<h1 matDialogTitle>{{data.title | translate}}<span fxFlex></span><mat-icon style="cursor: pointer;" (click)="displayHelp = true;" *ngIf="!displayHelp">help</mat-icon></h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" *ngIf="displayHelp">
+        <div class="light-gray pl-12 pr-12 pt-12 pb-36" fxLayout="row wrap" fxLayout.lt-sm="column">
+          <div fxFlex="100">
+            <span fxFlex></span><mat-icon style="cursor: pointer;" (click)="displayHelp = false;">close</mat-icon>
+          </div>
+          <div fxLayout="row wrap" fxLayout.lt-sm="column">
+            <div fxFlex="100">
+              <span class="font-weight-bold">Additional Help</span>
+            </div>
+            <div fxFlex="100">
+              A report task can be used to notify the PV reporter of potential data quality issues that require additional follow up or correction.
+            </div>
+            <div fxFlex="100" class="mt-12">
+              <p><span class="font-weight-bold">Examples</span></p>
+            </div>
+            <div fxFlex="100">
+              <span class="font-weight-bold">Lab Test</span>
+            </div>
+            <div fxFlex="100">
+              <span class="text-muted">No viral load information in the last 6 months, please request an updated test</span>
+            </div>
+            <div fxFlex="100" class="mt-12">
+              <span class="font-weight-bold">Medications</span>
+            </div>
+            <div fxFlex="100">
+              <span class="text-muted">Patient is on HIV but no HIV medications are listed as potentially suspect. Please update medications list</span>
+            </div>
+            <div fxFlex="100" class="mt-12">
+              <span class="font-weight-bold">Weight</span>
+            </div>
+            <div fxFlex="100">
+              <span class="text-muted">Weight seems to be an outlier. Please check if this is a data capture issue</span>
+            </div>
+          </div>
+        </div>      
+      </div>
+
+      <div fxFlex="100" class="pr-1" *ngIf="!displayHelp">
+        <mat-form-field class="p-8 full-width">
+          <mat-label>{{'Form area' | translate}}</mat-label>
+          <mat-select formControlName="source" required>
+            <mat-option value="Patient Particulars">{{'Patient Particulars' | translate}}</mat-option>
+            <mat-option value="Adverse event">{{'Adverse event' | translate}}</mat-option>
+            <mat-option value="Management of the reaction">{{'Management of the reaction' | translate}}</mat-option>
+            <mat-option value="Suspected medication">{{'Suspected medication' | translate}}</mat-option>
+            <mat-option value="Reporter particulars">{{'Reporter particulars' | translate}}</mat-option>
+          </mat-select>               
+          <mat-error *ngIf="itemForm.get('source').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>
+        </mat-form-field>        
+      </div>
+
+      <div fxFlex="100" class="pr-1" *ngIf="!displayHelp">
+        <mat-form-field class="p-8 full-width">
+          <mat-label>{{'Type of task' | translate}}</mat-label>
+          <mat-select formControlName="taskType" required>
+            <mat-option value="Data Quality Assurance">{{'Data Quality Assurance' | translate}}</mat-option>
+            <mat-option value="Follow Up">{{'Follow Up' | translate}}</mat-option>
+          </mat-select>               
+        </mat-form-field>       
+      </div>
+
+      <div fxFlex="100" class="pr-1" *ngIf="!displayHelp">
+        <mat-form-field class="p-8 full-width" appearance="outline">
+          <mat-label>{{'Details' | translate }}</mat-label>
+          <textarea matInput formControlName="description" rows="4" required></textarea>
+          <mat-hint *ngIf="itemForm.get('taskType').value == 'Data Quality Assurance'"> {{'Describe in detail the details of the data issue' | translate}}</mat-hint>
+          <mat-hint *ngIf="itemForm.get('taskType').value == 'Follow Up'"> {{'Describe in detail the details of the data query' | translate}}</mat-hint>
+          <mat-error *ngIf="itemForm.get('description').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+          <mat-error *ngIf="itemForm.get('description').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>            
+          <mat-error *ngIf="itemForm.get('description').hasError('pattern')">
+            {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space, parenthesis, question mark, comma, period)
+          </mat-error>            
+        </mat-form-field>        
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

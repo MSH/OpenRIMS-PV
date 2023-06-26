@@ -1,0 +1,66 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<mat-card class="p-0">
+  
+  <mat-card-title class="">
+    <div class="card-title-text">
+      {{'Public Holidays' | translate}}
+      <div class="addButton">
+        <button mat-raised-button class="mb-05" color="accent" (click)="openPopUp({}, true)">{{'Add Holiday' | translate }}</button>
+      </div>      
+    </div>
+  </mat-card-title>
+
+  <mat-card-content>
+    <div class="ml-05 mr-05 mt-05 pb-1">
+
+      <div class="table-container">
+        <mat-table [dataSource]="viewModel?.mainGrid?.records"
+                    [@animate]="{value:'50'}">
+
+            <ng-container matColumnDef="holiday-date">
+                <mat-header-cell *matHeaderCellDef>{{'Holiday date' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <p>{{record.holidayDate | date:'yyyy-MM-dd'}}</p>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+              <mat-header-cell *matHeaderCellDef>{{'Description' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.description}}</p>
+              </mat-cell>
+            </ng-container>            
+
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>
+                    {{"Actions" | translate }}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <button mat-icon-button color="primary" matTooltip="{{'Update Holiday' | translate }}"
+                            (click)="openPopUp(record, false)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" matTooltip="{{'Delete Holiday' | translate }}"
+                            (click)="openDeletePopUp(record)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="viewModel?.mainGrid?.displayedColumns; sticky:true"></mat-header-row>
+            <mat-row *matRowDef="let record; columns: viewModel?.mainGrid?.displayedColumns;" matRipple></mat-row>
+        </mat-table>
+      </div>
+
+      <mat-paginator #mainGridPaginator="matPaginator" [length]="viewModel?.mainGrid?.count"
+                    [pageIndex]="0" [pageSize]="10"
+                    [pageSizeOptions]="[5, 10, 25, 50]">
+      </mat-paginator>      
+
+    </div>
+      
+  </mat-card-content>
+</mat-card>

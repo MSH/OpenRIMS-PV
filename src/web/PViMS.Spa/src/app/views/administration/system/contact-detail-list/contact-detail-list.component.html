@@ -1,0 +1,79 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<mat-card class="p-0">
+  
+  <mat-card-title class="">
+    <div class="card-title-text">
+      {{'Contact Details' | translate}}
+    </div>
+  </mat-card-title>
+
+  <mat-card-content>
+    <div class="ml-05 mr-05 mt-05 pb-1">
+
+      <div class="table-container">
+        <mat-table [dataSource]="viewModel?.mainGrid?.records"
+                    [@animate]="{value:'50'}">
+
+            <ng-container matColumnDef="contact-type">
+                <mat-header-cell *matHeaderCellDef>{{'Contact type' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <p>{{record.contactType}}</p>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="organisation-name">
+              <mat-header-cell *matHeaderCellDef>{{'Organisation name' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.organisationName}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="contact-first-name">
+              <mat-header-cell *matHeaderCellDef>{{'Contact first name' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.contactFirstName}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="contact-last-name">
+              <mat-header-cell *matHeaderCellDef>{{'Contact last name' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.contactLastName}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="contact-number">
+              <mat-header-cell *matHeaderCellDef>{{'Contact number' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.contactNumber}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="contact-email">
+              <mat-header-cell *matHeaderCellDef>{{'Contact email' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.contactEmail}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>
+                    {{"Actions" | translate }}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <button mat-icon-button color="primary" (click)="openPopUp(record, false)" matTooltip="{{'Update Detail' | translate }}">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="viewModel?.mainGrid?.displayedColumns; sticky:true"></mat-header-row>
+            <mat-row *matRowDef="let record; columns: viewModel?.mainGrid?.displayedColumns;"></mat-row>
+        </mat-table>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

@@ -1,0 +1,175 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1">
+        <mat-tab-group>
+          <mat-tab label="{{'Basic Information' | translate}}">
+            <mat-card-content class="m-1 p-5" style="height: 500px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                <div fxFlex="100" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                    <input matInput formControlName="conditionName" placeholder="{{'Description' | translate }}">
+                    <mat-error *ngIf="itemForm.get('conditionName').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                    <mat-error *ngIf="itemForm.get('conditionName').hasError('maxlength')">
+                      {{'Maximum length exceeded' | translate}}
+                    </mat-error>            
+                    <mat-error *ngIf="itemForm.get('conditionName').hasError('pattern')">
+                      {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space)
+                    </mat-error>
+                  </mat-form-field>        
+                </div>
+          
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                    <mat-select formControlName="active" placeholder="{{'Active' | translate}}" required>
+                      <mat-option value="Yes">{{'Yes' | translate}}</mat-option>
+                      <mat-option value="No">{{'No' | translate}}</mat-option>
+                    </mat-select>               
+                    <mat-error *ngIf="itemForm.get('active').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                  </mat-form-field>       
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                    <mat-select formControlName="chronic" placeholder="{{'Chronic' | translate}}" required>
+                      <mat-option value="Yes">{{'Yes' | translate}}</mat-option>
+                      <mat-option value="No">{{'No' | translate}}</mat-option>
+                    </mat-select>               
+                    <mat-error *ngIf="itemForm.get('chronic').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                  </mat-form-field>       
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+          <mat-tab label="{{'Tests and Procedures' | translate}}">
+            <mat-card-content class="m-1 p-5" style="height: 500px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                <div fxFlex="100" class="p-6" fxLayoutAlign="end">
+                  <button mat-raised-button color="accent" (click)="openLabTestSelectPopup()">{{'Add Test and Procedure' | translate}}</button>
+                </div>
+                <div fxFlex="100" class="p-6">
+                  <div class="table-container">
+                    <mat-table [dataSource]="viewGridModel?.labTestGrid?.records"
+                              [@animate]="{value:'50'}">
+    
+                      <ng-container matColumnDef="test">
+                          <mat-header-cell *matHeaderCellDef>{{'Test' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.labTestName}}
+                          </mat-cell>
+                      </ng-container>
+    
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef>
+                          {{'Actions' | translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let record">
+                          <button mat-icon-button color="warn" matTooltip="{{'Delete Test and Procedure' | translate}}"
+                                (click)="removeLabTest(record.labTestId)">
+                              <mat-icon>delete</mat-icon>
+                          </button>
+                        </mat-cell>
+                      </ng-container>                        
+                
+                      <mat-header-row *matHeaderRowDef="viewGridModel?.labTestGrid?.displayedColumns; sticky:true"></mat-header-row>
+                      <mat-row *matRowDef="let record; columns: viewGridModel?.labTestGrid?.displayedColumns;"></mat-row>
+                    </mat-table>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+          <mat-tab label="{{'Medications' | translate}}">
+            <mat-card-content class="m-1 p-5" style="height: 500px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                <div fxFlex="100" class="pr-1" fxLayoutAlign="end">
+                  <button mat-raised-button color="accent" (click)="openConceptSelectPopup()">{{'Add Medication' | translate}}</button>
+                </div>
+                <div fxFlex="100" class="pr-1">
+                  <div class="table-container">
+                    <mat-table [dataSource]="viewGridModel?.medicationGrid?.records"
+                              [@animate]="{value:'50'}">
+    
+                      <ng-container matColumnDef="medication">
+                        <mat-header-cell *matHeaderCellDef>{{'Medication' | translate }}</mat-header-cell>
+                        <mat-cell *matCellDef="let record">
+                            <p>{{record.medicationName}}</p>
+                        </mat-cell>
+                      </ng-container>
+                    
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef>
+                          {{'Actions' | translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let record">
+                          <button mat-icon-button color="warn" matTooltip="{{'Delete Test and Procedure' | translate}}"
+                                  (click)="removeMedication(record.productId)">
+                              <mat-icon>delete</mat-icon>
+                          </button>
+                        </mat-cell>
+                      </ng-container>                        
+                
+                      <mat-header-row *matHeaderRowDef="viewGridModel?.medicationGrid?.displayedColumns; sticky:true"></mat-header-row>
+                      <mat-row *matRowDef="let record; columns: viewGridModel?.medicationGrid?.displayedColumns;"></mat-row>
+                    </mat-table>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+          <mat-tab label="{{'MedDra Terms' | translate}}">
+            <mat-card-content class="m-1 p-5" style="height: 500px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                <div fxFlex="100" class="pr-1" fxLayoutAlign="end">
+                  <button mat-raised-button color="accent" (click)="openMeddraSelectPopup()">{{'Add Terminology' | translate}}</button>
+                </div>
+                <div fxFlex="100" class="pr-1">
+                  <div class="table-container">
+                    <mat-table [dataSource]="viewGridModel?.meddraGrid?.records"
+                              [@animate]="{value:'50'}">
+    
+                      <ng-container matColumnDef="term">
+                        <mat-header-cell *matHeaderCellDef>{{'Term' | translate }}</mat-header-cell>
+                        <mat-cell *matCellDef="let record">
+                            <p>{{record.medDraTerm}}</p>
+                        </mat-cell>
+                      </ng-container>
+                      
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef>
+                          {{'Actions' | translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let record">
+                          <button mat-icon-button color="warn" matTooltip="{{'Delete Terminology' | translate}}"
+                                  (click)="removeMeddra(record.terminologyMedDraId)">
+                              <mat-icon>delete</mat-icon>
+                          </button>
+                        </mat-cell>
+                      </ng-container>                        
+                
+                      <mat-header-row *matHeaderRowDef="viewGridModel?.meddraGrid?.displayedColumns; sticky:true"></mat-header-row>
+                      <mat-row *matRowDef="let record; columns: viewGridModel?.meddraGrid?.displayedColumns;"></mat-row>
+                    </mat-table>
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid" (click)="submit()">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

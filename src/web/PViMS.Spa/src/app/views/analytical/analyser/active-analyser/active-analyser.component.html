@@ -1,0 +1,622 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<div class="page-layout overflow-hidden pb-8">
+  <mat-card class="p-0">
+    <mat-card-title class="">
+      <div class="card-title-text">
+        {{'Active Analyser' | translate}}
+      </div>
+    </mat-card-title>
+  </mat-card>
+
+  <egret-sidebar name="layout-left-sidebar-card" class="default-bg-mobile height-100vh-70px" [perfectScrollbar]>
+    <div>
+      <mat-action-list>
+        <button mat-list-item (click)="selectAction(1)" [ngClass]="{'selected-action': selectedOption == 1}" [disabled]="disableAnalysisCriteria()"> <mat-icon class="mr-24" [ngStyle]="{'color': disableAnalysisCriteria() ? 'lightgray' : 'black' }">settings</mat-icon> <h5>{{'Analysis Criteria' | translate}}</h5> </button>
+        <mat-divider></mat-divider>
+        <button mat-list-item (click)="selectAction(2)" [ngClass]="{'selected-action': selectedOption == 2}" [disabled]="disableAnalysisResult()"> <mat-icon class="mr-24" [ngStyle]="{'color': disableAnalysisResult() ? 'lightgray' : 'black' }">send</mat-icon> <h5>{{'Analysis Results' | translate}}</h5> </button>
+        <mat-divider></mat-divider>
+        <button mat-list-item (click)="selectAction(3)" [ngClass]="{'selected-action': selectedOption == 3}" [disabled]="disableAnalysisOther()"> <mat-icon class="mr-24" [ngStyle]="{'color': disableAnalysisOther() ? 'lightgray' : 'black' }">dashboard</mat-icon> <h5>{{'Dashboard' | translate}}</h5> </button>
+        <mat-divider></mat-divider>
+        <button mat-list-item (click)="selectAction(4)" [ngClass]="{'selected-action': selectedOption == 4}" [disabled]="disableAnalysisOther()"> <mat-icon class="mr-24" [ngStyle]="{'color': disableAnalysisOther() ? 'lightgray' : 'black' }">group</mat-icon> <h5>{{'Patients' | translate}}</h5> </button>
+        <mat-divider></mat-divider>
+        <button mat-list-item (click)="selectAction(5)" [ngClass]="{'selected-action': selectedOption == 5}"> <mat-icon class="mr-24">assistant</mat-icon> <h5>{{'Legend' | translate}}</h5> </button>
+        <mat-divider></mat-divider>
+        <button mat-list-item (click)="selectAction(6)" [ngClass]="{'selected-action': selectedOption == 6}"> <mat-icon class="mr-24">cloud_download</mat-icon> <h5>{{'Download Data' | translate}}</h5> </button>
+        <mat-divider></mat-divider>
+      </mat-action-list>
+    </div>
+  </egret-sidebar>
+
+  <!-- body content -->
+  <div class="content">
+
+    <!-- content card -->
+    <div class="content-body" [perfectScrollbar]>
+
+      <!-- card header -->
+      <div class="card-header px-24 py-8 border-bottom">
+        <button fxHide fxShow.lt-md mat-icon-button egretSidebarToggler="layout-left-sidebar-card" class="mr-8">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+
+      <form [formGroup]="viewModelForm">
+
+      <div class="card-body p-12" [hidden]="selectedOption != 1">
+        <mat-card>
+          <mat-tab-group>
+            <mat-tab label="{{'Patient Population' | translate}}">
+              <mat-card-content class="m-1 p-5">
+                <mat-card-title class="text-center">
+                  <div class="card-title-text mat-bg-accent p-24">
+                    {{'L_TEXT_18' | translate}}
+                  </div>
+                </mat-card-title>              
+                <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="start">
+                  <div fxFlex="35" class="pr-1">
+                    <mat-form-field class="p-8 full-width">
+                      <mat-select formControlName="conditionId" placeholder="{{'Primary condition group risk factor' | translate}}" (selectionChange)="changeCondition($event)">
+                        <mat-option value="0"></mat-option>
+                        <mat-option *ngFor="let condition of conditionList" [value]="condition.id">
+                          {{condition.conditionName}}
+                        </mat-option>
+                      </mat-select>                        
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="5" class="pr-1">
+                    <span class="p-8 text-muted"> -- {{'OR' | translate}} --</span>
+                  </div>
+                  <div fxFlex="35" class="pr-1">
+                    <mat-form-field class="p-8 full-width">
+                      <mat-select formControlName="cohortGroupId" placeholder="{{'Cohort' | translate}}" (selectionChange)="changeCohort($event)">
+                        <mat-option value="0"></mat-option>
+                        <mat-option *ngFor="let cohort of cohortList" [value]="cohort.id">
+                          {{cohort.cohortName}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-tab>
+  
+            <mat-tab label="{{'Date Range' | translate}}">
+              <mat-card-content class="m-1 p-5"> 
+                <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="start">
+                  <div fxFlex="35" class="pr-1">
+                    <mat-form-field class="p-8 full-width">
+                      <input matInput formControlName="searchFrom" placeholder="{{'Search from' | translate}}" [matDatepicker]="searchFromDatepicker" required>
+                      <mat-datepicker-toggle matSuffix [for]="searchFromDatepicker"></mat-datepicker-toggle>
+                      <mat-error *ngIf="viewModelForm.get('searchFrom').hasError('required')">
+                        {{'This is a required field' | translate}}
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-datepicker #searchFromDatepicker></mat-datepicker>
+                  </div>
+                  <div fxFlex="35" class="pr-1">
+                    <mat-form-field class="p-8 full-width">
+                      <input matInput formControlName="searchTo" placeholder="{{'Search to' | translate}}" [matDatepicker]="searchToDatepicker" required>
+                      <mat-datepicker-toggle matSuffix [for]="searchToDatepicker"></mat-datepicker-toggle>
+                      <mat-error *ngIf="viewModelForm.get('searchTo').hasError('required')">
+                        {{'This is a required field' | translate}}
+                      </mat-error>
+                    </mat-form-field>
+                    <mat-datepicker #searchToDatepicker></mat-datepicker>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-tab>
+  
+            <mat-tab label="{{'Risk Factors' | translate}}">
+              <mat-card-content class="m-1 p-5">
+                <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="start">
+                  <div fxFlex="35" class="pr-1">
+                    <mat-form-field class="p-8 full-width">
+                      <mat-select formControlName="riskFactorId" placeholder="{{'Risk factor' | translate}}" (selectionChange)='changeRiskFactor($event)'>
+                        <mat-option *ngFor="let riskFactor of riskFactorList" [value]="riskFactor.id">
+                          {{riskFactor.factorName}}
+                        </mat-option>
+                      </mat-select>                        
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="35" class="pr-1" *ngIf="selectedRiskFactor != null">
+                    <mat-form-field class="p-8 full-width">
+                      <mat-select formControlName="riskFactorOptionId" placeholder="{{'Option' | translate}}">
+                        <mat-option value="0"></mat-option>
+                        <mat-option *ngFor="let riskfactorOption of selectedRiskFactor.options" [value]="riskfactorOption.display">
+                          {{riskfactorOption.display}}
+                        </mat-option>
+                      </mat-select>                        
+                    </mat-form-field>
+                  </div>
+                  <div fxFlex="25" class="pr-1" *ngIf="selectedRiskFactor != null && viewModelForm.get('riskFactorOptionId').value != null && viewModelForm.get('riskFactorOptionId').value != '0'">
+                    <button mat-mini-fab color="accent" (click)="addRiskFactor({}, true)"><mat-icon>add</mat-icon></button>
+                  </div>
+                </div>
+                <div>
+                  <div class="p-12 table-container">
+                    <mat-table [dataSource]="viewModel?.riskFactorGrid?.records"
+                            [@animate]="{value:'50'}">
+        
+                      <ng-container matColumnDef="factor-name">
+                          <mat-header-cell *matHeaderCellDef>{{'Factor' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.factorName}}
+                          </mat-cell>
+                      </ng-container>
+      
+                      <ng-container matColumnDef="option-name">
+                        <mat-header-cell *matHeaderCellDef>{{'Option' | translate}}</mat-header-cell>
+                        <mat-cell *matCellDef="let record">
+                            {{record.optionName}}
+                        </mat-cell>
+                      </ng-container>
+      
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef>{{'Actions' | translate}}</mat-header-cell>
+                        <mat-cell *matCellDef="let record">
+                          <button mat-icon-button color="warn" matTooltip="{{'Delete Factor' | translate}}"
+                              (click)="removeRiskFactor(record.index)">
+                              <mat-icon>delete</mat-icon>
+                          </button>
+                        </mat-cell>
+                      </ng-container>                        
+                  
+                    <mat-header-row *matHeaderRowDef="viewModel?.riskFactorGrid?.displayedColumns; sticky:true"></mat-header-row>
+                    <mat-row *matRowDef="let record; columns: viewModel?.riskFactorGrid?.displayedColumns;"></mat-row>
+                  </mat-table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-tab>
+          </mat-tab-group>
+
+          <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="end" class="p-8">
+            <button mat-raised-button color="primary" (click)="runAnalysisTerm()" class="float-right" [disabled]="viewModelForm.invalid">{{'Analyse' | translate}}</button>
+          </div>
+        </mat-card>
+      </div>
+
+      <div class="card-body p-12" [hidden]="selectedOption != 2">
+        <mat-card>
+          <mat-card-content class="m-1 p-5">
+              <mat-card-title class="text-center">
+                <div class="card-title-text mat-bg-accent p-24">
+                  {{'L_TEXT_24' | translate}} <br/>
+                  {{'L_TEXT_25' | translate}}
+                </div>
+              </mat-card-title>              
+
+              <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="5.5%" fxLayoutAlign="start">
+                <mat-chip-list #chipList>
+                  <div *ngFor="let result of viewModel?.results">
+                    <mat-chip color="primary" [selected]="result.terminologyMeddraId == selectedTermId" (click)="runAnalysisResult(result.terminologyMeddraId)"> 
+                      {{result.meddraTerm}}
+                    </mat-chip>
+                  </div>
+                  <div>
+                    <mat-chip color="warn" (click)="resetCriteria()"> 
+                      {{'Reset criteria' | translate}}
+                    </mat-chip>
+                  </div>
+                </mat-chip-list>
+              </div>
+
+              <mat-tab-group>
+                <mat-tab label="{{'Exposed incidence rate' | translate}}">
+                  <mat-card-content class="m-1 p-5">
+  
+                    <div class="ml-05 mr-05 mt-05 pb-1">
+                      <div class="table-container" >
+                        <mat-table [dataSource]="viewModel?.exposedGrid?.records"
+                                  [@animate]="{value:'50'}">
+              
+                          <ng-container matColumnDef="medication">
+                              <mat-header-cell *matHeaderCellDef>{{'Medication' | translate}}</mat-header-cell>
+                              <mat-cell *matCellDef="let record">
+                                  {{record.medication}}
+                              </mat-cell>
+                          </ng-container>
+              
+                          <ng-container matColumnDef="cases">
+                              <mat-header-cell *matHeaderCellDef>{{'Cases' | translate}}</mat-header-cell>
+                              <mat-cell *matCellDef="let record">
+                                  {{record.exposedIncidenceRate.cases}}
+                              </mat-cell>
+                          </ng-container>
+  
+                          <ng-container matColumnDef="non-cases">
+                            <mat-header-cell *matHeaderCellDef>{{'Non cases' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.exposedIncidenceRate.nonCases}}
+                            </mat-cell>
+                          </ng-container>
+
+                          <ng-container matColumnDef="population">
+                            <mat-header-cell *matHeaderCellDef>{{'Population' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.exposedIncidenceRate.population | number:'1.2-5'}}
+                            </mat-cell>
+                          </ng-container>
+
+                          <ng-container matColumnDef="incidence rate">
+                            <mat-header-cell *matHeaderCellDef>{{'Incidence rate' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.exposedIncidenceRate.incidenceRate | number:'1.2-5'}}
+                            </mat-cell>
+                          </ng-container>
+                          
+                          <mat-header-row *matHeaderRowDef="viewModel?.exposedGrid?.displayedColumns; sticky:true"></mat-header-row>
+                          <mat-row *matRowDef="let record; columns: viewModel?.exposedGrid?.displayedColumns;" matRipple></mat-row>
+                        </mat-table>
+                      </div>
+  
+                    </div>                  
+                   
+                  </mat-card-content>
+                </mat-tab>
+  
+                <mat-tab label="{{'Non exposed incidence rate' | translate}}">
+                  <mat-card-content class="m-1 p-5">
+  
+                    <div class="ml-05 mr-05 mt-05 pb-1">
+                      <div class="table-container" >
+                        <mat-table [dataSource]="viewModel?.unexposedGrid?.records"
+                                  [@animate]="{value:'50'}">
+              
+                          <ng-container matColumnDef="medication">
+                              <mat-header-cell *matHeaderCellDef>{{'Medication' | translate}}</mat-header-cell>
+                              <mat-cell *matCellDef="let record">
+                                  {{record.medication}}
+                              </mat-cell>
+                          </ng-container>
+              
+                          <ng-container matColumnDef="cases">
+                              <mat-header-cell *matHeaderCellDef>{{'Cases' | translate}}</mat-header-cell>
+                              <mat-cell *matCellDef="let record">
+                                  {{record.nonExposedIncidenceRate.cases}}
+                              </mat-cell>
+                          </ng-container>
+  
+                          <ng-container matColumnDef="non-cases">
+                            <mat-header-cell *matHeaderCellDef>{{'Non cases' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.nonExposedIncidenceRate.nonCases}}
+                            </mat-cell>
+                          </ng-container>
+
+                          <ng-container matColumnDef="population">
+                            <mat-header-cell *matHeaderCellDef>{{'Population' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.nonExposedIncidenceRate.population | number:'1.2-5'}}
+                            </mat-cell>
+                          </ng-container>
+
+                          <ng-container matColumnDef="incidence rate">
+                            <mat-header-cell *matHeaderCellDef>{{'Incidence rate' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.nonExposedIncidenceRate.incidenceRate | number:'1.2-5'}}
+                            </mat-cell>
+                          </ng-container>
+                          
+                          <mat-header-row *matHeaderRowDef="viewModel?.unexposedGrid?.displayedColumns; sticky:true"></mat-header-row>
+                          <mat-row *matRowDef="let record; columns: viewModel?.unexposedGrid?.displayedColumns;" matRipple></mat-row>
+                        </mat-table>
+                      </div>
+  
+                    </div>                  
+                   
+                  </mat-card-content>
+                </mat-tab>
+  
+                <mat-tab label="{{'Relative risk' | translate}}">
+                  <mat-card-content class="m-1 p-5">
+  
+                    <div class="ml-05 mr-05 mt-05 pb-1">
+                      <div class="table-container" >
+                        <mat-table [dataSource]="viewModel?.riskGrid?.records"
+                                  [@animate]="{value:'50'}">
+              
+                          <ng-container matColumnDef="medication">
+                            <mat-header-cell *matHeaderCellDef>{{'Medication' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.medication}}
+                            </mat-cell>
+                          </ng-container>
+      
+                          <ng-container matColumnDef="unadjusted relative risk">
+                              <mat-header-cell *matHeaderCellDef>{{'Unadjusted relative risk' | translate}}</mat-header-cell>
+                              <mat-cell *matCellDef="let record">
+                                {{ record.unadjustedRelativeRisk | number:'1.2-5'}}
+                              </mat-cell>
+                          </ng-container>
+
+                          <ng-container matColumnDef="adjusted relative risk">
+                            <mat-header-cell *matHeaderCellDef>{{'Adjusted relative risk' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.adjustedRelativeRisk | number:'1.2-5'}}
+                            </mat-cell>
+                          </ng-container>
+                        
+                          <ng-container matColumnDef="CI 95%">
+                              <mat-header-cell *matHeaderCellDef>{{'Confidence intervale 95%' | translate}}</mat-header-cell>
+                              <mat-cell *matCellDef="let record">
+                                {{record.confidenceIntervalLow | number:'1.2-5'}} ~ {{record.confidenceIntervalHigh | number:'1.2-5'}}
+                              </mat-cell>
+                          </ng-container>
+  
+                          <mat-header-row *matHeaderRowDef="viewModel?.riskGrid?.displayedColumns; sticky:true"></mat-header-row>
+                          <mat-row *matRowDef="let record; columns: viewModel?.riskGrid?.displayedColumns;" matRipple></mat-row>
+                        </mat-table>
+                      </div>
+  
+                    </div>                  
+                   
+                  </mat-card-content>
+                </mat-tab>
+  
+              </mat-tab-group>
+  
+          </mat-card-content>
+
+        </mat-card>
+      </div>
+
+      <div class="card-body p-12" [hidden]="selectedOption != 3">
+        <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+          <div fxFlex.gt-xs="50" fxFlex.xs="100" class="card-body p-12" style="height: 450px;">
+            <mat-card>
+              <mat-card-title class="m-0 p-05 light-gray">
+                <div class="card-title-text" fxLayout="row wrap" fxLayoutAlign="start">
+                  <h1>{{'Exposed cases per medication' | translate}}</h1>
+                </div>
+              </mat-card-title>
+              <mat-card-content class="m-0" style="overflow-y: auto; height: 500px;">
+                <apx-chart
+                  [series]="exposedChartOptions?.series"
+                  [chart]="exposedChartOptions?.chart"
+                  [dataLabels]="exposedChartOptions?.dataLabels"
+                  [plotOptions]="exposedChartOptions?.plotOptions"
+                  [yaxis]="exposedChartOptions?.yaxis"
+                  [legend]="exposedChartOptions?.legend"
+                  [fill]="exposedChartOptions?.fill"
+                  [stroke]="exposedChartOptions?.stroke"
+                  [tooltip]="exposedChartOptions?.tooltip"
+                  [xaxis]="exposedChartOptions?.xaxis"
+                ></apx-chart>
+              </mat-card-content>
+            </mat-card>
+    
+          </div>
+          <div fxFlex.gt-xs="50" fxFlex.xs="100" class="card-body p-12" style="height: 450px;">
+            <mat-card>
+              <mat-card-title class="m-0 p-05 light-gray">
+                <div class="card-title-text" fxLayout="row wrap" fxLayoutAlign="start">
+                  <h1>{{'Relative risks per medication' | translate}}</h1>
+                </div>
+              </mat-card-title>
+              <mat-card-content class="m-0" style="overflow-y: auto; height: 500px;">
+                <apx-chart
+                  [series]="relativeChartOptions?.series"
+                  [chart]="relativeChartOptions?.chart"
+                  [dataLabels]="relativeChartOptions?.dataLabels"
+                  [plotOptions]="relativeChartOptions?.plotOptions"
+                  [yaxis]="relativeChartOptions?.yaxis"
+                  [legend]="relativeChartOptions?.legend"
+                  [fill]="relativeChartOptions?.fill"
+                  [stroke]="relativeChartOptions?.stroke"
+                  [tooltip]="relativeChartOptions?.tooltip"
+                  [xaxis]="relativeChartOptions?.xaxis"
+                ></apx-chart>
+              </mat-card-content>
+            </mat-card>
+    
+          </div>
+        </div>
+      </div>  
+
+      <div class="card-body p-12" [hidden]="selectedOption != 4">
+        <div class="ml-05 mr-05 mt-05 pb-1">
+          <div class="table-container" >
+            <mat-table [dataSource]="viewModel?.patientContributionGrid?.records"
+                      [@animate]="{value:'50'}">
+  
+              <ng-container matColumnDef="patient-name">
+                <mat-header-cell *matHeaderCellDef>{{'Patient name' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.patientName}}
+                </mat-cell>
+              </ng-container>
+  
+              <ng-container matColumnDef="medication">
+                <mat-header-cell *matHeaderCellDef>{{'Medication' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.medication}}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="days-contributed">
+                <mat-header-cell *matHeaderCellDef>{{'Days contributed' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                  {{record.daysContributed}}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="reaction">
+                <mat-header-cell *matHeaderCellDef>{{'Reaction' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.experiencedReaction}}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="factor">
+                <mat-header-cell *matHeaderCellDef>{{'Risk factor' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.riskFactor}}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="criteria">
+                <mat-header-cell *matHeaderCellDef>{{'Criteria' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.riskFactorOption}}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="factor-met">
+                <mat-header-cell *matHeaderCellDef>{{'Criteria met' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.factorMet}}
+                </mat-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="viewModel?.patientContributionGrid?.displayedColumns; sticky:true"></mat-header-row>
+              <mat-row *matRowDef="let record; columns: viewModel?.patientContributionGrid?.displayedColumns;" matRipple></mat-row>
+            </mat-table>
+          </div>
+
+          <mat-paginator #mainGridPaginator="matPaginator" [length]="viewModel?.patientContributionGrid?.count"
+                        [pageIndex]="0" [pageSize]="10"
+                        [pageSizeOptions]="[5, 10, 25, 50]">
+          </mat-paginator>
+        </div>                  
+      </div>
+
+      </form>      
+
+      <div class="card-body p-12" [hidden]="selectedOption != 5">
+        <mat-card class="p-0 full-width" [perfectScrollbar]>
+          <mat-card-title>
+            <div class="card-title-text">{{'Legend' | translate}}</div>
+            <mat-divider></mat-divider>
+          </mat-card-title>
+          <mat-card-content>
+    
+            <mat-accordion class="example-headers-align full-width">
+              <mat-expansion-panel [expanded]="step === 0" (opened)="setStep(0)">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="card-title-text font-weight-bold">{{'Exposed' | translate}}</div>
+                  </mat-panel-title>
+                  <mat-panel-description>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                {{'ALEG_EXP' | translate}}
+              </mat-expansion-panel>
+              <mat-expansion-panel [expanded]="step === 1" (opened)="setStep(1)">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="card-title-text font-weight-bold">{{'Unexposed' | translate}}</div>
+                  </mat-panel-title>
+                  <mat-panel-description>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                {{'ALEG_UNEXP' | translate}}
+              </mat-expansion-panel>
+              <mat-expansion-panel [expanded]="step === 2" (opened)="setStep(2)">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="card-title-text font-weight-bold">{{'Cases' | translate}}</div>
+                  </mat-panel-title>
+                  <mat-panel-description>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                {{'ALEG_CASE' | translate}}
+              </mat-expansion-panel>
+              <mat-expansion-panel [expanded]="step === 3" (opened)="setStep(3)">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="card-title-text font-weight-bold">{{'Non cases' | translate}}</div>
+                  </mat-panel-title>
+                  <mat-panel-description>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                {{'ALEG_NONCASE' | translate}}
+              </mat-expansion-panel>
+              <mat-expansion-panel [expanded]="step === 4" (opened)="setStep(4)">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="card-title-text font-weight-bold">{{'Population' | translate}}</div>
+                  </mat-panel-title>
+                  <mat-panel-description>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                {{'ALEG_POP' | translate}}
+              </mat-expansion-panel>
+              <mat-expansion-panel [expanded]="step === 5" (opened)="setStep(5)">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="card-title-text font-weight-bold">{{'Incidence rate' | translate}}</div>
+                  </mat-panel-title>
+                  <mat-panel-description>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                {{'ALEG_INC' | translate}}
+              </mat-expansion-panel>
+              <mat-expansion-panel [expanded]="step === 6" (opened)="setStep(6)">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="card-title-text font-weight-bold">{{'Unadjusted relative risk' | translate}}</div>
+                  </mat-panel-title>
+                  <mat-panel-description>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                {{'ALEG_UNADJ' | translate}}
+              </mat-expansion-panel>
+              <mat-expansion-panel [expanded]="step === 7" (opened)="setStep(7)">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <div class="card-title-text font-weight-bold">{{'Adjusted relative risk' | translate}}</div>
+                  </mat-panel-title>
+                  <mat-panel-description>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                {{'ALEG_ADJ' | translate}}
+              </mat-expansion-panel>
+            </mat-accordion>        
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div class="card-body p-12" [hidden]="selectedOption != 6">
+        <div class="flex-container">
+          <mat-card class="flex-item p-12 mat-elevation-z6 rounded">
+            <mat-card-title class="text-center">
+              <div class="card-title-text light-gray p-12">
+                {{'Active Analyser' | translate}}
+              </div>
+            </mat-card-title>
+            <mat-card-content class="p-2">
+              <p>
+                {{'L_TEXT_22' | translate}}
+              </p>
+              <form [formGroup]="viewDatasetModelForm">
+                <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="start">
+                  <div fxFlex="50" class="pr-1">
+                    <mat-form-field class="p-8 full-width">
+                      <mat-select formControlName="datasetCohortGroupId" placeholder="{{'Cohort' | translate}}" (selectionChange)="changeCohort($event)">
+                        <mat-option value="0">{{'All cohorts' | translate}}</mat-option>
+                        <mat-option *ngFor="let cohort of cohortList" [value]="cohort.id">
+                          {{cohort.cohortName}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </form>
+            </mat-card-content>
+            <div class="card-title-text mat-bg-warn p-12" *ngIf="!accountService.allowDatasetDownload">
+              {{'L_TEXT_21' | translate}}
+            </div>
+            <mat-card-actions fxLayoutAlign="end" class="p-8">
+              <button mat-raised-button color="accent" (click)="downloadDataset()" *ngIf="accountService.allowDatasetDownload">{{'Download Dataset' | translate}}</button>
+            </mat-card-actions>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

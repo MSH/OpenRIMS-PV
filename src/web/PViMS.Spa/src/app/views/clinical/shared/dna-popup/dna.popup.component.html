@@ -1,0 +1,27 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+  <mat-card-title class="">
+    <div class="card-title-text mat-bg-warn p-24">
+      {{ 'L_TEXT_2' | translate }}
+    </div>
+    <mat-divider></mat-divider>
+  </mat-card-title>      
+  
+  <div fxLayout="row wrap" fxLayout.lt-sm="column">
+    <div fxFlex="50" class="pr-1">
+        <mat-form-field class="full-width" appearance="fill">
+            <mat-label>{{ 'Appointment date' | translate }}</mat-label>
+            <input matInput formControlName="appointmentDate" readonly>
+        </mat-form-field>        
+    </div>
+
+    <div fxFlex="100" class="mt-1">
+      <button mat-raised-button color="primary" [disabled]="itemForm.invalid">{{"Save" | translate }}</button>
+      <span fxFlex></span>
+      <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+    </div>
+  </div>
+</form>

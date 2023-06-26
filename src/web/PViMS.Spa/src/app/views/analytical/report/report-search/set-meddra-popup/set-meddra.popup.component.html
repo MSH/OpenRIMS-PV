@@ -1,0 +1,146 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column" style="height: 400px; overflow-y: auto;">
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-2 full-width" appearance="fill">
+          <mat-label>{{'L_TEXT_7' | translate }}</mat-label>
+          <input matInput formControlName="sourceIdentifier" readonly>
+        </mat-form-field>        
+      </div>
+      <div fxFlex="100" class="pb-8" *ngIf="itemForm.get('searchOption')?.value == 'Term'">
+        <mat-hint class="font-weight-bold">{{'L_TEXT_11' | translate }}</mat-hint>
+      </div>
+      <div fxFlex="100" class="pb-8" *ngIf="itemForm.get('searchOption')?.value == 'Code'">
+        <mat-hint class="font-weight-bold">{{'L_TEXT_12' | translate }}</mat-hint>
+      </div>
+      <div fxFlex="100" class="pb-8" *ngIf="itemForm.get('searchOption')?.value == 'List'">
+        <mat-hint class="font-weight-bold">{{'L_TEXT_13' | translate }}</mat-hint>
+      </div>
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="full-width">
+          <mat-select formControlName="searchOption" placeholder="{{'Search option' | translate}}" required (selectionChange)="viewModel.mainGrid.clearDataSource()">
+              <mat-option value="Term">{{'MedDRA term' | translate}}</mat-option>
+              <mat-option value="Code">{{'MedDRA code' | translate}}</mat-option>
+              <mat-option value="List">{{'MedDRA list' | translate}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('searchOption')?.value == 'Term'">
+        <mat-form-field class="full-width">
+          <mat-select formControlName="termType" placeholder="{{'Term type' | translate}}">
+              <mat-option value="SOC">{{'System Organ Class' | translate}}</mat-option>
+              <mat-option value="HLGT">{{'High Level Group Term' | translate}}</mat-option>
+              <mat-option value="HLT">{{'High Level Term' | translate}}</mat-option>
+              <mat-option value="PT">{{'Preferred Term' | translate}}</mat-option>
+              <mat-option value="LLT">{{'Lowest Level Term' | translate}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('searchOption')?.value == 'Term'">
+        <mat-form-field class="full-width">
+            <input matInput formControlName="searchTerm" placeholder="{{'Find by term' | translate }}">
+            <mat-hint>{{'Maximum length' | translate}} 100</mat-hint> 
+            <mat-error *ngIf="itemForm.get('searchTerm').hasError('maxlength')">
+              {{'Maximum length exceeded' | translate}}
+            </mat-error>            
+        </mat-form-field>
+      </div>
+      <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('searchOption')?.value == 'Code'">
+        <mat-form-field class="full-width">
+            <input matInput formControlName="searchCode" placeholder="{{'Find by code' | translate }}">
+            <mat-hint>{{'Maximum length' | translate}} 10</mat-hint> 
+            <mat-error *ngIf="itemForm.get('searchCode').hasError('maxlength')">
+              {{'Maximum length exceeded' | translate}}
+            </mat-error>            
+        </mat-form-field>
+      </div>
+      <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('searchOption')?.value == 'List'">
+        <mat-form-field class="full-width">
+          <mat-select formControlName="termSOC" placeholder="{{'Find by System Organ Class (SOC)' | translate}}" (selectionChange)="loadHLGTList($event)">
+              <mat-option value=""></mat-option>
+              <mat-option *ngFor="let term of termSOCList" [value]="term.id">
+                {{term.medDraTerm}}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('searchOption')?.value == 'List' && itemForm.get('termSOC').value != ''">
+        <mat-form-field class="full-width">
+          <mat-select formControlName="termHLGT" placeholder="{{'Find by High Level Group Term (HLGT)' | translate}}" (selectionChange)="loadHLTList($event)">
+              <mat-option value=""></mat-option>
+              <mat-option *ngFor="let term of termHLGTList" [value]="term.id">
+                {{term.medDraTerm}}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('searchOption')?.value == 'List' && itemForm.get('termSOC').value != '' && itemForm.get('termHLGT').value != ''">
+        <mat-form-field class="full-width">
+          <mat-select formControlName="termHLT" placeholder="{{'Find by High Level Term (HLT)' | translate}}" (selectionChange)="loadPTList($event)">
+              <mat-option value=""></mat-option>
+              <mat-option *ngFor="let term of termHLTList" [value]="term.id">
+                {{term.medDraTerm}}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('searchOption')?.value == 'List' && itemForm.get('termSOC').value != '' && itemForm.get('termHLGT').value != '' && itemForm.get('termHLT').value != ''">
+        <mat-form-field class="full-width">
+          <mat-select formControlName="termPT" placeholder="{{'Find by Preferred Term (PT)' | translate}}" (selectionChange)="loadGrid()">
+              <mat-option value=""></mat-option>
+              <mat-option *ngFor="let term of termPTList" [value]="term.medDraTerm">
+                {{term.medDraTerm}}
+              </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxFlex="100" class="pr-1" fxLayoutAlign="end" *ngIf="itemForm.get('searchOption')?.value == 'Term' || itemForm.get('searchOption')?.value == 'Code'">
+        <div class="p-2 mb-05">
+          <button mat-mini-fab (click)="loadGrid()" [disabled]="itemForm.invalid"><mat-icon>search</mat-icon></button>
+        </div>
+      </div>
+      <div fxFlex="100" class="pr-1">
+        <div class="text-red text-center mt-12 font-weight-bold" *ngIf="viewModel?.mainGrid?.records?.data?.length == 0 && viewModel?.searched">
+          No records found ...
+        </div>
+        <div class="table-container">
+          <mat-table [dataSource]="viewModel?.mainGrid?.records"
+                    [@animate]="{value:'50'}">
+
+            <ng-container matColumnDef="meddra-term">
+                <mat-header-cell *matHeaderCellDef>{{'Description' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.medDraTerm}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <mat-header-cell *matHeaderCellDef>
+                {{'Actions' | translate}}
+              </mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                <button mat-icon-button color="primary" matTooltip="{{'Select' | translate}}"
+                        (click)="selectTerm(record)">
+                    <mat-icon>send</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>                        
+          
+            <mat-header-row *matHeaderRowDef="viewModel?.mainGrid?.displayedColumns; sticky:true"></mat-header-row>
+            <mat-row *matRowDef="let record; columns: viewModel?.mainGrid?.displayedColumns;"></mat-row>
+          </mat-table>
+        </div>
+        <mat-paginator #mainGridPaginator="matPaginator" [length]="viewModel?.mainGrid?.count"
+                    [pageIndex]="0" [pageSize]="50"
+                    [pageSizeOptions]="[5, 10, 25, 50]">
+        </mat-paginator>
+      </div>
+      
+    </div>
+    <div class="mt-1">
+      <span fxFlex></span>
+      <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+    </div>
+</form>

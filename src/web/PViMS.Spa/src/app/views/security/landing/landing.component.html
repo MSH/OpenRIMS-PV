@@ -1,0 +1,56 @@
+<div class="height-100" fxLayoutAlign="center center" style="overflow-y: auto;">
+  <div fxFlex.gt-sm="60" fxFlex.lt-md="100">
+    <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="center center">
+      <div fxFlex="100" class="text-center">
+        <img [src]="logo" alt="">
+      </div>
+
+      <div fxFlex="100" class="text-center">
+        <img src="assets/images/pvims_logo_sm.png" alt="">
+      </div>
+  
+      <div fxFlex="100" class="text-center">
+        <h1 class="title center font-weight-bold">{{'Pharmacovigilance Monitoring System' | translate}}</h1>
+      </div>
+      
+      <div fxFlex.gt-sm="49" fxFlex.lt-md="100" class="container m-2">
+        <mat-card class="yellow-200 text-center" style="min-height: 60px;" (click)="navigateToSpontaneous()">
+          <mat-card-title>
+            <h2 class="title font-weight-bold">{{'Public' | translate}} </h2>
+          </mat-card-title>
+          <mat-card-content>
+            <div class="pt-8 pb-16">
+              <p class="m-8">{{'L_TEXT_20' | translate}}</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div fxFlex.gt-sm="49" fxFlex.lt-md="100" class="container m-2">
+        <mat-card class="grey-100 text-center" style="min-height: 60px;" (click)="navigateToLogin()">
+          <mat-card-title class="text-center">
+            <h2 class="title font-weight-bold">{{'Pharmacovigilance and Clinical Staff Login' | translate}}</h2>
+          </mat-card-title>
+          <mat-card-content>
+            <div class="pt-8 pb-16">
+              <p class="m-8">{{'L_TEXT_23' | translate}}</p>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <div fxFlex="100" class="text-center">
+        <button mat-button color="primary" (click)="openAboutPopUp()">{{'About PViMS' | translate}}</button>
+        <button mat-button [matMenuTriggerFor]="menu" matTooltip="{{'Select language' | translate }}">
+          <span class="flag-icon {{currentLang.flag}} mr-05"></span>
+          <span>{{currentLang.name}}</span>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item *ngFor="let lang of availableLangs" (click)="setLang(lang)">
+                <span class="flag-icon mr-05 {{lang.flag}}"></span>
+                <span>{{lang.name}}</span>
+          </button>
+        </mat-menu>    
+      </div>
+    </div>
+  </div>
+</div>

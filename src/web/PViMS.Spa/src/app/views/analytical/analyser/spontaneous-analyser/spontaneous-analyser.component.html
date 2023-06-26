@@ -1,0 +1,24 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<div class="flex-container">
+  <mat-card class="flex-item p-12 mat-elevation-z6 rounded">
+    <mat-card-title class="text-center">
+      <div class="card-title-text light-gray p-12">
+        {{'Spontaneous Analyser' | translate}}
+      </div>
+    </mat-card-title>
+    <mat-card-content class="p-8">
+      <p>
+        {{'L_TEXT_19' | translate}}
+     </p>
+    </mat-card-content>
+    <div class="card-title-text mat-bg-warn p-12" *ngIf="!accountService.allowDatasetDownload">
+      {{'L_TEXT_21' | translate}}
+    </div>
+    <mat-card-actions fxLayoutAlign="end" class="p-8">
+      <button mat-raised-button color="accent" (click)="downloadDataset()" *ngIf="accountService.allowDatasetDownload">{{'Download Dataset' | translate}}</button>
+   </mat-card-actions>
+    </mat-card>
+</div>

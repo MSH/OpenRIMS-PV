@@ -1,0 +1,9 @@
+<div id="error-403" fxLayout="column" fxLayoutAlign="center center">
+    <div class="content" fxLayout="column" fxLayoutAlign="center center">
+
+        <div class="error-code">{{ viewModel.statusCode || '403' }}</div>
+        <div class="message m-20">{{ viewModel.message || 'Forbidden' }}</div>
+        <a class="back-link mt-10" [routerLink]="'/'">Go back to application</a>
+
+    </div>
+</div>

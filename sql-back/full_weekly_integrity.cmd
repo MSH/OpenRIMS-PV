@@ -1,0 +1,1 @@
+sqlcmd -E -S **SERVERANDINSTANCENAME** -d master -i integrity_pvims_db.sql -o **OUTPUTFILENAME**

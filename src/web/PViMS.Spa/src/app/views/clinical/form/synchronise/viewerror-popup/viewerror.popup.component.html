@@ -1,0 +1,16 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+<div fxLayout="row wrap" fxLayout.lt-sm="column">
+  <div fxFlex="100" class="pr-1">
+    <ul>
+      <li class="text-muted p-line" *ngFor="let message of this.data.messages" [@animate]="{ value: '*', params: { opacity: '0', y: '40px', delay: '250ms' } }">
+        {{message | translate}}
+      </li>
+    </ul>
+  </div>
+
+  <div fxFlex="100" class="mt-1">
+    <span fxFlex></span>
+    <button mat-raised-button color="primary" type="button" (click)="dialogRef.close(false)">{{"Close" | translate }}</button>
+  </div>
+</div>

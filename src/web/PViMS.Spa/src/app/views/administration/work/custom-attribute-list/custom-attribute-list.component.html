@@ -1,0 +1,112 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<mat-card class="p-0">
+  
+  <mat-card-title class="">
+    <div class="card-title-text">
+      {{'Entity Attributes' | translate}}
+    </div>
+  </mat-card-title>
+
+  <mat-card-content>
+    <form [formGroup]="viewModelForm">
+      <div fxLayout="column" fxLayoutWrap fxLayoutGap="0.1%" fxLayoutAlign="start" class="p-0">
+        <div fxFlex="100" fxLayoutAlign="end">
+          <button mat-raised-button class="mr-05" color="accent" (click)="openAddPopUp()">{{'Add Attribute' | translate}}</button>
+        </div>
+        <div fxFlex="100" class="pr-1 p-12">
+          <mat-label>{{'Please select an extendable type below' | translate}}...</mat-label>
+        </div>
+        <div fxFlex="100" class="pr-1">
+          <mat-chip-list #chipList>
+            <mat-chip color="primary" [selected]="viewModel.extendableTypeName == '1'" (click)="selectExtendableType('1')" style="cursor: pointer;"> 
+              {{'Patient Attributes' | translate}}
+            </mat-chip>
+            <mat-chip color="primary" [selected]="viewModel.extendableTypeName == '2'" (click)="selectExtendableType('2')" style="cursor: pointer;"> 
+              {{'Condition Attributes' | translate}}
+            </mat-chip>
+            <mat-chip color="primary" [selected]="viewModel.extendableTypeName == '3'" (click)="selectExtendableType('3')" style="cursor: pointer;"> 
+              {{'Medication Attributes' | translate}}
+            </mat-chip>
+            <mat-chip color="primary" [selected]="viewModel.extendableTypeName == '4'" (click)="selectExtendableType('4')" style="cursor: pointer;"> 
+              {{'Lab Test Attributes' | translate}}
+            </mat-chip>
+            <mat-chip color="primary" [selected]="viewModel.extendableTypeName == '5'" (click)="selectExtendableType('5')" style="cursor: pointer;"> 
+              {{'Clinical Event Attributes' | translate}}
+            </mat-chip>
+          </mat-chip-list>
+        </div>
+      </div>
+    </form> 
+
+    <div class="ml-05 mr-05 mt-05 pb-1">
+
+      <div class="table-container">
+        <mat-table [dataSource]="viewModel?.mainGrid?.records"
+                    [@animate]="{value:'50'}">
+
+            <ng-container matColumnDef="id">
+                <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <p>{{record.id}}</p>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="attribute-key">
+                <mat-header-cell *matHeaderCellDef>{{'Attribute key' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <p>{{record.attributeKey}}</p>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="category">
+              <mat-header-cell *matHeaderCellDef>{{'Category' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.category}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="attribute-type">
+              <mat-header-cell *matHeaderCellDef>{{'Attribute type' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.customAttributeType}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>
+                    {{"Actions" | translate }}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <button mat-icon-button color="primary" matTooltip="{{'Update Attribute' | translate }}"
+                            (click)="openEditPopUp(record)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" matTooltip="{{'Delete Attribute' | translate }}"
+                            (click)="openDeletePopUp(record)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'Set Values' | translate }}"
+                            (click)="openSelectionPopUp(record)"
+                            *ngIf="record.customAttributeType == 'Selection'">
+                        <mat-icon>apps</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="viewModel?.mainGrid?.displayedColumns; sticky:true"></mat-header-row>
+            <mat-row *matRowDef="let record; columns: viewModel?.mainGrid?.displayedColumns;"></mat-row>
+        </mat-table>
+      </div>
+
+      <mat-paginator #mainGridPaginator="matPaginator" [length]="viewModel?.mainGrid?.count"
+                    [pageIndex]="0" [pageSize]="10"
+                    [pageSizeOptions]="[5, 10, 25, 50]">
+      </mat-paginator>
+
+    </div>
+      
+  </mat-card-content>
+</mat-card>

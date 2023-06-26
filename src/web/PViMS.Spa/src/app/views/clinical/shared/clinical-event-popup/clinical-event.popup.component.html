@@ -1,0 +1,94 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="viewModelForm">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1">
+        <mat-tab-group>
+          <mat-tab label="{{'Basic Information' | translate}}">
+            <mat-card-content class="m-1" style="height: 400px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                <div fxFlex="100" class="pr-1 mt-12">
+                  <mat-form-field class="full-width" appearance="outline">
+                      <textarea matInput formControlName="sourceDescription" rows="3" placeholder="{{'L_TEXT_7' | translate }}" required></textarea>
+                      <mat-hint>{{'Maximum length' | translate}} 500</mat-hint> 
+                      <mat-error *ngIf="viewModelForm.get('sourceDescription').hasError('required')">
+                        {{'This is a required field' | translate}}
+                      </mat-error>            
+                      <mat-error *ngIf="viewModelForm.get('sourceDescription').hasError('maxlength')">
+                        {{'Maximum length exceeded' | translate}}
+                      </mat-error>            
+                      <mat-error *ngIf="viewModelForm.get('sourceDescription').hasError('pattern')">
+                        {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, parenthesis, forward slash, space, comma, period)
+                      </mat-error>            
+                  </mat-form-field>        
+                </div>
+                <div fxFlex="50" class="pr-1 mt-12">
+                  <mat-form-field class="full-width">
+                    <input matInput formControlName="onsetDate" placeholder="{{'Onset date' | translate}}" [matDatepicker]="onsetDateDatepicker" required>
+                    <mat-datepicker-toggle matSuffix [for]="onsetDateDatepicker"></mat-datepicker-toggle>
+                    <mat-error *ngIf="viewModelForm.get('onsetDate').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                  </mat-form-field>
+                  <mat-datepicker #onsetDateDatepicker></mat-datepicker>
+                </div>
+                <div fxFlex="50" class="pr-1 mt-12">
+                  <mat-form-field class="full-width">
+                    <input matInput formControlName="resolutionDate" placeholder="{{'Resolution date' | translate}}" [matDatepicker]="resolutionDateDatepicker">
+                    <mat-datepicker-toggle matSuffix [for]="resolutionDateDatepicker"></mat-datepicker-toggle>
+                  </mat-form-field>
+                  <mat-datepicker #resolutionDateDatepicker></mat-datepicker>
+                </div>
+                <div fxFlex="100" class="pr-1 mt-12">
+                  <mat-form-field class="full-width" appearance='fill'>
+                      <input matInput formControlName="medDraTerm" placeholder="{{'L_TEXT_6' | translate }}" readonly>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="100" class="pr-1 mt-12" fxLayoutAlign="end">
+                  <button mat-mini-fab (click)="openMeddraPopup()"><mat-icon>search</mat-icon></button>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+          <mat-tab label="{{'Detail Information' | translate}}">
+            <mat-card-content class="m-1" style="height: 400px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start" formGroupName="attributes" fxLayoutGap="1.5%">
+                <div fxFlex="100" class="mt-12" *ngFor="let attribute of customAttributeList">
+                  <mat-form-field class="full-width" *ngIf="attribute.customAttributeType == 'String'">
+                    <input matInput formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" [required]="attribute.required">
+                  </mat-form-field>
+                  <mat-form-field class="full-width" *ngIf="attribute.customAttributeType == 'Numeric'">
+                    <input matInput formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" type="number" [required]="attribute.required">
+                    <mat-hint *ngIf="attribute.numericMinValue != null && attribute.numericMaxValue != null">
+                      {{'Valid between ' | translate}} {{attribute.numericMinValue}} {{'and ' | translate}} {{attribute.numericMaxValue}}
+                    </mat-hint>
+                  </mat-form-field>        
+                  <span *ngIf="attribute.customAttributeType == 'DateTime'">
+                    <mat-form-field class="full-width">
+                      <input matInput formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" [matDatepicker]="datepicker" [required]="attribute.required">
+                      <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                    </mat-form-field>        
+                    <mat-datepicker #datepicker startView="multi-year"></mat-datepicker>
+                  </span>
+                  <mat-form-field class="full-width" *ngIf="attribute.customAttributeType == 'Selection'">
+                    <mat-select formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" [required]="attribute.required">
+                      <mat-option *ngFor="let item of attribute.selectionDataItems" value="{{item.selectionKey}}">
+                        {{item.value | translate}}
+                      </mat-option>
+                    </mat-select>                        
+                  </mat-form-field>                
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="viewModelForm.invalid" (click)="submit()">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

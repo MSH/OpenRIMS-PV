@@ -1,0 +1,18 @@
+<div class="page-wrap height-100 default-bg">
+  <div class="app-error">
+    <div class="fix">
+      <mat-icon class="error-icon" color="warn">error</mat-icon>
+      <div class="error-text">
+        <h1 class="error-title">501</h1>
+        <div class="error-subtitle">{{ viewModel.statusCode }}</div>
+        <div class="error-subtitle">{{ viewModel.message || 'Not Implemented' }}</div>
+      </div>
+    </div>
+    
+    <div class="error-actions">
+      <button mat-raised-button (click)="goBack()" color="accent" class="mr-48">
+        Return to previous page
+      </button>
+    </div>
+  </div>
+</div>

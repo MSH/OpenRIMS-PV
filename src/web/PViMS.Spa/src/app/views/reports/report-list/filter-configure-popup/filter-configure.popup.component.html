@@ -1,0 +1,101 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width" appearance="fill">
+          <mat-label>{{'Report name' | translate}}</mat-label>
+          <input matInput formControlName="reportName" readonly>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" class="p-12 font-weight-bold default-light-bg rounded">
+        {{'L_TEXT_28' | translate}}
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <div class="p-2 table-container">
+          <div fxLayout="row wrap" fxLayout.lt-sm="column">
+            <div fxFlex="20" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="relation" placeholder="{{'Relation' | translate}}" required>
+                  <mat-option value="AND">
+                    {{'AND' | translate}}
+                  </mat-option>
+                  <mat-option value="OR">
+                    {{'OR' | translate}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="attributeName" placeholder="{{'Attribute name' | translate}}" required (selectionChange)="changeColumn($event)">
+                  <mat-option *ngFor="let metaColumn of coreMetaTable?.columns" [value]="metaColumn.columnName">
+                      {{metaColumn.columnName}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex="30" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="operator" placeholder="{{'Operator' | translate}}" required>
+                  <mat-option *ngFor="let operator of selectedColumn?.operators" [value]="operator.operatorValue">
+                      {{operator.operatorName}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
+          <div class="p-12" fxLayoutAlign="end">
+            <button mat-mini-fab (click)="addFilter()"><mat-icon>add</mat-icon></button>
+          </div>
+          <mat-table [dataSource]="viewModel?.filterGrid?.records"
+                    [@animate]="{value:'50'}">
+
+            <ng-container matColumnDef="relation">
+              <mat-header-cell *matHeaderCellDef>{{'Relation' | translate}}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  {{record.relation | translate}}
+              </mat-cell>
+            </ng-container>
+        
+            <ng-container matColumnDef="attribute-name">
+                <mat-header-cell *matHeaderCellDef>{{'Attribute name' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.attributeName}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="operator">
+              <mat-header-cell *matHeaderCellDef>{{'Operator' | translate}}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  {{record.operator}}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <mat-header-cell *matHeaderCellDef>{{'Actions' | translate}}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                <button mat-icon-button color="warn" matTooltip="{{'Delete Filter' | translate}}"
+                    (click)="removeFilter(record.index)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>                        
+          
+            <mat-header-row *matHeaderRowDef="viewModel?.filterGrid?.displayedColumns; sticky:true"></mat-header-row>
+            <mat-row *matRowDef="let record; columns: viewModel?.filterGrid?.displayedColumns;"></mat-row>
+          </mat-table>
+        </div>
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid" (click)="submit()">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

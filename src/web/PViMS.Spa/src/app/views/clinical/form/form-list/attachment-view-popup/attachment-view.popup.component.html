@@ -1,0 +1,15 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+<mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+<div fxLayout="row wrap" fxLayout.lt-sm="column">
+  <div fxFlex="100" class="pr-1">
+    <img [src]="viewModel.attachment">
+  </div>
+
+  <div fxFlex="100" class="mt-1">
+    <button mat-raised-button color="warn" (click)="this.deleteImage();">{{"Delete Image" | translate }}</button>
+    <span fxFlex></span>
+    <button mat-raised-button color="primary" type="button" (click)="dialogRef.close(false)">{{"Close" | translate }}</button>
+  </div>
+</div>

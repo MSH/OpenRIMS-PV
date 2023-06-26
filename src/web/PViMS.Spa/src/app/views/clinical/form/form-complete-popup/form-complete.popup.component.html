@@ -1,0 +1,27 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <div fxLayout="row wrap" fxLayout.lt-sm="column">
+    <div fxFlex="100" class="light-mat-gray p-24" *ngIf="!viewModel?.confirmed">
+      {{'Please confirm that the form is complete and is ready for submission' | translate }}
+    </div>
+
+    <div fxFlex="100" class="pr-1 mt-24 text-center" *ngIf="!viewModel?.confirmed">
+      <button mat-raised-button color="primary" (click)="confirmFormComplete()">{{'Confirm' | translate}}</button>
+    </div>
+
+    <div fxFlex="100" class="light-mat-gray p-24" *ngIf="viewModel?.confirmed">
+      {{'The following identifier has been created for your form. Please note this number on the form' | translate }}
+    </div>
+
+    <div fxFlex="100" class="light-mat-gray p-24 text-center font-weight-bold" *ngIf="viewModel?.confirmed">
+        {{viewModel?.formIdentifier}}
+    </div>
+
+    <div fxFlex="100" class="mt-1">
+      <span fxFlex></span>
+      <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)" *ngIf="!viewModel?.confirmed">{{"Cancel" | translate }}</button>
+      <button mat-raised-button color="primary" type="button" (click)="dialogRef.close(true)" *ngIf="viewModel?.confirmed">{{"Close" | translate }}</button>
+    </div>
+  </div>

@@ -1,0 +1,258 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="viewModelForm" (ngSubmit)="submit()">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1">
+        <mat-tab-group>
+          <mat-tab label="{{'Basic Information' | translate}}">
+            <mat-card-content class="m-1 p-5" style="height: 400px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                      <input matInput formControlName="firstName" placeholder="{{'First name' | translate }}" required>
+                      <mat-hint>{{'Maximum length' | translate}} 30</mat-hint> 
+                      <mat-error *ngIf="viewModelForm.get('firstName').hasError('required')">
+                        {{'This is a required field' | translate}}
+                      </mat-error>            
+                      <mat-error *ngIf="viewModelForm.get('firstName').hasError('maxlength')">
+                        {{'Maximum length exceeded' | translate}}
+                      </mat-error>            
+                      <mat-error *ngIf="viewModelForm.get('firstName').hasError('pattern')">
+                        {{'Value contains invalid characters' | translate}} (A-Z, a-z, space, apostrophe)
+                      </mat-error>            
+                  </mat-form-field>        
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                      <input matInput formControlName="lastName" placeholder="{{'Last name' | translate }}" required>
+                      <mat-hint>{{'Maximum length' | translate}} 30</mat-hint> 
+                      <mat-error *ngIf="viewModelForm.get('lastName').hasError('required')">
+                        {{'This is a required field' | translate}}
+                      </mat-error>            
+                      <mat-error *ngIf="viewModelForm.get('lastName').hasError('maxlength')">
+                        {{'Maximum length exceeded' | translate}}
+                      </mat-error>            
+                      <mat-error *ngIf="viewModelForm.get('lastName').hasError('pattern')">
+                        {{'Value contains invalid characters' | translate}} (A-Z, a-z, space, apostrophe)
+                      </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                      <input matInput formControlName="middleName" placeholder="{{'Middle name' | translate }}">
+                      <mat-hint>{{'Maximum length' | translate}} 30</mat-hint> 
+                      <mat-error *ngIf="viewModelForm.get('middleName').hasError('maxlength')">
+                        {{'Maximum length exceeded' | translate}}
+                      </mat-error>            
+                      <mat-error *ngIf="viewModelForm.get('middleName').hasError('pattern')">
+                        {{'Value contains invalid characters' | translate}} (A-Z, a-z, space, apostrophe)
+                      </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                    <input matInput formControlName="dateOfBirth" placeholder="{{'Date of birth' | translate}}" [matDatepicker]="birthDateDatepicker" required>
+                    <mat-datepicker-toggle matSuffix [for]="birthDateDatepicker"></mat-datepicker-toggle>
+                    <mat-error *ngIf="viewModelForm.get('dateOfBirth').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                  </mat-form-field>
+                  <mat-datepicker #birthDateDatepicker startView="multi-year"></mat-datepicker>
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                    <mat-select formControlName="facilityName" placeholder="{{'Facility' | translate}}" required>
+                        <mat-option *ngFor="let facility of viewModel?.facilityList" [value]="facility">
+                            {{facility}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error>
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+          <mat-tab label="{{'Detail Information' | translate}}">
+            <mat-card-content class="m-1 p-5" style="height: 400px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start" formGroupName="attributes">
+                <div fxFlex="50" class="pr-1" *ngFor="let attribute of viewModel?.customAttributeList">
+                  <mat-form-field class="p-8 full-width" *ngIf="attribute.customAttributeType == 'String'">
+                    <input matInput formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" [required]="attribute.required">
+                    <mat-hint *ngIf="attribute.stringMaxLength != null">
+                      {{'Maximum length' | translate}} {{attribute.stringMaxLength}}
+                    </mat-hint>
+                  </mat-form-field>
+                  <mat-form-field class="p-8 full-width" *ngIf="attribute.customAttributeType == 'Numeric'">
+                    <input matInput formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" type="number" [required]="attribute.required">
+                    <mat-hint *ngIf="attribute.numericMinValue != null && attribute.numericMaxValue != null">
+                      {{'Valid between ' | translate}} {{attribute.numericMinValue}} {{'and ' | translate}} {{attribute.numericMaxValue}}
+                    </mat-hint>
+                  </mat-form-field>        
+                  <span *ngIf="attribute.customAttributeType == 'DateTime'">
+                    <mat-form-field class="p-8 full-width">
+                      <input matInput formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" [matDatepicker]="datepicker" [required]="attribute.required">
+                      <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                    </mat-form-field>        
+                    <mat-datepicker #datepicker startView="multi-year"></mat-datepicker>
+                  </span>
+                  <mat-form-field class="p-8 full-width" *ngIf="attribute.customAttributeType == 'Selection'">
+                    <mat-select formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" [required]="attribute.required">
+                      <mat-option *ngFor="let item of attribute.selectionDataItems" value="{{item.selectionKey}}">
+                        {{item.value | translate}}
+                      </mat-option>
+                    </mat-select>                        
+                  </mat-form-field>                
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+          <mat-tab label="{{'Primary Condition Group' | translate}}" *ngIf="data.patientId == 0">
+            <mat-card-content class="m-1 p-5" style="height: 400px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                    <mat-select formControlName="conditionGroupId" placeholder="{{'Condition' | translate}}" required (selectionChange)='onConditionSelected($event)'>
+                      <mat-option *ngFor="let condition of viewModel?.conditionList" [value]="condition.id">
+                          {{condition.conditionName}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error>
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1" *ngIf="viewModel?.selectedCondition != null">
+                  <mat-form-field class="p-8 full-width">
+                    <mat-select formControlName="meddraTermId" placeholder="{{'Meddra term' | translate}}" required>
+                      <mat-option *ngFor="let term of viewModel?.selectedCondition.conditionMedDras" [value]="term.terminologyMedDraId">
+                          {{term.medDraTerm}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="viewModelForm.get('meddraTermId').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1" *ngIf="viewModel?.selectedCondition != null && viewModel?.selectedCondition.cohortGroups.length > 0">
+                  <mat-form-field class="p-8 full-width">
+                    <mat-select formControlName="cohortGroupId" placeholder="{{'Cohort' | translate}}" required>
+                      <mat-option value="0"></mat-option>
+                      <mat-option *ngFor="let cohort of viewModel?.selectedCondition.cohortGroups" [value]="cohort.id">
+                          {{cohort.cohortName}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="viewModelForm.get('cohortGroupId').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1" *ngIf="viewModel?.selectedCondition != null && viewModel?.selectedCondition.cohortGroups.length > 0">
+                  <mat-form-field class="p-8 full-width">
+                    <input matInput formControlName="enroledDate" placeholder="{{'Cohort enroled date' | translate}}" [matDatepicker]="enroledDatepicker" required>
+                    <mat-datepicker-toggle matSuffix [for]="enroledDatepicker"></mat-datepicker-toggle>
+                    <mat-error *ngIf="viewModelForm.get('enroledDate').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-datepicker #enroledDatepicker></mat-datepicker>
+                </div>
+                <div fxFlex="50" class="pr-1" *ngIf="viewModel?.selectedCondition != null">
+                  <mat-form-field class="p-8 full-width">
+                    <input matInput formControlName="startDate" placeholder="{{'Condition start date' | translate}}" [matDatepicker]="startDatepicker" required>
+                    <mat-datepicker-toggle matSuffix [for]="startDatepicker"></mat-datepicker-toggle>
+                    <mat-error *ngIf="viewModelForm.get('startDate').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                  </mat-form-field>
+                  <mat-datepicker #startDatepicker></mat-datepicker>
+                </div>
+                <div fxFlex="50" class="pr-1" *ngIf="viewModel?.selectedCondition != null">
+                  <mat-form-field class="p-8 full-width">
+                    <input matInput formControlName="outcomeDate" placeholder="{{'Condition outcome date' | translate}}" [matDatepicker]="outcomeDatepicker">
+                    <mat-datepicker-toggle matSuffix [for]="outcomeDatepicker"></mat-datepicker-toggle>
+                  </mat-form-field>
+                  <mat-datepicker #outcomeDatepicker></mat-datepicker>
+                </div>
+                <div fxFlex="50" class="pr-1" *ngIf="viewModel?.selectedCondition != null">
+                  <mat-form-field class="p-8 full-width">
+                      <input matInput formControlName="caseNumber" placeholder="{{'Case number' | translate }}" required>
+                      <mat-hint>{{'Maximum length' | translate}} 50</mat-hint> 
+                      <mat-error *ngIf="viewModelForm.get('caseNumber').hasError('required')">
+                        {{'This is a required field' | translate}}
+                      </mat-error>
+                        <mat-error *ngIf="viewModelForm.get('caseNumber').hasError('maxlength')">
+                        {{'Maximum length exceeded' | translate}}
+                      </mat-error>            
+                      <mat-error *ngIf="viewModelForm.get('caseNumber').hasError('pattern')">
+                        {{'Value contains invalid characters' | translate}} (Enter A-Z, a-z, 0-9, hyphen, space, period, parentheses)
+                      </mat-error>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="100" class="pr-1" *ngIf="viewModel?.selectedCondition != null">
+                  <mat-form-field class="p-8 full-width">
+                      <input matInput formControlName="comments" placeholder="{{'Comments' | translate }}">
+                      <mat-hint>{{'Maximum length' | translate}} 100</mat-hint> 
+                      <mat-error *ngIf="viewModelForm.get('comments').hasError('maxlength')">
+                        {{'Maximum length exceeded' | translate}}
+                      </mat-error>            
+                      <mat-error *ngIf="viewModelForm.get('comments').hasError('pattern')">
+                        {{'Value contains invalid characters' | translate}} (Enter A-Z, a-z, 0-9, hyphen, space, period, comma, parentheses, apostrophe)
+                      </mat-error>
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+          <mat-tab label="{{'Encounter Information' | translate}}"  *ngIf="data.patientId == 0">
+            <mat-card-content class="m-1 p-5" style="height: 400px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                    <mat-select formControlName="encounterTypeId" placeholder="{{'Encounter type' | translate}}" required>
+                      <mat-option *ngFor="let type of viewModel?.encounterTypeList" [value]="type.id">
+                          {{type.encounterTypeName}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error>
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                    <mat-select formControlName="priorityId" placeholder="{{'Priority' | translate}}" required>
+                      <mat-option *ngFor="let priority of viewModel?.priorityList" [value]="priority.id">
+                          {{priority.priorityName}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error>
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                    <input matInput formControlName="encounterDate" placeholder="{{'Encounter date' | translate}}" [matDatepicker]="encounterDatepicker" required>
+                    <mat-datepicker-toggle matSuffix [for]="encounterDatepicker"></mat-datepicker-toggle>
+                    <mat-error *ngIf="viewModelForm.get('encounterDate').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                  </mat-form-field>
+                  <mat-datepicker #encounterDatepicker></mat-datepicker>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="viewModelForm.invalid">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

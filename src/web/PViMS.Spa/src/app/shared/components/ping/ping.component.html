@@ -1,0 +1,3 @@
+<div class="handle">
+  <button mat-icon-button (click)="openOnlineStatusPopup()" matTooltip="{{'Online status' | translate }}" [ngClass]="{'error-status': !viewModel?.connected, 'connected-status': viewModel?.connected, 'spin' : viewModel?.checking} "><mat-icon>gps_fixed</mat-icon></button>
+</div>

@@ -1,0 +1,58 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<mat-card class="p-0">
+  
+  <mat-card-title class="">
+      <div class="card-title-text">{{ metaPage?.pageName | translate}}</div>
+  </mat-card-title>
+</mat-card>
+
+<div fxLayout="row wrap" fxLayoutGap="0.1%" fxLayoutAlign="start start">
+  <div fxFlex="100" class="pr-1" *ngIf="topLeft != null">
+    <div *ngIf="topLeft.widgetType == 'ItemList'"  class="height-100vh-280px" style="overflow-y: auto">
+      <mat-card class="p-0">
+        <mat-card-title class="">
+            <div class="card-title-text"><mat-icon class="mr-24">{{ topLeft.icon }}</mat-icon> {{ topLeft.widgetName | translate}}</div>
+        </mat-card-title>
+        <mat-card-content>
+          <mat-accordion>
+            <mat-expansion-panel opened="false" *ngFor="let item of topLeft.contentItems">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{ item.title }}
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              {{ item.content}}
+            </mat-expansion-panel>
+          </mat-accordion>          
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div *ngIf="topLeft.widgetType == 'SubItems'"  class="height-100vh-280px" style="overflow-y: auto">
+      <mat-card class="p-0">
+        <mat-card-title class="">
+            <div class="card-title-text"><mat-icon class="mr-24">{{ topLeft.icon }}</mat-icon> {{ topLeft.widgetName | translate}}</div>
+        </mat-card-title>
+        <mat-card-content>
+          <div class="table-container">
+            <div fxLayout="row wrap" fxLayoutGap="0.1%" fxLayoutAlign="start start" *ngFor="let item of topLeft.contentItems" class="height-100vh-280px" style="overflow-y: auto">
+              <div fxFlex="70" class="pr-1">
+                <button mat-stroked-button color="primary">{{ item.title }}</button><br/>
+                <span class="mr-16"></span><small>{{ item.subTitle }}</small>
+              </div>
+              <div fxFlex="25" class="pr-1">{{ item.modified }}</div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+  <div fxFlex="100" class="pr-1" *ngIf="topRight != null">
+  </div>
+  <div fxFlex="100" class="mt-1">
+    <span fxFlex></span>
+    <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Close" | translate }}</button>
+  </div>
+</div>

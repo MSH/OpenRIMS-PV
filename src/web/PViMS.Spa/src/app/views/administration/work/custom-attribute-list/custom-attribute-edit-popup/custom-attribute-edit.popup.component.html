@@ -1,0 +1,143 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+
+    <mat-tab-group>
+      <mat-tab label="{{'Details' | translate}}">
+        <mat-card-content class="m-1 p-2">
+          <div fxLayout="row wrap" fxLayout.lt-sm="column">
+            <div fxFlex="100">
+              <mat-form-field class="p-2 full-width" appearance="fill">
+                <mat-label>{{'Entity' | translate}}</mat-label>
+                <input matInput formControlName="extendableTypeName" readonly>                
+              </mat-form-field>
+            </div>
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-2 full-width">
+                <mat-label>{{'Category' | translate}}</mat-label>
+                <input matInput formControlName="category" required>
+                <mat-error *ngIf="itemForm.get('category').hasError('required')">
+                  {{'This is a required field' | translate}}
+                </mat-error>            
+                <mat-error *ngIf="itemForm.get('category').hasError('maxlength')">
+                  {{'Maximum length exceeded' | translate}}
+                </mat-error>
+                <mat-error *ngIf="itemForm.get('category').hasError('pattern')">
+                  {{'Value contains invalid characters' | translate}} (A-Z, a-z, space)
+                </mat-error>              
+              </mat-form-field>        
+            </div>
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-2 full-width">
+                <mat-label>{{'Attribute name' | translate}}</mat-label>
+                <input matInput formControlName="attributeKey" required>
+                <mat-error *ngIf="itemForm.get('attributeKey').hasError('required')">
+                  {{'This is a required field' | translate}}
+                </mat-error>            
+                <mat-error *ngIf="itemForm.get('attributeKey').hasError('maxlength')">
+                  {{'Maximum length exceeded' | translate}}
+                </mat-error>
+                <mat-error *ngIf="itemForm.get('attributeKey').hasError('pattern')">
+                  {{'Value contains invalid characters' | translate}} (A-Z, a-z, space)
+                </mat-error>              
+              </mat-form-field>        
+            </div>
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-2 full-width">
+                <mat-label>{{'Required' | translate}}</mat-label>
+                <mat-select formControlName="isRequired" required>
+                  <mat-option value="Yes">{{'Yes' | translate}}</mat-option>
+                  <mat-option value="No">{{'No' | translate}}</mat-option>
+                </mat-select>               
+                <mat-error *ngIf="itemForm.get('isRequired').hasError('required')">
+                  {{'This is a required field' | translate}}
+                </mat-error>            
+              </mat-form-field>       
+            </div>
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-2 full-width">
+                <mat-label>{{'Searchable' | translate}}</mat-label>
+                <mat-select formControlName="isSearchable" required>
+                  <mat-option value="Yes">{{'Yes' | translate}}</mat-option>
+                  <mat-option value="No">{{'No' | translate}}</mat-option>
+                </mat-select>               
+                <mat-error *ngIf="itemForm.get('isSearchable').hasError('required')">
+                  {{'This is a required field' | translate}}
+                </mat-error>            
+              </mat-form-field>       
+            </div>
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-2 full-width">
+                <mat-label>{{'Attribute detail' | translate}}</mat-label>
+                <input matInput formControlName="attributeDetail">
+                <mat-error *ngIf="itemForm.get('attributeDetail').hasError('maxlength')">
+                  {{'Maximum length exceeded' | translate}}
+                </mat-error>
+                <mat-error *ngIf="itemForm.get('attributeDetail').hasError('pattern')">
+                  {{'Value contains invalid characters' | translate}} (A-Z, a-z, space)
+                </mat-error>              
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-tab>
+
+      <mat-tab label="{{'Field type' | translate}}">
+        <mat-card-content class="m-1 p-2">
+          <div fxLayout="row wrap" fxLayout.lt-sm="column">
+            <div fxFlex="100">
+              <mat-form-field class="p-2 full-width" appearance="fill">
+                <mat-label>{{'Attribute type' | translate}}</mat-label>
+                <input matInput formControlName="customAttributeType" readonly>                
+              </mat-form-field>
+            </div>
+            <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('customAttributeType').value == 'String'">
+              <mat-form-field class="p-2 full-width">
+                <input matInput formControlName="stringMaxLength" placeholder="{{'Maximum length' | translate }}" type="number">
+              </mat-form-field>        
+            </div>
+            <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('customAttributeType').value == 'Numeric'">
+              <mat-form-field class="p-2 full-width">
+                <input matInput formControlName="numericMinValue" placeholder="{{'Minimum' | translate }}" type="number">
+              </mat-form-field>        
+            </div>
+            <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('customAttributeType').value == 'Numeric'">
+              <mat-form-field class="p-2 full-width">
+                <input matInput formControlName="numericMaxValue" placeholder="{{'Maximum' | translate }}" type="number">
+              </mat-form-field>        
+            </div>
+            <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('customAttributeType').value == 'DateTime'">
+              <mat-form-field class="p-2 full-width">
+                <mat-label>{{'Future date only' | translate}}</mat-label>
+                <mat-select formControlName="futureDateOnly">
+                  <mat-option value="Yes">{{'Yes' | translate}}</mat-option>
+                  <mat-option value="No">{{'No' | translate}}</mat-option>
+                </mat-select>               
+              </mat-form-field>       
+            </div>
+            <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('customAttributeType').value == '5'">
+              <mat-form-field class="p-2 full-width">
+                <mat-label>{{'Past date only' | translate}}</mat-label>
+                <mat-select formControlName="pastDateOnly">
+                  <mat-option value="Yes">{{'Yes' | translate}}</mat-option>
+                  <mat-option value="No">{{'No' | translate}}</mat-option>
+                </mat-select>               
+              </mat-form-field>       
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-tab>      
+
+    </mat-tab-group>
+
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+
+  </form>

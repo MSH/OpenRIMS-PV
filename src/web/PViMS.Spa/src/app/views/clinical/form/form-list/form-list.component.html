@@ -1,0 +1,390 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<mat-card class="p-0">
+  
+  <mat-card-title class="">
+    <div class="card-title-text">
+      <button mat-raised-button routerLink="/clinical/form-landing" color="accent" class="mr-48">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      {{'Forms List.Header' | translate}}
+    </div>
+  </mat-card-title>
+
+  <mat-card-content>
+    <mat-tab-group>
+      <mat-tab label="{{'Incomplete forms' | translate}}">
+        <div class="ml-05 mr-05 mt-05 pb-1">
+          <div class="table-container" >
+            <mat-table [dataSource]="viewModel?.incompleteGrid?.records"
+                      [@animate]="{value:'50'}">
+    
+              <ng-container matColumnDef="created">
+                  <mat-header-cell *matHeaderCellDef>{{'Created' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      {{record.created}}
+                  </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="form-type">
+                <mat-header-cell *matHeaderCellDef>{{'Type' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.formType}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="patient identifier">
+                  <mat-header-cell *matHeaderCellDef>{{'Patient Identifier' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      {{record.patientIdentifier}}
+                  </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="patient name">
+                <mat-header-cell *matHeaderCellDef>{{'Patient' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.patientName}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="complete status">
+                <mat-header-cell *matHeaderCellDef>{{'Completed Status' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.completeStatus | translate}}
+                </mat-cell>
+              </ng-container>
+              
+              <ng-container matColumnDef="synch status">
+                <mat-header-cell *matHeaderCellDef>{{'Synchronisation Status' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.synchStatus | translate}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>
+                  {{'Actions' | translate}}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <button mat-icon-button color="primary" matTooltip="{{'View Form' | translate}}"
+                            (click)="viewForm(record)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'Capture Image' | translate}}" *ngIf="!record.hasAttachment && record.synchStatus != 'Synched'"
+                            (click)="openCameraPopup(record.id, 1)">
+                        <mat-icon>camera</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'View Image' | translate}}" *ngIf="record.hasAttachment == true"
+                            (click)="openImageView(record.id, 1)">
+                        <mat-icon>image</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'Capture Image' | translate}}" *ngIf="record.hasAttachment && record.synchStatus != 'Synched' && !record.hasSecondAttachment"
+                            (click)="openCameraPopup(record.id, 2)">
+                        <mat-icon>camera</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'View Image' | translate}}" *ngIf="record.hasSecondAttachment == true"
+                            (click)="openImageView(record.id, 2)">
+                        <mat-icon>image</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" matTooltip="{{'Delete Form' | translate}}"
+                            (click)="openFormDelete(record.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-cell>
+              </ng-container>
+    
+              <mat-header-row *matHeaderRowDef="viewModel?.incompleteGrid?.displayedColumns; sticky:true"></mat-header-row>
+              <mat-row *matRowDef="let record; columns: viewModel?.incompleteGrid?.displayedColumns;"></mat-row>
+            </mat-table>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="{{'Complete forms' | translate}}">
+        <div class="ml-05 mr-05 mt-05 pb-1">
+          <div class="table-container" >
+            <mat-table [dataSource]="viewModel?.completeGrid?.records"
+                      [@animate]="{value:'50'}">
+    
+              <ng-container matColumnDef="created">
+                  <mat-header-cell *matHeaderCellDef>{{'Created' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      {{record.created}}
+                  </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="form-type">
+                <mat-header-cell *matHeaderCellDef>{{'Type' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.formType}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="identifier">
+                <mat-header-cell *matHeaderCellDef>{{'Identifier' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.formIdentifier}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="patient identifier">
+                  <mat-header-cell *matHeaderCellDef>{{'Patient Identifier' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      {{record.patientIdentifier}}
+                  </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="patient name">
+                <mat-header-cell *matHeaderCellDef>{{'Patient' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.patientName}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="complete status">
+                <mat-header-cell *matHeaderCellDef>{{'Completed Status' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.completeStatus | translate}}
+                </mat-cell>
+              </ng-container>
+              
+              <ng-container matColumnDef="synch status">
+                <mat-header-cell *matHeaderCellDef>{{'Synchronisation Status' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.synchStatus | translate}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>
+                  {{'Actions' | translate}}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <button mat-icon-button color="primary" matTooltip="{{'View Form' | translate}}"
+                            (click)="viewForm(record)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'Capture Image' | translate}}" *ngIf="!record.hasAttachment && record.synchStatus != 'Synched'"
+                            (click)="openCameraPopup(record.id, 1)">
+                        <mat-icon>camera</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'View Image' | translate}}" *ngIf="record.hasAttachment == true"
+                            (click)="openImageView(record.id, 1)">
+                        <mat-icon>image</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'Capture Image' | translate}}" *ngIf="record.hasAttachment && record.synchStatus != 'Synched' && !record.hasSecondAttachment"
+                            (click)="openCameraPopup(record.id, 2)">
+                        <mat-icon>camera</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'View Image' | translate}}" *ngIf="record.hasSecondAttachment == true"
+                            (click)="openImageView(record.id, 2)">
+                        <mat-icon>image</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" matTooltip="{{'Delete Form' | translate}}"
+                            (click)="openFormDelete(record.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-cell>
+              </ng-container>
+    
+              <mat-header-row *matHeaderRowDef="viewModel?.completeGrid?.displayedColumns; sticky:true"></mat-header-row>
+              <mat-row *matRowDef="let record; columns: viewModel?.completeGrid?.displayedColumns;"></mat-row>
+            </mat-table>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="{{'Forms submitted' | translate}}">
+        <div class="ml-05 mr-05 mt-05 pb-1">
+          <div class="table-container" >
+            <mat-table [dataSource]="viewModel?.synchronisedGrid?.records" [@animate]="{value:'50'}">
+              <ng-container matColumnDef="created">
+                  <mat-header-cell *matHeaderCellDef>{{'Created' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      {{record.created}}
+                  </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="form-type">
+                <mat-header-cell *matHeaderCellDef>{{'Type' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.formType}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="identifier">
+                <mat-header-cell *matHeaderCellDef>{{'Identifier' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.formIdentifier}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="patient identifier">
+                  <mat-header-cell *matHeaderCellDef>{{'Patient Identifier' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      {{record.patientIdentifier}}
+                  </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="patient name">
+                <mat-header-cell *matHeaderCellDef>{{'Patient' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.patientName}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="complete status">
+                <mat-header-cell *matHeaderCellDef>{{'Completed Status' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.completeStatus | translate}}
+                </mat-cell>
+              </ng-container>
+              
+              <ng-container matColumnDef="synch status">
+                <mat-header-cell *matHeaderCellDef>{{'Synchronisation Status' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.synchStatus | translate}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>
+                  {{'Actions' | translate}}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <button mat-icon-button color="primary" matTooltip="{{'View Form' | translate}}"
+                            (click)="viewForm(record)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'Capture Image' | translate}}" *ngIf="!record.hasAttachment && record.synchStatus != 'Synched'"
+                            (click)="openCameraPopup(record.id, 1)">
+                        <mat-icon>camera</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'View Image' | translate}}" *ngIf="record.hasAttachment == true"
+                            (click)="openImageView(record.id, 1)">
+                        <mat-icon>image</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'Capture Image' | translate}}" *ngIf="record.hasAttachment && record.synchStatus != 'Synched' && !record.hasSecondAttachment"
+                            (click)="openCameraPopup(record.id, 2)">
+                        <mat-icon>camera</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'View Image' | translate}}" *ngIf="record.hasSecondAttachment == true"
+                            (click)="openImageView(record.id, 2)">
+                        <mat-icon>image</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" matTooltip="{{'Delete Form' | translate}}" 
+                            (click)="openFormDelete(record.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </mat-cell>
+              </ng-container>
+    
+              <mat-header-row *matHeaderRowDef="viewModel?.synchronisedGrid?.displayedColumns; sticky:true"></mat-header-row>
+              <mat-row *matRowDef="let record; columns: viewModel?.synchronisedGrid?.displayedColumns;"></mat-row>
+            </mat-table>
+          </div>
+        </div>
+      </mat-tab>
+
+      <mat-tab label="{{'Search' | translate}}">
+        <form [formGroup]="viewModelForm">
+          <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.1%" fxLayoutAlign="space-evenly start" class="p-8 default-light-bg rounded">
+            <mat-form-field class="p-8 full-width" fxFlex="50">
+                <input matInput formControlName="searchTerm" placeholder="{{'Search' | translate}}">
+            </mat-form-field>
+          </div>
+          <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10" fxLayoutAlign="end" class="p-8">
+            <button mat-raised-button color="primary" (click)="loadSearchGrid()" [disabled]="viewModelForm.invalid">{{'Search' | translate}}</button>
+          </div>
+        </form>
+        <div class="ml-05 mr-05 mt-05 pb-1">
+          <div class="table-container" >
+            <mat-table [dataSource]="viewModel?.searchGrid?.records" [@animate]="{value:'50'}">
+              <ng-container matColumnDef="created">
+                  <mat-header-cell *matHeaderCellDef>{{'Created' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      {{record.created}}
+                  </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="form-type">
+                <mat-header-cell *matHeaderCellDef>{{'Type' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.formType}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="identifier">
+                <mat-header-cell *matHeaderCellDef>{{'Identifier' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.formIdentifier}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="patient identifier">
+                  <mat-header-cell *matHeaderCellDef>{{'Patient Identifier' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      {{record.patientIdentifier}}
+                  </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="patient name">
+                <mat-header-cell *matHeaderCellDef>{{'Patient' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.patientName}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="complete status">
+                <mat-header-cell *matHeaderCellDef>{{'Completed Status' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.completeStatus | translate}}
+                </mat-cell>
+              </ng-container>
+              
+              <ng-container matColumnDef="synch status">
+                <mat-header-cell *matHeaderCellDef>{{'Synchronisation Status' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.synchStatus | translate}}
+                </mat-cell>
+              </ng-container>
+    
+              <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>
+                  {{'Actions' | translate}}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <button mat-icon-button color="primary" matTooltip="{{'View Form' | translate}}"
+                            (click)="viewForm(record)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'Capture Image' | translate}}" *ngIf="!record.hasAttachment && record.synchStatus != 'Synched'"
+                            (click)="openCameraPopup(record.id, 1)">
+                        <mat-icon>camera</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'View Image' | translate}}" *ngIf="record.hasAttachment == true"
+                            (click)="openImageView(record.id, 1)">
+                        <mat-icon>image</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'Capture Image' | translate}}" *ngIf="record.hasAttachment && record.synchStatus != 'Synched' && !record.hasSecondAttachment"
+                            (click)="openCameraPopup(record.id, 2)">
+                        <mat-icon>camera</mat-icon>
+                    </button>
+                    <button mat-icon-button color="primary" matTooltip="{{'View Image' | translate}}" *ngIf="record.hasSecondAttachment == true"
+                            (click)="openImageView(record.id, 2)">
+                        <mat-icon>image</mat-icon>
+                    </button>
+                </mat-cell>
+              </ng-container>
+    
+              <mat-header-row *matHeaderRowDef="viewModel?.searchGrid?.displayedColumns; sticky:true"></mat-header-row>
+              <mat-row *matRowDef="let record; columns: viewModel?.searchGrid?.displayedColumns;"></mat-row>
+            </mat-table>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+</mat-card>

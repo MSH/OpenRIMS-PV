@@ -1,0 +1,705 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <div fxLayout="row wrap" fxLayout.lt-sm="column">
+    <div fxFlex="100" class="pr-1">
+      <mat-tab-group>
+        <mat-tab label="{{'Patient Information' | translate}}">
+          <mat-card-content class="m-1 p-5" style="height: 500px; overflow-y: auto;">
+            <form [formGroup]="patientFormGroup">
+              <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutAlign="start start">
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width" appearance="fill">
+                    <mat-label>{{'First name' | translate}}</mat-label>
+                    <input matInput formControlName="patientFirstName" readonly>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width" appearance="fill">
+                    <mat-label>{{'Last name' | translate}}</mat-label>
+                    <input matInput formControlName="patientLastName" readonly>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width" appearance="fill">
+                    <mat-label>{{'Gender' | translate}}</mat-label>
+                    <input matInput formControlName="gender" readonly>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width" appearance="fill">
+                    <mat-label>{{'Ethnic group' | translate}}</mat-label>
+                    <input matInput formControlName="ethnicity" readonly>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width" appearance="fill">
+                    <mat-label>{{'Date of birth' | translate}}</mat-label>
+                    <input matInput formControlName="dateOfBirth" readonly>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width" appearance="fill">
+                    <mat-label>{{'Age' | translate}}</mat-label>
+                    <input matInput formControlName="age" readonly>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="100" class="pr-1">
+                  <mat-form-field class="p-8 full-width" appearance="fill">
+                    <mat-label>{{'Age group' | translate}}</mat-label>
+                    <input matInput formControlName="ageGroup" readonly>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width" appearance="fill">
+                    <mat-label>{{'Facility' | translate}}</mat-label>
+                    <input matInput formControlName="facilityName" readonly>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width" appearance="fill">
+                    <mat-label>{{'Region' | translate}}</mat-label>
+                    <input matInput formControlName="facilityRegion" readonly>
+                  </mat-form-field>
+                </div>
+              </div>
+            </form>
+          </mat-card-content>
+        </mat-tab>
+        <mat-tab label="{{'PV Analytical History' | translate}}">
+          <mat-card-content class="m-1 p-5" style="height: 500px; overflow-y: auto;">
+            <div class="table-container">
+              <mat-table [dataSource]="viewModel?.historyGrid?.records"
+                        [@animate]="{value:'50'}">
+
+                <ng-container matColumnDef="executed-date">
+                    <mat-header-cell *matHeaderCellDef>{{'Date' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        {{record.executedDate}}
+                    </mat-cell>
+                </ng-container>
+                        
+                <ng-container matColumnDef="activity">
+                    <mat-header-cell *matHeaderCellDef>{{'Activity' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        {{record.activity | translate}}
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="execution-event">
+                  <mat-header-cell *matHeaderCellDef>{{'Event' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      {{record.executionEvent | translate}}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="comments">
+                  <mat-header-cell *matHeaderCellDef>{{'Comments' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      {{record.comments}}
+                  </mat-cell>
+                </ng-container>
+              
+                <mat-header-row *matHeaderRowDef="viewModel?.historyGrid?.displayedColumns; sticky:true"></mat-header-row>
+                <mat-row *matRowDef="let record; columns: viewModel?.historyGrid?.displayedColumns;"></mat-row>
+              </mat-table>
+            </div>
+          </mat-card-content>
+        </mat-tab>
+        <mat-tab label="{{'Tasks' | translate}}">
+          <mat-card-content class="m-1 p-0" style="height: 500px; overflow-y: auto;">
+            <div class="table-container">
+              <mat-table [dataSource]="viewModel?.taskGrid?.records" [@animate]="{value:'50'}">
+
+                <ng-container matColumnDef="source">
+                  <mat-header-cell *matHeaderCellDef>{{'Source' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      {{record.source | translate }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="description">
+                  <mat-header-cell *matHeaderCellDef>{{'Description' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      {{record.description | translate }}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="task-type">
+                  <mat-header-cell *matHeaderCellDef>{{'Task type' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      {{record.taskType}}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="task-status">
+                  <mat-header-cell *matHeaderCellDef>{{'Task status' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      {{record.taskStatus}}
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="task-age">
+                  <mat-header-cell *matHeaderCellDef>{{'Age in days' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                    <div class="p-12">
+                      <span matBadge="{{record.taskAge}}" matBadgeColor="accent"></span>
+                    </div>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                  <mat-header-cell *matHeaderCellDef>
+                    {{'Actions' | translate}}
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                    <button mat-icon-button [matMenuTriggerFor]="menuMain">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menuMain="matMenu" [xPosition]="'before'">
+                      <button mat-menu-item (click)="openChangeTaskStatusPopUp(record.id)">
+                        <mat-icon>check_box</mat-icon>
+                        <span style="vertical-align: middle;">
+                            {{ 'Change status' | translate }}
+                        </span>
+                      </button>
+                      <button mat-menu-item (click)="openTaskCommentsPopUp(record.id)">
+                        <mat-icon>comment</mat-icon>
+                        <span style="vertical-align: middle;">
+                            {{ 'Comments' | translate }}
+                        </span>
+                      </button>
+                    </mat-menu>
+                  </mat-cell>
+                </ng-container>                        
+
+                <mat-header-row *matHeaderRowDef="viewModel?.taskGrid?.displayedColumns; sticky:true"></mat-header-row>
+                <mat-row *matRowDef="let record; columns: viewModel?.taskGrid?.displayedColumns;"></mat-row>
+              </mat-table>
+            </div>
+          </mat-card-content>
+        </mat-tab>
+        <mat-tab label="{{'Form' | translate}}">
+          <mat-card-content class="m-1 p-2" style="height: 500px; overflow-y: auto;">
+            <div fxLayout="row" fxLayoutAlign="start">
+              <div fxFlex="30" class="mt-4">
+                <div class="p-2">
+                  <div fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="start" class="p-05" style="cursor: pointer;" (click)="setStep(1)">
+                    <mat-icon color="warn" *ngIf="thirdFormGroup.invalid" class="mr-12">error</mat-icon>
+                    <mat-icon color="accent" *ngIf="thirdFormGroup.valid" class="mr-12">check_circle</mat-icon>
+                    <span [class.font-weight-bold]="viewModel.currentStep == 1">Adverse event</span>
+                  </div>
+                  <div fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="start" class="p-05" style="cursor: pointer;" (click)="setStep(2)">
+                    <mat-icon color="warn" *ngIf="fourthFormGroup.invalid" class="mr-12">error</mat-icon>
+                    <mat-icon color="accent" *ngIf="fourthFormGroup.valid" class="mr-12">check_circle</mat-icon>
+                    <span [class.font-weight-bold]="viewModel.currentStep == 2">Management of the reaction</span>
+                  </div>
+                  <div fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="start" class="p-05" style="cursor: pointer;" (click)="setStep(3)">
+                    <mat-icon color="warn" *ngIf="fifthFormGroup.invalid" class="mr-12">error</mat-icon>
+                    <mat-icon color="accent" *ngIf="fifthFormGroup.valid" class="mr-12">check_circle</mat-icon>
+                    <span [class.font-weight-bold]="viewModel.currentStep == 3">Suspected medication</span>
+                  </div>
+                  <div fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="start" class="p-05" style="cursor: pointer;" (click)="setStep(4)">
+                    <mat-icon color="warn" *ngIf="sixthFormGroup.invalid" class="mr-12">error</mat-icon>
+                    <mat-icon color="accent" *ngIf="sixthFormGroup.valid" class="mr-12">check_circle</mat-icon>
+                    <span [class.font-weight-bold]="viewModel.currentStep == 4">Reporter particulars</span>
+                  </div>
+                  <div fxLayout="row" fxLayoutGap="1.0%" fxLayoutAlign="center" class="p-12">
+                    <button mat-flat-button color="primary" (click)="submit()" [disabled]="thirdFormGroup.invalid || fourthFormGroup.invalid || fifthFormGroup.invalid" *ngIf="firstFormGroup.dirty || thirdFormGroup.dirty || fourthFormGroup.dirty || fifthFormGroup.dirty || sixthFormGroup.dirty">Save</button>
+                  </div>
+                </div>
+              </div>
+          
+              <div fxFlex="70" fxFlex.lt-md="100" *ngIf="viewModel.currentStep == 1">
+                <form [formGroup]="thirdFormGroup" [@fadeInOut2]="">
+                  <mat-tab-group>
+                    <mat-tab label="{{'Adverse event details' | translate}}">
+                      <div class="p-2">
+                        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                          <div fxFlex="95">
+                            <mat-form-field class="full-width pl-8 pr-8 mt-12" appearance="outline">
+                              <mat-label>Date of onset</mat-label>
+                              <input matInput formControlName="onsetDate" [matDatepicker]="onsetDatepicker" required>
+                              <mat-datepicker-toggle matSuffix [for]="onsetDatepicker"></mat-datepicker-toggle>
+                            </mat-form-field>
+                            <mat-datepicker #onsetDatepicker></mat-datepicker>
+                          </div>
+                        </div>
+
+                        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                          <div fxFlex="95">
+                            <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                              <mat-label>Regimen</mat-label>
+                              <mat-select formControlName="regimen" required>
+                                <mat-option value="1">SSOR (3)</mat-option>
+                                <mat-option value="2">SLOR FQ-S (4)</mat-option>
+                                <mat-option value="3">SLOR FQ-R (5)</mat-option>
+                                <mat-option value="4">ITR</mat-option>
+                                <mat-option value="5">FQ susceptible MDR TB (6a)</mat-option>
+                                <mat-option value="6">FQ susceptible MDR TB (6b)</mat-option>
+                                <mat-option value="7">FQ susceptible MDR TB (6c)</mat-option>
+                                <mat-option value="8">FQ resistant MDR TB (7a)</mat-option>
+                                <mat-option value="9">FQ resistant MDR TB (7b)</mat-option>
+                                <mat-option value="10">FQ resistant MDR TB (7c)</mat-option>
+                                <mat-option value="11">BPaL</mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="thirdFormGroup.get('regimen').hasError('required')">
+                                Field is required
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                          <div fxFlex="95">
+                            <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                              <mat-label>Event description</mat-label>
+                              <textarea matInput formControlName="sourceDescription" rows="3" required></textarea>
+                              <mat-error *ngIf="thirdFormGroup.get('sourceDescription').hasError('required')">
+                                Field is required
+                              </mat-error>
+                              <mat-error *ngIf="thirdFormGroup.get('sourceDescription').hasError('maxlength')">
+                                Maximum length exceeded
+                              </mat-error>
+                              <mat-error *ngIf="thirdFormGroup.get('sourceDescription').hasError('pattern')">
+                                {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, parenthesis, forward slash, space, comma, period)
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                          <div fxFlex="95">
+                            <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                              <mat-label>Do you consider the reaction to be serious?</mat-label>
+                              <mat-select formControlName="isSerious" required>
+                                <mat-option value="1">Yes</mat-option>
+                                <mat-option value="2">No</mat-option>
+                                <mat-option value="3">Unknown</mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="thirdFormGroup.get('isSerious').hasError('required')">
+                                Field is required
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                          <div fxFlex="95">
+                            <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                              <mat-label>What is the seriousness of the event?</mat-label>
+                              <mat-select formControlName="seriousness" required>
+                                <mat-option value="8">N/A</mat-option>
+                                <mat-option value="1">A congenital anomaly or birth defect</mat-option>
+                                <mat-option value="2">Persistent or significant disability or incapacity</mat-option>
+                                <mat-option value="3">Death</mat-option>
+                                <mat-option value="4">Hospitalisation</mat-option>
+                                <mat-option value="5">Prolonged hospitalisation</mat-option>
+                                <mat-option value="6">Life threatening</mat-option>
+                                <mat-option value="7">A medically important event</mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="thirdFormGroup.get('seriousness').hasError('required')">
+                                Field is required
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start" class="mt-2">
+                          <div fxFlex="95">
+                            <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                              <mat-label>Event classification</mat-label>
+                              <mat-select formControlName="classification" required>
+                                <mat-option value="1">AESI</mat-option>
+                                <mat-option value="2">SAE</mat-option>
+                                <mat-option value="3">Clinically Significant</mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="thirdFormGroup.get('classification').hasError('required')">
+                                Field is required
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>                
+                      </div>
+                    </mat-tab>
+
+                    <mat-tab label="{{'Other clinical details' | translate}}">
+                      <div class="p-2">
+                        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                          <div fxFlex="95">
+                            <mat-form-field class="full-width pl-8 pr-8 mt-12" appearance="outline">
+                              <mat-label>Weight (kg)</mat-label>
+                              <input matInput formControlName="weight" type="number" required>
+                              <mat-hint>
+                                {{'Valid between ' | translate}} 1 {{'and ' | translate}} 159
+                              </mat-hint>
+                              <mat-error *ngIf="thirdFormGroup.get('weight').hasError('required')">
+                                Field is required
+                              </mat-error>
+                              <mat-error *ngIf="thirdFormGroup.get('weight').hasError('min')">
+                                Minimum value exceeded
+                              </mat-error>
+                              <mat-error *ngIf="thirdFormGroup.get('weight').hasError('max')">
+                                Maximum value exceeded
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                          <div fxFlex="95">
+                            <mat-form-field class="full-width pl-8 pr-8 mt-12" appearance="outline">
+                              <mat-label>Height (cm)</mat-label>
+                              <input matInput formControlName="height" type="number" required>
+                              <mat-hint>
+                                {{'Valid between ' | translate}} 1 {{'and ' | translate}} 259
+                              </mat-hint>
+                              <mat-error *ngIf="thirdFormGroup.get('height').hasError('required')">
+                                Field is required
+                              </mat-error>
+                              <mat-error *ngIf="thirdFormGroup.get('height').hasError('min')">
+                                Minimum value exceeded
+                              </mat-error>
+                              <mat-error *ngIf="thirdFormGroup.get('height').hasError('max')">
+                                Maximum value exceeded
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>                      
+              
+                        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                          <div fxFlex="95">
+                            <mat-form-field class="full-width pl-8 pr-8 mt-12" appearance="outline">
+                              <mat-label>Any known allergies</mat-label>
+                              <textarea matInput formControlName="allergy" rows="3" required></textarea>
+                              <mat-error *ngIf="thirdFormGroup.get('allergy').hasError('required')">
+                                Field is required
+                              </mat-error>
+                              <mat-error *ngIf="thirdFormGroup.get('allergy').hasError('maxlength')">
+                                Maximum length exceeded
+                              </mat-error>
+                              <mat-error *ngIf="thirdFormGroup.get('allergy').hasError('pattern')">
+                                {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, parenthesis, forward slash, space, comma, period)
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                          <div fxFlex="95">
+                            <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                              <mat-label>Pregnancy status</mat-label>
+                              <mat-select formControlName="pregnancyStatus" required>
+                                <mat-option value=""></mat-option>
+                                <mat-option value="0">No</mat-option>
+                                <mat-option value="1">1st trimester</mat-option>
+                                <mat-option value="2">2nd trimester</mat-option>
+                                <mat-option value="3">3rd trimester</mat-option>
+                                <mat-option value="4">Unknown</mat-option>
+                              </mat-select>
+                              <mat-error *ngIf="thirdFormGroup.get('pregnancyStatus').hasError('required')">
+                                Field is required
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+
+                        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                          <div fxFlex="95">
+                            <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                              <mat-label>Comorbidities</mat-label>
+                              <textarea matInput formControlName="comorbidities" rows="3" required></textarea>
+                              <mat-error *ngIf="thirdFormGroup.get('comorbidities').hasError('required')">
+                                Field is required
+                              </mat-error>
+                              <mat-error *ngIf="thirdFormGroup.get('comorbidities').hasError('maxlength')">
+                                Maximum length exceeded
+                              </mat-error>
+                              <mat-error *ngIf="thirdFormGroup.get('comorbidities').hasError('pattern')">
+                                {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, parenthesis, forward slash, space, comma, period)
+                              </mat-error>
+                            </mat-form-field>
+                          </div>
+                        </div>
+                      </div>    
+                    </mat-tab>
+
+                    <mat-tab label="{{'Lab results' | translate}}">
+                      <div class="p-2">
+                        <div fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="end" class="p-2 mt-12">
+                          <button mat-raised-button color="accent" class="mr-12" (click)="openAttachmentPopUp()" [disabled]="viewModel?.attachments?.length >= 5">Add Attachment</button>
+                        </div>
+                        <div fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="start" class="p-2 mt-12">
+                          <div class="table-container" fxFlex="100">
+                            <mat-table [dataSource]="viewModel?.attachmentGrid?.records"
+                                      [@animate]="{value:'50'}">
+              
+                              <ng-container matColumnDef="file-name">
+                                  <mat-header-cell *matHeaderCellDef>{{'File name' | translate}}</mat-header-cell>
+                                  <mat-cell *matCellDef="let record">
+                                    <div class="pt-12 pb-12">
+                                      <span class="font-weight-bold">{{record.file.name}}</span><br/>
+                                      <small class="text-muted">{{record.description}}</small>
+                                    </div>
+                                  </mat-cell>
+                              </ng-container>
+                                      
+                              <ng-container matColumnDef="actions">
+                                <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                                <mat-cell *matCellDef="let record">
+                                  <button mat-icon-button color="warn" (click)="removeAttachment(i)">
+                                    <mat-icon>clear</mat-icon>
+                                  </button>
+                                </mat-cell>
+                              </ng-container>
+                            
+                              <mat-header-row *matHeaderRowDef="viewModel?.attachmentGrid?.displayedColumns; sticky:true"></mat-header-row>
+                              <mat-row *matRowDef="let record; columns: viewModel?.attachmentGrid?.displayedColumns;"></mat-row>
+                            </mat-table>
+                          </div>
+                        </div>
+                      </div>
+                    </mat-tab>
+                  </mat-tab-group>
+                </form>
+              </div>
+          
+              <div fxFlex="70" fxFlex.lt-md="100" *ngIf="viewModel.currentStep == 2">
+                <form [formGroup]="fourthFormGroup" [@fadeInOut2]="">
+          
+                  <div class="p-2">
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                      <div fxFlex="95">
+                        <mat-form-field class="full-width pl-8 pr-8 mt-12" appearance="outline">
+                          <mat-label>Was treatment given?</mat-label>
+                          <mat-select formControlName="treatmentGiven">
+                            <mat-option value="0"></mat-option>
+                            <mat-option value="1">Yes</mat-option>
+                            <mat-option value="2">No</mat-option>
+                            <mat-option value="3">Unknown</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </div>
+                    </div>                      
+          
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                      <div fxFlex="95">
+                        <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                          <mat-label>Treatment details</mat-label>
+                          <textarea matInput formControlName="treatmentDetails" rows="2"></textarea>
+                          <mat-error *ngIf="fourthFormGroup.get('treatmentDetails').hasError('maxlength')">
+                            Maximum length exceeded
+                          </mat-error>
+                          <mat-error *ngIf="fourthFormGroup.get('treatmentDetails').hasError('pattern')">
+                            {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, parenthesis, forward slash, space, comma, period)
+                          </mat-error>
+                        </mat-form-field>                
+                      </div>
+                    </div>
+
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                      <div fxFlex="95">
+                        <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                          <mat-label>Outcome of the adverse event</mat-label>
+                          <mat-select formControlName="outcome" required>
+                            <mat-option value="1">Resolved</mat-option>
+                            <mat-option value="2">Resolved with sequelae</mat-option>
+                            <mat-option value="3">Fatal</mat-option>
+                            <mat-option value="4">Resolving</mat-option>
+                            <mat-option value="5">Not resolved</mat-option>
+                            <mat-option value="6">Unknown</mat-option>
+                          </mat-select>                        
+                          <mat-error *ngIf="fourthFormGroup.get('outcome').hasError('required')">
+                            Field is required
+                          </mat-error>            
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                      <div fxFlex="95">
+                        <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                          <mat-label>Date of outcome</mat-label>
+                          <input matInput formControlName="dateOfRecovery" [matDatepicker]="recoveryDatepicker">
+                          <mat-datepicker-toggle matSuffix [for]="recoveryDatepicker"></mat-datepicker-toggle>
+                        </mat-form-field>
+                        <mat-datepicker #recoveryDatepicker></mat-datepicker>
+                      </div>
+                    </div>
+
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                      <div fxFlex="95">
+                        <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                          <mat-label>Sequlae</mat-label>
+                          <textarea matInput formControlName="sequlae" rows="2"></textarea>
+                          <mat-error *ngIf="fourthFormGroup.get('sequlae').hasError('maxlength')">
+                            Maximum length exceeded
+                          </mat-error>
+                          <mat-error *ngIf="fourthFormGroup.get('sequlae').hasError('pattern')">
+                            {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, parenthesis, forward slash, space, comma, period)
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>
+
+                    <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                      <div fxFlex="95">
+                        <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                          <mat-label>Interventions performed</mat-label>
+                          <textarea matInput formControlName="interventions" rows="2"></textarea>
+                          <mat-error *ngIf="fourthFormGroup.get('interventions').hasError('maxlength')">
+                            Maximum length exceeded
+                          </mat-error>
+                          <mat-error *ngIf="fourthFormGroup.get('interventions').hasError('pattern')">
+                            {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, parenthesis, forward slash, space, comma, period)
+                          </mat-error>
+                        </mat-form-field>
+                      </div>
+                    </div>            
+                  </div>
+                </form>
+              </div>
+          
+              <div fxFlex="70" fxFlex.lt-md="100" *ngIf="viewModel.currentStep == 3">
+                <form [formGroup]="fifthFormGroup" [@fadeInOut2]="">
+          
+                  <div class="p-2">
+                    <div class="ml-05 mr-05 mt-05 pb-1">
+                      <div class="p-12 table-container">
+                          <div class="p-12" fxLayoutAlign="end">
+                            <button mat-mini-fab (click)="openMedicationPopup({}, true)"><mat-icon>add</mat-icon></button>
+                          </div>
+                          <mat-table [dataSource]="viewModel?.medicationGrid?.records"
+                                  [@animate]="{value:'50'}">
+              
+                          <ng-container matColumnDef="medication">
+                              <mat-header-cell *matHeaderCellDef>{{'Medication' | translate}}</mat-header-cell>
+                              <mat-cell *matCellDef="let record">
+                                  {{record.medication}}
+                              </mat-cell>
+                          </ng-container>
+          
+                          <ng-container matColumnDef="start-date">
+                            <mat-header-cell *matHeaderCellDef>{{'Start date' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.startDate | date:'yyyy-MM-dd'}}
+                            </mat-cell>
+                          </ng-container>
+          
+                          <ng-container matColumnDef="end-date">
+                            <mat-header-cell *matHeaderCellDef>{{'End date' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                              {{record.endDate | date:'yyyy-MM-dd'}}
+                            </mat-cell>
+                          </ng-container>
+        
+                          <ng-container matColumnDef="dose">
+                            <mat-header-cell *matHeaderCellDef>{{'Dose' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                              {{record.dose}} {{record.doseUnit}}
+                            </mat-cell>
+                          </ng-container>                  
+                          
+                          <ng-container matColumnDef="actions">
+                            <mat-header-cell *matHeaderCellDef>{{'Actions' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                              <button mat-icon-button color="primary" matTooltip="{{'Update Medication' | translate }}"
+                                      (click)="openMedicationPopup(record, false)">
+                                  <mat-icon>edit</mat-icon>
+                              </button>
+                              <button mat-icon-button color="warn" matTooltip="{{'Delete Medication' | translate}}"
+                                  (click)="removeMedication(record.index)" *ngIf="record.id == 0">
+                                  <mat-icon>delete</mat-icon>
+                              </button>
+                          </mat-cell>                    
+                          </ng-container>                        
+                        
+                          <mat-header-row *matHeaderRowDef="viewModel?.medicationGrid?.displayedColumns; sticky:true"></mat-header-row>
+                          <mat-row *matRowDef="let record; columns: viewModel?.medicationGrid?.displayedColumns;"></mat-row>
+                        </mat-table>
+                      </div>
+                    </div>              
+                  </div>
+                </form>
+              </div>
+          
+              <div fxFlex="70" fxFlex.lt-md="100" *ngIf="viewModel.currentStep == 4">
+                <form [formGroup]="sixthFormGroup" [@fadeInOut2]="">
+                  <div class="p-2">
+                    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                      <div fxFlex="95">
+                        <mat-form-field class="full-width pl-8 pr-8 mt-12" appearance="outline">
+                          <mat-label>Name of the reporter</mat-label>
+                          <input matInput formControlName="reporterName" required>
+                          <mat-error *ngIf="sixthFormGroup.get('reporterName').hasError('required')">
+                            Field is required
+                          </mat-error>
+                          <mat-error *ngIf="sixthFormGroup.get('reporterName').hasError('maxlength')">
+                            {{'Maximum length exceeded' | translate}}
+                          </mat-error>
+                          <mat-error *ngIf="sixthFormGroup.get('reporterName').hasError('pattern')">
+                            {{'Value contains invalid characters' | translate}} (A-Z, a-z, hyphen, space)
+                          </mat-error>
+                        </mat-form-field>            
+                      </div>
+                    </div>
+
+                    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                      <div fxFlex="95">
+                        <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                          <mat-label>Contact number</mat-label>
+                          <input matInput formControlName="contactNumber">
+                          <mat-error *ngIf="sixthFormGroup.get('contactNumber').hasError('maxlength')">
+                            {{'Maximum length exceeded' | translate}}
+                          </mat-error>
+                          <mat-error *ngIf="sixthFormGroup.get('contactNumber').hasError('pattern')">
+                            {{'Value contains invalid characters' | translate}} (0-9, hyphen, plus sign)
+                          </mat-error>
+                        </mat-form-field>            
+                      </div>
+                    </div>
+
+                    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                      <div fxFlex="95">
+                        <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                          <mat-label>Email address</mat-label>
+                          <input matInput formControlName="emailAddress" required>
+                          <mat-error *ngIf="sixthFormGroup.get('emailAddress').hasError('required')">
+                            Field is required
+                          </mat-error>
+                          <mat-error *ngIf="sixthFormGroup.get('emailAddress').hasError('maxlength')">
+                            {{'Maximum length exceeded' | translate}}
+                          </mat-error>            
+                        </mat-form-field>            
+                      </div>
+                    </div>
+
+                    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                      <div fxFlex="95">
+                        <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="outline">
+                          <mat-label>Profession</mat-label>
+                          <mat-select formControlName="profession">
+                            <mat-option value="0"></mat-option>
+                            <mat-option value="1">Medical Doctor</mat-option>
+                            <mat-option value="2">RPh</mat-option>
+                            <mat-option value="3">RN</mat-option>
+                            <mat-option value="4">Patient</mat-option>
+                            <mat-option value="5">Dentist</mat-option>
+                          </mat-select>                        
+                        </mat-form-field>
+                      </div>              
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+    <div fxFlex="100" class="mt-1">
+      <span fxFlex></span>
+      <button mat-raised-button color="primary" type="button" (click)="dialogRef.close(false)">{{"Close" | translate }}</button>
+    </div>
+  </div>

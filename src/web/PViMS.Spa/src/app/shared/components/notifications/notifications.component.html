@@ -1,0 +1,52 @@
+<div class="handle" *ngIf="notifications.length > 0">
+  <button mat-icon-button matTooltip="{{'Notifications' | translate }}" (click)="isNotificationOpen = true" [style.overflow]="'visible'" class="topbar-button-right" [ngClass]="{'spin' : checking} ">
+    <mat-icon>notifications</mat-icon>
+    <span class="notification-number mat-bg-warn">{{notifications?.length}}</span>
+  </button>
+</div>
+<div id="app-notification" *ngIf="isNotificationOpen">
+  <mat-card class="p-0 mat-elevation-z6 height-100" style="overflow-y: auto">
+    <mat-card-title class="p-12">
+      <div class="title" fxLayout="row wrap" fxLayoutAlign="end">
+        {{ "Notifications" | translate }}
+        <span fxFlex></span>
+        <button mat-icon-button (click)="isNotificationOpen = false">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </mat-card-title>
+    <mat-card-content>
+      <mat-divider></mat-divider>
+      <div class="p-0" *ngFor="let notification of notifications">
+        <div fxLayout="row wrap" fxLayoutAlign="center">
+          <div fxFlex="100" class="text-center mt-12">
+            <mat-icon color="accent" *ngIf="notification.notificationType == 'Warning'">add_alert</mat-icon> 
+            <mat-icon color="primary"*ngIf="notification.notificationType == 'Informational'">event_note</mat-icon> 
+            <mat-icon color="warn"*ngIf="notification.notificationType == 'Error'">error_outline</mat-icon> 
+          </div>
+        </div>
+        <div fxLayout="row wrap" fxLayoutAlign="center">
+          <div fxFlex="100" class="text-center">
+            <span class="font-weight-bold;">{{notification.summary}}</span>
+          </div>
+        </div>
+        <div fxLayout="row wrap" fxLayoutAlign="center" *ngIf="notification.detail != ''">
+          <div fxFlex="100" class="text-center p-12 light-gray">
+            <small class="text-muted; font-weight-normal">{{notification.detail}}</small>
+          </div>
+        </div>
+        <div fxLayout="row wrap" fxLayoutAlign="center">
+          <div fxFlex="100" class="text-center">
+            <small class="text-muted;">{{notification.createdDetail}}</small>
+          </div>
+        </div>
+        <div fxLayout="row wrap" fxLayoutAlign="center" class="mb-12">
+          <div fxFlex="100" class="p-12 text-center">
+            <button mat-raised-button color="accent" (click)="selectAction(notification.contextRoute)">View</button>
+          </div>
+        </div>
+        <mat-divider></mat-divider>
+      </div> 
+    </mat-card-content>
+  </mat-card>
+</div>

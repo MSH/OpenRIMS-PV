@@ -1,0 +1,485 @@
+<mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+<div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+  <div fxFlex="25" class="p-12">
+    <button mat-raised-button (click)="goBack()" color="accent">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+</div>
+
+<div fxLayout="row wrap">
+  <div fxFlex="80">
+    <mat-card class="p-12 mat-elevation-z6 rounded">
+      <mat-card-title>
+        <div class="card-title-text light-gray p-12">
+          {{'Patient particulars' | translate}}
+        </div>
+      </mat-card-title>              
+      <mat-card-content>
+        <form [formGroup]="firstFormGroup" [@fadeInOut2]="">
+          <div class="mt-12">
+            <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.75%" fxLayoutAlign="start start">
+              <div fxFlex="45">
+                <mat-form-field class="p-8 full-width" appearance="fill">
+                  <mat-label>{{'First name' | translate}}</mat-label>
+                  <input matInput formControlName="patientFirstName" readonly>
+                </mat-form-field>
+              </div>
+              <div fxFlex="45">
+                <mat-form-field class="p-8 full-width" appearance="fill">
+                  <mat-label>{{'Last name' | translate}}</mat-label>
+                  <input matInput formControlName="patientLastName" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.75%" fxLayoutAlign="start start">
+              <div fxFlex="45">
+                <mat-form-field class="p-8 full-width" appearance="fill">
+                  <mat-label>{{'Gender' | translate}}</mat-label>
+                  <input matInput formControlName="gender" readonly>
+                </mat-form-field>
+              </div>
+              <div fxFlex="45">
+                <mat-form-field class="p-8 full-width" appearance="fill">
+                  <mat-label>{{'Ethnic group' | translate}}</mat-label>
+                  <input matInput formControlName="ethnicity" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.75%" fxLayoutAlign="start start">
+              <div fxFlex="45">
+                <mat-form-field class="p-8 full-width" appearance="fill">
+                  <mat-label>{{'Date of birth' | translate}}</mat-label>
+                  <input matInput formControlName="dateOfBirth" readonly>
+                </mat-form-field>
+              </div>
+              <div fxFlex="45">
+                <mat-form-field class="p-8 full-width" appearance="fill">
+                  <mat-label>{{'Age' | translate}}</mat-label>
+                  <input matInput formControlName="age" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.75%" fxLayoutAlign="start start">
+              <div fxFlex="90">
+                <mat-form-field class="p-8 full-width" appearance="fill">
+                  <mat-label>{{'Age group' | translate}}</mat-label>
+                  <input matInput formControlName="ageGroup" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+              
+            <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.75%" fxLayoutAlign="start start">
+              <div fxFlex="90">
+                <mat-form-field class="p-8 full-width" appearance="fill">
+                  <mat-label>{{'Facility' | translate}}</mat-label>
+                  <input matInput formControlName="facilityName" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.75%" fxLayoutAlign="start start">
+              <div fxFlex="90">
+                <mat-form-field class="p-8 full-width" appearance="fill">
+                  <mat-label>{{'Region' | translate}}</mat-label>
+                  <input matInput formControlName="facilityRegion" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>    
+
+<div fxLayout="row wrap">
+  <div fxFlex="80">
+    <mat-card class="p-12 mat-elevation-z6 rounded">
+      <mat-card-title>
+        <div class="card-title-text light-gray p-12">
+          {{'Adverse event' | translate}}
+        </div>
+      </mat-card-title>              
+      <mat-card-content>
+        <form [formGroup]="thirdFormGroup" [@fadeInOut2]="">
+          <mat-tab-group>
+            <mat-tab label="{{'Adverse event details' | translate}}">
+              <div class="p-2">
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                  <div fxFlex="95">
+                    <mat-form-field class="p-8 full-width" appearance="fill">
+                      <mat-label>{{'Date of onset' | translate}}</mat-label>
+                      <input matInput formControlName="onsetDate" readonly>
+                    </mat-form-field>                        
+                  </div>
+                </div>
+
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                  <div fxFlex="95">
+                    <mat-form-field class="p-8 full-width" appearance="fill">
+                      <mat-label>{{'Regimen' | translate}}</mat-label>
+                      <input matInput formControlName="regimen" readonly>
+                    </mat-form-field>                         
+                  </div>
+                </div>
+
+                <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                  <div fxFlex="95">
+                    <mat-form-field class="p-8 full-width" appearance="fill">
+                      <mat-label>{{'Event description' | translate}}</mat-label>
+                      <input matInput formControlName="sourceDescription" readonly>
+                    </mat-form-field>                         
+                  </div>
+                </div>
+
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                  <div fxFlex="95">
+                    <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="fill">
+                      <mat-label>Do you consider the reaction to be serious?</mat-label>
+                      <input matInput formControlName="isSerious" readonly>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                  <div fxFlex="95">
+                    <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="fill">
+                      <mat-label>What is the seriousness of the event?</mat-label>
+                      <input matInput formControlName="seriousness" readonly>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start" class="mt-2">
+                  <div fxFlex="95">
+                    <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="fill">
+                      <mat-label>Event classification</mat-label>
+                      <input matInput formControlName="classification" readonly>
+                    </mat-form-field>
+                  </div>
+                </div>                
+              </div>
+            </mat-tab>
+
+            <mat-tab label="{{'Other clinical details' | translate}}">
+              <div class="p-2">
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                  <div fxFlex="95">
+                    <mat-form-field class="full-width pl-8 pr-8 mt-12" appearance="fill">
+                      <mat-label>Weight (kg)</mat-label>
+                      <input matInput formControlName="weight" type="number" readonly>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                  <div fxFlex="95">
+                    <mat-form-field class="full-width pl-8 pr-8 mt-12" appearance="fill">
+                      <mat-label>Height (cm)</mat-label>
+                      <input matInput formControlName="height" type="number" readonly>
+                    </mat-form-field>
+                  </div>
+                </div>                      
+      
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                  <div fxFlex="95">
+                    <mat-form-field class="full-width pl-8 pr-8 mt-12" appearance="fill">
+                      <mat-label>Any known allergies</mat-label>
+                      <textarea matInput formControlName="allergy" rows="3" readonly></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                  <div fxFlex="95">
+                    <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="fill">
+                      <mat-label>Pregnancy status</mat-label>
+                      <input matInput formControlName="pregnancyStatus" readonly>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                  <div fxFlex="95">
+                    <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="fill">
+                      <mat-label>Comorbidities</mat-label>
+                      <textarea matInput formControlName="comorbidities" rows="3" readonly></textarea>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>    
+            </mat-tab>
+
+            <mat-tab label="{{'Attachments' | translate}}">
+              <mat-card-content class="m-1 p-5">
+                <div class="ml-05 mr-05 mt-05 pb-1" style="overflow-y: auto">
+                  <div class="table-container">
+                    <mat-table [dataSource]="viewModel?.attachmentGrid?.records"
+                              [@animate]="{value:'50'}">
+          
+                      <ng-container matColumnDef="type">
+                          <mat-header-cell *matHeaderCellDef>{{"Type" | translate }}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              <p>{{record.attachmentType | translate }}</p>
+                          </mat-cell> 
+                      </ng-container>
+          
+                      <ng-container matColumnDef="name">
+                          <mat-header-cell *matHeaderCellDef>{{"Name" | translate }}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              <p>{{record.fileName}}</p>
+                          </mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="description">
+                        <mat-header-cell *matHeaderCellDef>{{"Description" | translate }}</mat-header-cell>
+                        <mat-cell *matCellDef="let record">
+                            <p>{{record.description}}</p>
+                        </mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef>
+                          {{'Actions' | translate }}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let record">
+                            <button mat-icon-button color="primary" matTooltip="{{'Download Attachment' | translate }}"
+                                    (click)="downloadAttachment(record)">
+                                <mat-icon>cloud_download</mat-icon>
+                            </button>
+                        </mat-cell>
+                      </ng-container>            
+                      
+                      <mat-header-row *matHeaderRowDef="viewModel?.attachmentGrid?.displayedColumns; sticky:true"></mat-header-row>
+                      <mat-row *matRowDef="let record; columns: viewModel?.attachmentGrid?.displayedColumns;"></mat-row>
+                    </mat-table>
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-tab>
+          </mat-tab-group>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div fxLayout="row wrap">
+  <div fxFlex="80">
+    <mat-card class="p-12 mat-elevation-z6 rounded">
+      <mat-card-title>
+        <div class="card-title-text light-gray p-12">
+          {{'Management of the reaction' | translate}}
+        </div>
+      </mat-card-title>              
+      <mat-card-content>
+        <form [formGroup]="fourthFormGroup" [@fadeInOut2]="">
+          <div class="p-2">
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+              <div fxFlex="95">
+                <mat-form-field class="full-width pl-8 pr-8 mt-12" appearance="fill">
+                  <mat-label>Was treatment given?</mat-label>
+                  <input matInput formControlName="treatmentGiven" readonly>
+                </mat-form-field>
+              </div>
+            </div>                      
+  
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+              <div fxFlex="95">
+                <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="fill">
+                  <mat-label>Treatment details</mat-label>
+                  <textarea matInput formControlName="treatmentDetails" rows="2" readonly></textarea>
+                </mat-form-field>                
+              </div>
+            </div>
+
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+              <div fxFlex="95">
+                <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="fill">
+                  <mat-label>Outcome of the adverse event</mat-label>
+                  <input matInput formControlName="outcome" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+              <div fxFlex="95">
+                <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="fill">
+                  <mat-label>Date of outcome</mat-label>
+                  <input matInput formControlName="dateOfRecovery" readonly>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+              <div fxFlex="95">
+                <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="fill">
+                  <mat-label>Sequlae</mat-label>
+                  <textarea matInput formControlName="sequlae" rows="2" readonly></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+
+            <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+              <div fxFlex="95">
+                <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="fill">
+                  <mat-label>Interventions performed</mat-label>
+                  <textarea matInput formControlName="interventions" rows="2" readonly></textarea>
+                </mat-form-field>
+              </div>
+            </div>            
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div fxLayout="row wrap">
+  <div fxFlex="80">
+    <mat-card class="p-12 mat-elevation-z6 rounded">
+      <mat-card-title>
+        <div class="card-title-text light-gray p-12">
+          {{'Suspected medication' | translate}}
+        </div>
+      </mat-card-title>              
+      <mat-card-content>
+        <form [formGroup]="fifthFormGroup" [@fadeInOut2]="">
+          <div class="p-2">
+            <div class="ml-05 mr-05 mt-05 pb-1">
+              <div class="p-12 table-container">
+                  <mat-table [dataSource]="viewModel?.medicationGrid?.records"
+                          [@animate]="{value:'50'}">
+      
+                  <ng-container matColumnDef="medication">
+                      <mat-header-cell *matHeaderCellDef>{{'Medication' | translate}}</mat-header-cell>
+                      <mat-cell *matCellDef="let record">
+                          {{record.medication}}
+                      </mat-cell>
+                  </ng-container>
+  
+                  <ng-container matColumnDef="start-date">
+                    <mat-header-cell *matHeaderCellDef>{{'Start date' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        {{record.startDate | date:'yyyy-MM-dd'}}
+                    </mat-cell>
+                  </ng-container>
+  
+                  <ng-container matColumnDef="end-date">
+                    <mat-header-cell *matHeaderCellDef>{{'End date' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                      {{record.endDate | date:'yyyy-MM-dd'}}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="dose">
+                    <mat-header-cell *matHeaderCellDef>{{'Dose' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                      {{record.dose}} {{record.doseUnit}}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="reason-for-stopping">
+                    <mat-header-cell *matHeaderCellDef>{{'Reason for stopping' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                      {{record.reasonForStopping}}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="clinical-action">
+                    <mat-header-cell *matHeaderCellDef>{{'Clinical action' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                      {{record.clinicianAction}}
+                    </mat-cell>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="result-of-challenge">
+                    <mat-header-cell *matHeaderCellDef>{{'Result of challenge' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                      {{record.challengeEffect}}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>{{'Actions' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                      <button mat-icon-button color="primary" matTooltip="{{'Update Medication' | translate }}"
+                              (click)="openMedicationPopup(record, false)">
+                          <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button color="warn" matTooltip="{{'Delete Medication' | translate}}"
+                          (click)="removeMedication(record.index)" *ngIf="record.id == 0">
+                          <mat-icon>delete</mat-icon>
+                      </button>
+                  </mat-cell>                    
+                  </ng-container>                        
+                
+                  <mat-header-row *matHeaderRowDef="viewModel?.medicationGrid?.displayedColumns; sticky:true"></mat-header-row>
+                  <mat-row *matRowDef="let record; columns: viewModel?.medicationGrid?.displayedColumns;"></mat-row>
+                </mat-table>
+              </div>
+            </div>              
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
+<div fxLayout="row wrap">
+  <div fxFlex="80">
+    <mat-card class="p-12 mat-elevation-z6 rounded">
+      <mat-card-title>
+        <div class="card-title-text light-gray p-12">
+          {{'Reporter particulars' | translate}}
+        </div>
+      </mat-card-title>              
+      <mat-card-content>
+        <form [formGroup]="sixthFormGroup" [@fadeInOut2]="">
+          <div class="p-2">
+            <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+              <div fxFlex="95">
+                <mat-form-field class="full-width pl-8 pr-8 mt-12" appearance="fill">
+                  <mat-label>Name of the reporter</mat-label>
+                  <input matInput formControlName="reporterName" readonly>
+                </mat-form-field>            
+              </div>
+            </div>
+
+            <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+              <div fxFlex="95">
+                <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="fill">
+                  <mat-label>Contact number</mat-label>
+                  <input matInput formControlName="contactNumber" readonly>
+                </mat-form-field>            
+              </div>
+            </div>
+
+            <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+              <div fxFlex="95">
+                <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="fill">
+                  <mat-label>Email address</mat-label>
+                  <input matInput formControlName="emailAddress" readonly>
+                </mat-form-field>            
+              </div>
+            </div>
+
+            <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+              <div fxFlex="95">
+                <mat-form-field class="full-width pl-8 pr-8 mt-2" appearance="fill">
+                  <mat-label>Profession</mat-label>
+                  <input matInput formControlName="profession" readonly>
+                </mat-form-field>
+              </div>              
+            </div>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

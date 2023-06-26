@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>PViMS.BuildingBlocks.EventBus</RootNamespace>
+    <AssemblyName>PViMS.BuildingBlocks.EventBus</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>    
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,63 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="50" class="pr-1">
+          <mat-form-field class="p-8 full-width">
+              <input matInput formControlName="encounterDate" placeholder="{{'Encounter date' | translate }}" [matDatepicker]="encounterDatepicker" required>
+              <mat-datepicker-toggle matSuffix [for]="encounterDatepicker"></mat-datepicker-toggle>
+              <mat-error *ngIf="itemForm.get('encounterDate').hasError('required')">
+                {{'This is a required field' | translate}}
+              </mat-error>            
+          </mat-form-field>
+          <mat-datepicker #encounterDatepicker></mat-datepicker>
+      </div>
+
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <mat-select formControlName="encounterTypeId" placeholder="{{'Encounter type' | translate}}" required>
+            <mat-option *ngFor="let type of encounterTypeList" [value]="type.id">
+                {{type.encounterTypeName}}
+            </mat-option>
+          </mat-select>
+          <mat-error>
+            {{'This is a required field' | translate}}
+          </mat-error>            
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <mat-select formControlName="priorityId" placeholder="{{'Priority' | translate}}" required>
+            <mat-option *ngFor="let priority of priorityList" [value]="priority.id">
+                {{priority.priorityName}}
+            </mat-option>
+          </mat-select>
+          <mat-error>
+            {{'This is a required field' | translate}}
+          </mat-error>            
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input matInput formControlName="notes" placeholder="{{'Notes' | translate }}">
+          <mat-hint>{{'Maximum length' | translate}} 500</mat-hint>
+          <mat-error *ngIf="itemForm.get('notes').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>            
+          <mat-error *ngIf="itemForm.get('notes').hasError('pattern')">
+            {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space, apostrophe, period)
+          </mat-error>            
+        </mat-form-field>        
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

@@ -1,0 +1,45 @@
+.addButton { 
+  display: flex; 
+  justify-content: space-between;
+
+  button {
+    margin-left: auto;
+  }
+}
+
+mat-card {
+
+  width:100% !important;
+  display: inline-block;
+  height:100%;
+}
+
+// Columns widths
+mat-column {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.mat-column-id {
+  flex: 0 0 10% !important;
+  width: 10% !important;
+}
+
+.mat-column-system {
+  flex: 0 0 10% !important;
+  width: 10% !important;
+}
+
+.mat-column-actions {
+  flex: 0 0 15% !important;
+  width: 15% !important;
+}

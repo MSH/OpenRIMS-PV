@@ -1,0 +1,249 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<mat-card class="p-0">
+  <mat-card-title class="">
+    <div class="card-title-text">{{'PV Feedback' | translate}}</div>
+  </mat-card-title>
+
+  <mat-card-content>
+    <form [formGroup]="viewModelForm">
+      <div class="p-0 default-light-bg rounded">
+        <mat-tab-group [(selectedIndex)]="viewModel.selectedTab">
+          <mat-tab label="{{'New Feedback' | translate}}">
+            <mat-card-content class="m-1 p-5" style="height: 130px;">
+              <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="5.5%" fxLayoutAlign="start">
+                <div fxFlex="100" class="pr-1">
+                  <mat-chip-list #chipList>
+                    <div *ngFor="let activity of viewModel?.workFlow?.feedbackActivity">
+                      <mat-chip color="primary" [selected]="activity.qualifiedName == viewModelForm.get('qualifiedName').value" (click)="selectActivity(activity.qualifiedName)" *ngIf="activity.reportInstanceCount > 0" style="cursor: pointer;"> 
+                        {{activity.qualifiedName | translate}}
+                      </mat-chip>
+                      <span class="mr-24" matBadge="{{activity.reportInstanceCount}}" matBadgePosition="above after" matBadgeColor="warn" matBadgeOverlap="true" *ngIf="activity.reportInstanceCount > 0"></span>
+                    </div>
+                    <mat-chip color="accent" (click)="selectActivity('Summary')" style="cursor: pointer;" *ngIf="hasActivity() == false"> 
+                      No feedback
+                    </mat-chip>
+                    <mat-chip color="primary" [selected]="viewModelForm.get('qualifiedName').value == 'Summary'" (click)="selectActivity('Summary')" style="cursor: pointer;"> 
+                      Summary
+                    </mat-chip>
+                  </mat-chip-list>
+                </div>
+                <div fxFlex="100" class="pr-1 mt-24" *ngIf="viewModelForm.get('qualifiedName').value == 'Confirm Report Data'">
+                  <div class="light-mat-gray rounded p-24">
+                    {{ 'The following reports have outstanding data quality tasks that require additional follow up ...' | translate }}
+                  </div>
+                </div>
+                <div fxFlex="100" class="pr-1 mt-24" *ngIf="viewModelForm.get('qualifiedName').value == 'Set MedDRA and Causality'">
+                  <div class="light-mat-gray rounded p-24">
+                    {{ 'The MedDRA and Causality stage for the following reports has been completed ...' | translate }}
+                  </div>
+                </div>
+                <div fxFlex="100" class="pr-1 mt-24" *ngIf="viewModelForm.get('qualifiedName').value == 'Extract E2B'">
+                  <div class="light-mat-gray rounded p-24">
+                    {{ 'The following reports have been submitted for E2B processing ...' | translate }}
+                  </div>
+                </div>
+                <div fxFlex="100" class="pr-1 mt-24" *ngIf="viewModelForm.get('qualifiedName').value == 'Summary'">
+                  <div class="light-mat-gray rounded p-24">
+                    {{ 'Up to date information on reports submitted for your facility ...' | translate }}
+                  </div>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+
+          <mat-tab label="{{'Search by term' | translate}}">
+            <mat-card-content class="m-1 p-5" style="height: 130px;">
+              <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="start">
+                <div fxFlex="100" class="pr-1 p-12">
+                  <mat-label>{{'Please enter a term below to search by patient name, MedDra term as set by the clinician, the MedDra term as set by the PV specialist, the report identifier or medications used in the analysis' | translate}}...</mat-label>
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                    <input matInput formControlName="searchTerm" placeholder="{{'Term' | translate}}">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10" fxLayoutAlign="end" class="p-8">
+                <button mat-raised-button color="primary" (click)="searchByTerm()" [disabled]="viewModelForm.invalid">{{'Search' | translate}}</button>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </form>
+
+    <div class="ml-05 mr-05 mt-05 pb-1" *ngIf="viewModelForm.get('qualifiedName').value == 'Summary'">
+      <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+        <div fxFlex.gt-sm="33" fxFlex.sm="75" fxFlex.xs="100">
+          <mat-card class="p-12 rounded" style="height:275px;">
+            <mat-card-title class="text-center">
+              <div class="card-title-text light-gray p-12">
+                {{'Facility Summary' | translate}}
+              </div>
+            </mat-card-title>              
+            <mat-card-content>
+              <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+                <div fxFlex="70" class="p-12 text-muted">Submitted</div>
+                <div fxFlex="30" class="light-gray p-12 text-center font-weight-bold">
+                  {{viewModel?.workFlowSummary?.submissionCount}}
+                </div>
+              </div>
+              <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+                <div fxFlex="70" class="p-12 text-muted">Deleted</div>
+                <div fxFlex="30" class="light-gray p-12 text-center font-weight-bold">
+                  {{viewModel?.workFlowSummary?.deletionCount}}
+                </div>
+              </div>
+              <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+                <div fxFlex="70" class="p-12 text-muted">Data quality confirmed</div>
+                <div fxFlex="30" class="light-gray p-12 text-center font-weight-bold">
+                  {{viewModel?.workFlowSummary?.reportDataConfirmedCount}}
+                </div>
+              </div>
+              <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+                <div fxFlex="70" class="p-12 text-muted">Terminology and causality confirmed</div>
+                <div fxFlex="30" class="light-gray p-12 text-center font-weight-bold">
+                  {{viewModel?.workFlowSummary?.terminologyAndCausalityConfirmedCount}}
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+      <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+        <div fxFlex.gt-sm="33" fxFlex.sm="75" fxFlex.xs="100" *ngFor="let classification of viewModel.workFlowSummary.classifications">
+          <mat-card class="p-12 rounded" style="height:275px;">
+            <mat-card-title class="text-center">
+              <div class="card-title-text light-gray p-12">
+                {{classification.classification | translate}}
+              </div>
+            </mat-card-title>              
+            <mat-card-content>
+              <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+                <div fxFlex="70" class="p-12 text-muted">Classifications</div>
+                <div fxFlex="30" class="light-gray p-12 text-center font-weight-bold">
+                  {{classification.classificationCount}}
+                </div>
+              </div>
+              <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+                <div fxFlex="70" class="p-12 text-muted">At least one causative drug</div>
+                <div fxFlex="30" class="light-gray p-12 text-center font-weight-bold">
+                  {{classification.causativeCount}}
+                </div>
+              </div>
+              <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+                <div fxFlex="70" class="p-12 text-muted">E2B submitted</div>
+                <div fxFlex="30" class="light-gray p-12 text-center font-weight-bold">
+                  {{classification.e2BCount}}
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>        
+      </div>
+      <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+        <div fxFlex.gt-xs="75" fxFlex.xs="100" class="card-body p-12">
+          <apx-chart
+            [series]="classificationChartOptions?.series"
+            [chart]="classificationChartOptions?.chart"
+            [dataLabels]="classificationChartOptions?.dataLabels"
+            [plotOptions]="classificationChartOptions?.plotOptions"
+            [yaxis]="classificationChartOptions?.yaxis"
+            [legend]="classificationChartOptions?.legend"
+            [fill]="classificationChartOptions?.fill"
+            [stroke]="classificationChartOptions?.stroke"
+            [tooltip]="classificationChartOptions?.tooltip"
+            [xaxis]="classificationChartOptions?.xaxis"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+    <div class="ml-05 mr-05 mt-05 pb-1" *ngIf="viewModelForm.get('qualifiedName').value != 'Summary'">
+      <div class="table-container">
+        <mat-table [dataSource]="viewModel?.mainGrid?.records"
+                    [@animate]="{value:'50'}">
+
+            <ng-container matColumnDef="Id">
+              <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.id}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="identifier">
+              <mat-header-cell *matHeaderCellDef>{{ 'Identifier' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.identifier}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="created">
+                <mat-header-cell *matHeaderCellDef>{{ 'Created' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <p>{{record.createdDetail}}</p><br/>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="patient">
+              <mat-header-cell *matHeaderCellDef>{{ 'Patient' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.patientIdentifier}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="adverse-event">
+              <mat-header-cell *matHeaderCellDef>{{ 'Adverse event' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.sourceIdentifier}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="meddra-term">
+              <mat-header-cell *matHeaderCellDef>{{ 'MedDra term' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.terminologyMedDra?.medDraTerm}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="task-count">
+              <mat-header-cell *matHeaderCellDef>{{ 'Tasks' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <div class="text-center pt-12 pb-12 border-right-light">
+                    <mat-icon matBadge="{{record.taskCount}}" matBadgeOverlap="false" *ngIf="record.activeTaskCount == 0" matBadgeColor="accent">assignment</mat-icon>
+                    <mat-icon matBadge="{{record.taskCount}}" matBadgeOverlap="false" *ngIf="record.activeTaskCount > 0" matBadgeColor="warn">assignment</mat-icon>
+                  </div>                
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <mat-header-cell *matHeaderCellDef>{{ 'Status' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.qualifiedName | translate}} | {{record.currentStatus | translate}}</p>
+              </mat-cell>
+            </ng-container>                
+
+            <ng-container matColumnDef="actions">
+              <mat-header-cell *matHeaderCellDef>{{'Actions' | translate}}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                <button mat-icon-button color="primary" matTooltip="{{'View Adverse Event' | translate}}"
+                        (click)="openClinicalEventTaskPopUp(record)">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="viewModel?.mainGrid?.displayedColumns; sticky:true"></mat-header-row>
+            <mat-row *matRowDef="let record; columns: viewModel?.mainGrid?.displayedColumns;"></mat-row>
+        </mat-table>
+      </div>
+
+      <mat-paginator #mainGridPaginator="matPaginator" [length]="viewModel?.mainGrid?.count"
+                    [pageIndex]="0" [pageSize]="10"
+                    [pageSizeOptions]="[5, 10, 25, 50]">
+      </mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>

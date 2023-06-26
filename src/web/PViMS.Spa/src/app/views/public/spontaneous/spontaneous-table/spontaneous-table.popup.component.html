@@ -1,0 +1,76 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+
+    <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+      <div fxFlex="100" style="height:450px; overflow-y: auto;">
+        <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start" formGroupName="elements">
+          <div fxFlex="50" class="pr-1" *ngFor="let elementSub of data.datasetElementSubs">
+            <mat-form-field class="p-8 full-width" *ngIf="elementSub.datasetElementSubType == 'AlphaNumericTextbox' && !elementSub.datasetElementSubSystem">
+              <input matInput formControlName="{{elementSub.datasetElementSubId}}" placeholder="{{ elementSub.datasetElementSubDisplayName }}" [required]="elementSub.required">
+              <mat-hint *ngIf="elementSub.datasetElementSubHelp != ''">
+                {{elementSub.datasetElementSubHelp}}
+              </mat-hint>
+              <mat-hint *ngIf="elementSub.datasetElementSubHelp == '' && elementSub.stringMaxLength != null">
+                {{'Maximum length' | translate}} {{elementSub.stringMaxLength}}
+              </mat-hint>
+            </mat-form-field>
+    
+            <mat-form-field class="p-8 full-width" *ngIf="elementSub.datasetElementSubType == 'NumericTextbox' && !elementSub.datasetElementSubSystem">
+              <input matInput formControlName="{{elementSub.datasetElementSubId}}" placeholder="{{ elementSub.datasetElementSubDisplayName }}" type="number" [required]="elementSub.required">
+              <mat-hint *ngIf="elementSub.datasetElementSubHelp != ''">
+                {{elementSub.datasetElementSubHelp}}
+              </mat-hint>
+              <mat-hint *ngIf="elementSub.datasetElementSubHelp == '' && elementSub.numericMinValue != null && elementSub.numericMaxValue != null">
+                {{'Valid between ' | translate}} {{elementSub.numericMinValue}} {{'and ' | translate}} {{elementSub.numericMaxValue}}
+              </mat-hint>
+            </mat-form-field>
+    
+            <span *ngIf="elementSub.datasetElementSubType == 'Date' && !elementSub.datasetElementSubSystem">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="{{elementSub.datasetElementSubId}}" placeholder="{{ elementSub.datasetElementSubDisplayName }}" [matDatepicker]="datepicker" [required]="elementSub.required">
+                <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                <mat-hint *ngIf="elementSub.datasetElementSubHelp != ''">
+                  {{elementSub.datasetElementSubHelp}}
+                </mat-hint>
+              </mat-form-field>        
+              <mat-datepicker #datepicker startView="multi-year"></mat-datepicker>
+            </span>
+    
+            <mat-form-field class="p-8 full-width" *ngIf="elementSub.datasetElementSubType == 'DropDownList' && !elementSub.datasetElementSubSystem">
+              <mat-select formControlName="{{elementSub.datasetElementSubId}}" placeholder="{{ elementSub.datasetElementSubDisplayName }}" [required]="elementSub.required">
+                <mat-option value=""></mat-option>
+                <mat-option *ngFor="let item of elementSub.selectionDataItems" value="{{item.selectionKey}}">
+                  {{item.value | translate}}
+                </mat-option>
+              </mat-select>                        
+              <mat-hint *ngIf="elementSub.datasetElementSubHelp != ''">
+                {{elementSub.datasetElementSubHelp}}
+              </mat-hint>
+            </mat-form-field>
+    
+            <mat-form-field class="p-8 full-width" *ngIf="elementSub.datasetElementSubType == 'YesNo' && !elementSub.datasetElementSubSystem">
+              <mat-select formControlName="{{elementSub.datasetElementSubId}}" placeholder="{{ elementSub.datasetElementSubDisplayName }}" [required]="elementSub.required">
+                <mat-option value=""></mat-option>
+                <mat-option value="Yes">Yes</mat-option>
+                <mat-option value="No">No</mat-option>
+              </mat-select>                        
+              <mat-hint *ngIf="elementSub.datasetElementSubHelp != ''">
+                {{elementSub.datasetElementSubHelp}}
+              </mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+  
+    </div>
+
+  </form>

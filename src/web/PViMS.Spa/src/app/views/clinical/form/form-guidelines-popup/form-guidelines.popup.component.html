@@ -1,0 +1,460 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <div fxLayout="row wrap" fxLayout.lt-sm="column">
+
+    <div *ngIf="data.type == 'A'" class="m-1 p-2 height-100vh-280px" style="overflow-y: auto">
+      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style='font-size:13px;font-family:"Arial",sans-serif;color:#002060;'>&nbsp;</span></p>
+      <table style="margin-left:9.9pt;border-collapse:collapse;border:none;">
+          <tbody>
+              <tr>
+                  <td style="width: 512.1pt;border-top: 1pt solid rgb(228, 244, 223);border-right: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-bottom: none;padding: 1.4pt 5.4pt 0cm;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;color:#BF8F00;">When to complete this form:</span></strong><strong><span style="font-size:12px;color:#0C9A73;">&nbsp;</span></strong><span style="font-size:12px;">This form should be completed for every patient at Treatment Initiation &ndash; the interview at which DTG based regimen is prescribed for the first time and the patient is enrolled into the active monitoring programme.</span></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-top: none;border-left: 1pt solid rgb(228, 244, 223);border-bottom: none;border-right: 1pt solid rgb(228, 244, 223);padding: 1.4pt 5.4pt 0cm;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;color:#BF8F00;">Patient participation:</span></strong><strong><span style="font-size:12px;color:#0C9A73;">&nbsp;&nbsp;</span></strong><span style="font-size:12px;">Patients may be enrolled if they are beginning treatment with DTG based regimen for the first time (i.e. treatment na</span><span style="font-size:12px;">&iuml;</span><span style="font-size:12px;">ve or are switched from NVP based regimen). It is important that monitoring begins at the commencement of therapy.</span></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-top: none;border-left: 1pt solid rgb(228, 244, 223);border-bottom: none;border-right: 1pt solid rgb(228, 244, 223);padding: 0cm 5.4pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;color:#BF8F00;">Treatment site:&nbsp;</span></strong><span style="font-size:12px;">Please provide the name of the site where patient is being enrolled into the active monitoring program.</span></p>
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;color:#BF8F00;">Patient ASM Code:</span></strong><strong><span style="font-size:12px;color:#0C9A73;">&nbsp;&nbsp;</span></strong><span style="font-size:12px;">Each patient enrolled should have a unique active safety monitoring (ASM) code.<u><span style="color:#0C9A73;">&nbsp;The coding system should be agreed upon and standardized across all sites by the country</span></u>. Please use the patient&rsquo;s ASM code as the unique identifier for that patient.&nbsp;</span></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;padding: 0cm 5.4pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;color:#BF8F00;">Tick boxes (</span></strong><strong><span style="font-size:12px;font-family:Wingdings;color:#BF8F00;">o</span></strong><strong><span style="font-size:12px;color:#BF8F00;">):</span></strong><strong><span style="font-size:12px;color:#0C9A73;">&nbsp;&nbsp;</span></strong><span style="font-size:12px;">Where there are tick boxes, please answer by placing a <em>tick</em>&nbsp;</span><span style="font-size:12px;font-family:Wingdings;color:#0C9A73;">&thorn;</span><span style="font-size:12px;color:#0C9A73;">&nbsp;</span><span style="font-size:12px;">in the appropriate box.</span></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;background: rgb(228, 244, 223);padding: 0cm 5.4pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#BF8F00;">Patient Details</span></strong></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-top: none;border-left: 1pt solid rgb(228, 244, 223);border-bottom: none;border-right: 1pt solid rgb(228, 244, 223);padding: 0cm 5.4pt;height: 15.35pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;">Patient name:</span></strong><span style="font-size:12px;">&nbsp;Please provide patient&rsquo;s Surname and given name (s) or initials. <strong>Hospital number:</strong> Record the file number used to identify this patient in your clinic.&nbsp;</span></p>
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;">Date of birth:</span></strong><span style="font-size:12px;">&nbsp;If date of birth is not known, record the patient&rsquo;s age (or estimated age).</span></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;padding: 0cm 5.4pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;">Sex:</span></strong><span style="font-size:12px;">&nbsp;Please provide patient&rsquo;s sex at birth. <strong>Pregnancy:</strong> For all female patients indicate pregnancy status with <strong>LMP</strong> and estimated <strong>gestational age</strong> if pregnant.&nbsp;</span></p>
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;">Address:</span></strong><span style="font-size:12px;">&nbsp; Provide a traceable address for patient in the vent that home visit may become necessary.&nbsp;</span></p>
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;">Phone number:</span></strong><span style="font-size:12px;">&nbsp;Provide patient&rsquo;s mobile number in the event that follow up by phone becomes necessary.</span></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;background: rgb(228, 244, 223);padding: 0cm 5.4pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#BF8F00;">Medical history prior to commencement of DTG based regimen</span></strong></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;padding: 0cm 5.4pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;">Alcohol/smoking and other substance abuse:&nbsp;</span></strong><span style="font-size:12px;">Indicate if the patient has a history of smoking, use of alcohol or other substances.&nbsp;</span></p>
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;">Medical conditions:</span></strong><span style="font-size:12px;">&nbsp;Please indicate if patient had or has any of the listed and/or other medical conditions, and if so, indicate if it was in the past or still ongoing.</span></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;background: rgb(228, 244, 223);padding: 0cm 5.4pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#BF8F00;">Laboratory tests</span></strong></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-top: none;border-left: 1pt solid rgb(228, 244, 223);border-bottom: none;border-right: 1pt solid rgb(228, 244, 223);padding: 0cm 5.4pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Record the results (including <strong>units</strong>) of the latest laboratory tests taken prior to commencement of DTG based regimen. A list of commonly performed tests has been provided; the details of any additional tests may be recorded in the rows marked &lsquo;<em><span style="color:#0C9A73;">Other</span></em>&rsquo;.</span></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border: 1pt solid rgb(228, 244, 223);background: rgb(228, 244, 223);padding: 0cm 5.4pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#BF8F00;">Medicines taken in last 1 month</span></strong></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;padding: 0cm 5.4pt;height: 54.95pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;">Medicines &amp; traditional/herbal medicines:<span style="color:#BF8F00;">&nbsp;</span></span></strong><span style="font-size:12px;">Record the details of any prescription or over-the counter medicines and any traditional medicines, herbal remedies or health supplements taken at any time during the <strong>past one month</strong>. Include the <strong><em>start and stop dates, indication for use,</em></strong> <strong><em>dosage and frequency</em></strong> in the columns provides. If patient is still taking the medicine tick continuing. If a medicine is given as a fixed dose combination (FDC), or in a co-blister pack, record it as a single medicine with the number of dosage forms (DF) given.&nbsp;</span></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;background: rgb(226, 239, 217);padding: 0cm 5.4pt;height: 12.65pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#BF8F00;">Medicines prescribed at this visit</span></strong></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;padding: 0cm 5.4pt;height: 17.15pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Record the names of the ART medicines or fixed dose combination (FDC) regimen and other medicines prescribed at this visit. The full details of these medicines will also be recorded on the <strong><em><span style="color:#0070C0;">Follow up Form</span></em></strong> <strong><span style="color:#0070C0;">(Form B)</span></strong> at the next visit, when the medicines have actually been taken.</span></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;background: rgb(226, 239, 217);padding: 0cm 5.4pt;height: 17.15pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#BF8F00;">Reasons for use of DTG based regimen</span></strong></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;padding: 0cm 5.4pt;height: 17.15pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Indicate the<strong>&nbsp;</strong>reason(s) for the patient being placed on DTG based regimen at this visit by ticking the most appropriate option</span></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;background: rgb(226, 239, 217);padding: 0cm 5.4pt;height: 17.15pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#BF8F00;">Date of follow up visit</span></strong></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;padding: 0cm 5.4pt;height: 17.15pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Assign to the patient the date to return to the site for follow up visit. This should be approximately one month after the treatment initiation visit. Record the date in the space provided</span></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;background: rgb(226, 239, 217);padding: 0cm 5.4pt;height: 17.15pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#BF8F00;">Details of reporter</span></strong></p>
+                  </td>
+              </tr>
+              <tr>
+                  <td style="width: 512.1pt;border-right: 1pt solid rgb(228, 244, 223);border-bottom: 1pt solid rgb(228, 244, 223);border-left: 1pt solid rgb(228, 244, 223);border-image: initial;border-top: none;padding: 0cm 5.4pt;height: 17.15pt;vertical-align: top;">
+                      <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Provide <strong><em>name, signature and profession</em></strong> of the reporter. This will typically be the person enrolling the patient into the active monitoring program. Indicate the date the form was filled which should coincide with the <strong><em>date of enrolment of the patient</em></strong>.&nbsp;</span></p>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="data.type == 'B'" class="m-1 p-2 height-100vh-280px" style="overflow-y: auto">
+      <table style="width: 5.5e+2pt;border-collapse:collapse;border:none;">
+        <tbody>
+            <tr>
+                <td style="width: 416.6pt;border-top: 1pt solid rgb(218, 238, 243);border-left: 1pt solid rgb(218, 238, 243);border-bottom: none;border-right: 1pt solid white;padding: 1.4pt 5.4pt 0cm;height: 32.05pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#1F497D;">When to complete this form:</span></strong><strong><span style="font-size:12px;color:#5F497A;">&nbsp;</span></strong><span style="font-size:12px;">This form</span><span style="font-size:12px;">&nbsp;should be competed each time the patient is interviewed (e.g., at each patient visit or other type of encounter with a health care professional) following commencement of treatment with DTG based regimen. &nbsp;If the patient is pregnant or becomes pregnant, the <strong><em><span style="color:#1F497D;">Follow up form for pregnant women (Form C)&nbsp;</span></em></strong>should be completed and linked to other forms. This form should also be completed at post-delivery follow up visits for pregnant women. &nbsp;</span></p>
+                </td>
+                <td rowspan="14" style="width: 128.95pt;border-top: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-image: initial;border-left: none;background: rgb(218, 238, 243);padding: 1.4pt 1.4pt 0cm 5.4pt;height: 32.05pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;text-align:center;'><strong><u><span style="color:#1F497D;">CODES</span></u></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;text-align:center;'><strong><u><span style="color:#1F497D;"><span style="text-decoration:none;">&nbsp;</span></span></u></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:13px;color:#1F497D;">SEVERITY</span></strong></p>
+                    <div style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>
+                        <ol style="margin-bottom:0cm;list-style-type: decimal;margin-left:8px;">
+                            <li style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-family:Calibri;color:black;font-size:13px;color:black;">Mild</span></li>
+                            <li style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-family:Calibri;color:black;font-size:13px;color:black;">Moderate</span></li>
+                            <li style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-family:Calibri;color:black;font-size:13px;color:black;">Severe</span></li>
+                        </ol>
+                    </div>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:13px;">&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:#1F497D;">&nbsp;</span></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:#1F497D;">&nbsp;</span></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:#1F497D;">SERIOUSNESS</span></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">H</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp; &nbsp;Hospitalization</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">PH</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp;Prolonged hospital stay&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">PD</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp;Permanent disability</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">CA</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp;Congenital abnormality</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">LT</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp; Life-threatening</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">D</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp; &nbsp; Death</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;line-height:115%;'><span style="font-size:13px;line-height:115%;">&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:#1F497D;">&nbsp;</span></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:#1F497D;">OUTCOME</span></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">R1</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp;Recovered/ resolved</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">R2</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp;Recovering/resolving</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">S</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp; Recovered with sequelae</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">N</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp;Not recovered/not &nbsp;resolved</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">D</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp;Died</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">U</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp;Unknown</span></p>
+                    <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: none;border-right: 1pt solid white;padding: 0cm 5.4pt;height: 71.3pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;color:#0070C0;">Treatment site:</span></strong><strong><span style="font-size:12px;color:#BF8F00;">&nbsp;</span></strong><span style="font-size:12px;">Please provide the name of the site where patient is being followed up in the active monitoring program.</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#0070C0;">Patient ASM Code:</span></strong><span style="font-size:12px;">&nbsp;Please indicate the patient&rsquo;s ASM code which is the unique identifier for that patient on this form to enable linking of patients&rsquo; previous data.<u><span style="color:#0C9A73;">&nbsp;The coding system should be agreed upon and standardized across all sites by the country</span></u></span><span style="font-size:12px;">. If you are completing a <strong><em><span style="color:#1F497D;">Follow up Form</span></em></strong> for a new-born who has been exposed to DTG based regimen <em>in utero</em>, please provide an ASM code for the new-born and ensure that both the <em>mother&rsquo;s and the infant&rsquo;s ID</em> are recorded on the form for proper linkage.&nbsp;</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 7.1pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#1F497D;">Tick boxes (</span></strong><span style="font-size:12px;font-family:Wingdings;color:#1F497D;">o</span><strong><span style="font-size:12px;color:#1F497D;">):&nbsp;</span></strong><span style="font-size:12px;">P</span><span style="font-size:12px;">lease answer by placing a <em>tick</em>&nbsp;</span><span style="font-size:12px;font-family:Wingdings;color:#1F497D;">&thorn;</span><span style="font-size:12px;color:#1F497D;">&nbsp;</span><span style="font-size:12px;">in the appropriate box or boxes.</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(218, 238, 243);padding: 0cm 5.4pt;height: 7.1pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#0070C0;">Patient Details</span></strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: none;border-right: 1pt solid white;padding: 0cm 5.4pt;height: 12.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;">Patient&rsquo;s name:&nbsp;</span></strong><span style="font-size:12px;">Please provide patient&rsquo;s surname and given name(s) or initials.</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 19.8pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;">Date of birth and Sex:&nbsp;</span></strong><span style="font-size:12px;">Record the patient&rsquo;s date of birth or age and sex as on Form A</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(218, 238, 243);padding: 0cm 5.4pt;height: 7.1pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#0070C0;">Medicines</span></strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 64.35pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Provide details of all medicines taken by the patient since the last visit including DTG based regimen. Include start and stop dates for medicines that were started or stopped during the interval since the patient was last interviewed and indicate which medicines continue to be taken. Record the details of any prescription or over-the counter medicines and any traditional medicines, herbal remedies or health supplements taken during this interval.<strong>&nbsp;</strong></span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(218, 238, 243);padding: 0cm 5.4pt;height: 7.1pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#0070C0;">Was there any new adverse event after the start of treatment with DTG based regimen</span></strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: none;border-right: 1pt solid white;padding: 0cm 5.4pt;height: 96.3pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Please indicate if patient experienced any new adverse event after the start of treatment with DTG based regimen.&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">If a new adverse event was indicated, please select from the list of possible adverse events &nbsp;provided or record all new adverse event(s) reported by the patients and provide details of such events.&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><em><span style="font-size:12px;">Death</span></em></strong><span style="font-size:12px;">&nbsp;should be recorded as an event; please also include <em>date and cause of death</em> if known.&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><em><span style="font-size:12px;">&nbsp;</span></em></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">If the event was severe, indicate the <strong><em>severity&nbsp;</em></strong>by filling the appropriate code in the space provided. Also indicate if the event was <strong><em>serious&nbsp;</em></strong>or not and the <strong><em>reason for seriousness&nbsp;</em></strong>by selecting the <strong><span style="color:#1F497D;">CODES</span></strong> for <strong><em>Severity and Seriousness&nbsp;</em></strong>from the panel as appropriate.&nbsp;</span><span style="font-size:12px;font-family:Wingdings;color:#1F497D;">&egrave;&egrave;&egrave;&egrave;&egrave;</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-width: 1pt;border-style: solid;border-color: rgb(218, 238, 243) white rgb(218, 238, 243) rgb(218, 238, 243);border-image: initial;background: rgb(218, 238, 243);padding: 0cm 5.4pt;height: 26.1pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#0070C0;">Was there worsening of an existing or resurgence of a past medical condition after the start of treatment with DTG based regimen</span></strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 65.7pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Please indicate if patient experienced worsening of an existing medical condition or resurgence of a past medical condition after the start of treatment with DTG based regimen. If so, select from the list of conditions provided or record medical conditions not listed that worsened or resurged in the rows marked <em><span style="color:#00B050;">other.&nbsp;</span></em> Indicate if the condition either worsened or resurged by putting the start and stop dates in the appropriate column.</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(218, 238, 243);padding: 0cm 5.4pt;height: 19.35pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#0070C0;">Treatment or action taken to manage adverse event</span></strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 22.95pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Indicate treatment or action taken including medicines prescribed to manage any adverse events&nbsp;</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(217, 226, 243);padding: 0cm 5.4pt;height: 7.2pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#0070C0;">Outcome of adverse event</span></strong></p>
+                </td>
+                <td style="width: 128.95pt;border-top: none;border-left: none;border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);background: rgb(218, 238, 243);padding: 1.4pt 5.4pt 0cm;height: 7.2pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 31.95pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Indicate the <strong><em>Outcome</em></strong> of the adverse event<strong><em>&nbsp;</em></strong>by selecting the <strong><span style="color:#1F497D;">CODES</span></strong> for <strong><em>Outcome&nbsp;</em></strong>from the panel as appropriate.&nbsp;</span><span style="font-size:12px;font-family:  Wingdings;color:#1F497D;">&egrave;&egrave;&egrave;&egrave;&egrave;</span></p>
+                </td>
+                <td style="width: 128.95pt;border-top: none;border-left: none;border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);background: rgb(218, 238, 243);padding: 1.4pt 5.4pt 0cm;height: 31.95pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(222, 234, 246);padding: 0cm 5.4pt;height: 14.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#0070C0;">Laboratory Tests</span></strong></p>
+                </td>
+                <td style="width: 128.95pt;border-top: none;border-left: none;border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);background: rgb(218, 238, 243);padding: 1.4pt 5.4pt 0cm;height: 14.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 23.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Record the results (including <strong>units</strong>) of any laboratory tests taken since the patient was last seen that is abnormal. Commonly performed tests have been listed; other tests may be recorded in the space provided.</span></p>
+                </td>
+                <td style="width: 128.95pt;border-top: none;border-left: none;border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);background: rgb(218, 238, 243);padding: 1.4pt 5.4pt 0cm;height: 23.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(222, 234, 246);padding: 0cm 5.4pt;height: 3.6pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#0070C0;">Reporter</span></strong></p>
+                </td>
+                <td style="width: 128.95pt;border-top: none;border-left: none;border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);background: rgb(218, 238, 243);padding: 1.4pt 5.4pt 0cm;height: 3.6pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 3.6pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Provide <strong><em>name, signature and phone number</em></strong> of the reporter. This will typically be the person that attends to the patient at the follow up visit.</span></p>
+                </td>
+                <td style="width: 128.95pt;border-top: none;border-left: none;border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);background: rgb(218, 238, 243);padding: 1.4pt 5.4pt 0cm;height: 3.6pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+        </tbody>
+      </table>      
+    </div>
+
+    <div *ngIf="data.type == 'C'" class="m-1 p-2 height-100vh-280px" style="overflow-y: auto">
+      <table style="width: 5.5e+2pt;border-collapse:collapse;border:none;">
+        <tbody>
+            <tr>
+                <td style="width: 416.6pt;border-top: 1pt solid rgb(218, 238, 243);border-left: 1pt solid rgb(218, 238, 243);border-bottom: none;border-right: 1pt solid white;padding: 1.4pt 5.4pt 0cm;height: 68.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;color:#00B050;">When to complete this form:</span></strong><strong><span style="font-size:12px;color:#943634;">&nbsp;</span></strong><span style="font-size:12px;">This follow up form should be completed at every follow up visit for <u>women who are already pregnant or women who become pregnant while enrolled on the active monitoring program</u></span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:12px;color:#00B050;">Treatment site</span></strong><strong><span style="font-size:12px;color:#0070C0;">:</span></strong><strong><span style="font-size:12px;color:#BF8F00;">&nbsp;</span></strong><span style="font-size:12px;">Please provide the name of the site where patient is being followed up in the active monitoring program.</span></p>
+                </td>
+                <td rowspan="11" style="width: 128.95pt;border-top: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-image: initial;border-left: none;background: rgb(218, 238, 243);padding: 1.4pt 1.4pt 0cm 5.4pt;height: 68.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;text-align:center;'><strong><u><span style="color:#1F497D;">CODES</span></u></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;text-align:center;'><strong><u><span style="color:#1F497D;"><span style="text-decoration:none;">&nbsp;</span></span></u></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;'><strong><span style="font-size:13px;color:#1F497D;">SEVERITY</span></strong></p>
+                    <div style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>
+                        <ol style="margin-bottom:0cm;list-style-type: decimal;margin-left:8px;">
+                            <li style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-family:Calibri;color:black;font-size:13px;color:black;">Mild</span></li>
+                            <li style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-family:Calibri;color:black;font-size:13px;color:black;">Moderate</span></li>
+                            <li style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-family:Calibri;color:black;font-size:13px;color:black;">Severe</span></li>
+                        </ol>
+                    </div>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:13px;">&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:#1F497D;">&nbsp;</span></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:#1F497D;">&nbsp;</span></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:#1F497D;">SERIOUSNESS</span></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">H</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp; &nbsp;Hospitalization</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">PH</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp;Prolonged hospital stay&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">PD</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp;Permanent disability</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">CA</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp;Congenital abnormality</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">LT</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp; Life-threatening</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">D</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp; &nbsp; Death</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;line-height:115%;'><span style="font-size:13px;line-height:115%;">&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:#1F497D;">&nbsp;</span></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:#1F497D;">OUTCOME</span></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">R1</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp;Recovered/ resolved</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">R2</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp;Recovering/resolving</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">S</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp; Recovered with sequelae</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">N</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp;Not recovered/not &nbsp;resolved</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">D</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp;Died</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;margin-bottom:6.0pt;line-height:115%;'><strong><span style="font-size:13px;line-height:115%;color:black;">U</span></strong><span style="font-size:13px;line-height:115%;color:black;">&nbsp; &nbsp;Unknown</span></p>
+                    <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 7.1pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#00B050;">Patient ASM Code</span></strong><strong><span style="font-size:12px;color:#0070C0;">:</span></strong><span style="font-size:12px;">&nbsp;Please indicate the patient&rsquo;s ASM code which is the unique identifier for that patient on this form to enable linking of patients&rsquo; previous data.<u><span style="color:#0C9A73;">&nbsp;The coding system should be agreed upon and standardized across all sites by the country</span></u></span><span style="font-size:12px;">.&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#00B050;">Tick boxes (</span></strong><strong><span style="font-size:12px;font-family:Wingdings;color:#00B050;">o</span></strong><strong><span style="font-size:12px;color:#00B050;">):</span></strong><strong><span style="font-size:12px;color:#1F497D;">&nbsp;</span></strong><span style="font-size:12px;">P</span><span style="font-size:12px;">lease answer by placing a <em>tick</em>&nbsp;</span><span style="font-size:12px;font-family:Wingdings;color:#1F497D;">&thorn;</span><span style="font-size:12px;color:#1F497D;">&nbsp;</span><span style="font-size:12px;">in the appropriate box or boxes.</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(218, 238, 243);padding: 0cm 5.4pt;height: 7.1pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#00B050;">Patient Details</span></strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: none;border-right: 1pt solid white;padding: 0cm 5.4pt;height: 12.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;">Patient&rsquo;s name:&nbsp;</span></strong><span style="font-size:12px;">Please provide patient&rsquo;s surname and given name(s) or initials.</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 119.7pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;">Date of birth and Sex:&nbsp;</span></strong><span style="font-size:12px;">Record the patient&rsquo;s date of birth or age and sex as on Form A</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;">Parity:&nbsp;</span></strong><span style="font-size:12px;">Indicate the number of pregnancies the patient has had that reached viable gestational age (typically &gt;28weeks) including live births and stillbirths</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;">Gravidity:</span></strong><span style="font-size:12px;">&nbsp;Indicate the number of times the woman has been pregnant regardless of the outcome</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;">Pregnancy status and outcome:&nbsp;</span></strong><span style="font-size:12px;">Indicate if the woman is still pregnant at this visit. If, yes provide the gestational age otherwise select the outcome of the pregnancy from the options provided. If live birth is selected, please also complete <span style="color:#7030A0;">form D</span>&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;">Events leading up to selected pregnancy outcome:</span></strong><span style="font-size:12px;">&nbsp;In the event that the woman is no longer pregnant, provide details of the events leading to the selected pregnancy outcome.&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;">History of previous adverse pregnancy outcomes:</span></strong><span style="font-size:12px;">&nbsp;Provide details of previous adverse pregnancy outcomes (if applicable)</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(218, 238, 243);padding: 0cm 5.4pt;height: 7.1pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#00B050;">Any other adverse event after the start of treatment with DTG based regimen</span></strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 92.25pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Please indicate if patient experienced any new adverse event after the start of treatment with DTG based regimen.&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">If a new adverse event was indicated, please select from the list of possible adverse events &nbsp;provided or record all new adverse event(s) reported by the patients and provide details of such events.&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><em><span style="font-size:12px;">Death</span></em></strong><span style="font-size:12px;">&nbsp;should be recorded as an event; please also include <em>date and cause of death</em> if known.&nbsp;</span></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><em><span style="font-size:12px;">&nbsp;</span></em></strong></p>
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">If the event was severe, indicate the <strong><em>severity&nbsp;</em></strong>by filling the appropriate code in the space provided. Also indicate if the event was <strong><em>serious&nbsp;</em></strong>or not and the <strong><em>reason for seriousness&nbsp;</em></strong>by selecting the <strong><span style="color:#1F497D;">CODES</span></strong> for <strong><em>Severity and Seriousness&nbsp;</em></strong>from the panel as appropriate.&nbsp;</span><span style="font-size:12px;font-family:Wingdings;color:#1F497D;">&egrave;&egrave;&egrave;&egrave;&egrave;</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(218, 238, 243);padding: 0cm 5.4pt;height: 22.95pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#00B050;">Was there worsening of an existing or resurgence of a past medical condition after the start of treatment with DTG based regimen</span></strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 59.85pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Please indicate if patient experienced worsening of an existing medical condition or resurgence of a past medical condition after the start of treatment with DTG based regimen. If so, select from the list of conditions provided or record medical conditions not listed that worsened or resurged in the rows marked <em><span style="color:#00B050;">other.&nbsp;</span></em> Indicate if the condition either worsened or resurged by putting the start and stop dates in the appropriate column.</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(218, 238, 243);padding: 0cm 5.4pt;height: 14.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#00B050;">Treatment or action taken to manage adverse event</span></strong></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 14.85pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Indicate treatment or action taken including medicines prescribed to manage any adverse events&nbsp;</span></p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(217, 226, 243);padding: 0cm 5.4pt;height: 11.25pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#00B050;">Outcome of adverse event</span></strong></p>
+                </td>
+                <td style="width: 128.95pt;border-top: none;border-left: none;border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);background: rgb(218, 238, 243);padding: 1.4pt 5.4pt 0cm;height: 11.25pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 24.75pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Indicate the <strong><em>Outcome</em></strong> of the adverse event<strong><em>&nbsp;</em></strong>by selecting the <strong><span style="color:#1F497D;">CODES</span></strong> for <strong><em>Outcome&nbsp;</em></strong>from the panel as appropriate.&nbsp;</span><span style="font-size:12px;font-family:  Wingdings;color:#1F497D;">&egrave;&egrave;&egrave;&egrave;&egrave;</span></p>
+                </td>
+                <td style="width: 128.95pt;border-top: none;border-left: none;border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);background: rgb(218, 238, 243);padding: 1.4pt 5.4pt 0cm;height: 24.75pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(222, 234, 246);padding: 0cm 5.4pt;height: 14.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#00B050;">Laboratory Tests</span></strong></p>
+                </td>
+                <td style="width: 128.95pt;border-top: none;border-left: none;border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);background: rgb(218, 238, 243);padding: 1.4pt 5.4pt 0cm;height: 14.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 23.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Record the results (including <strong>units</strong>) of any laboratory tests taken since the patient was last seen that is abnormal. Commonly performed tests have been listed; other tests may be recorded in the space provided.</span></p>
+                </td>
+                <td style="width: 128.95pt;border-top: none;border-left: none;border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);background: rgb(218, 238, 243);padding: 1.4pt 5.4pt 0cm;height: 23.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(222, 234, 246);padding: 0cm 5.4pt;height: 14.85pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#00B050;">Medicines</span></strong></p>
+                </td>
+                <td style="width: 128.95pt;border-top: none;border-left: none;border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);background: rgb(218, 238, 243);padding: 1.4pt 5.4pt 0cm;height: 14.85pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 23.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Provide details of all medicines taken by the patient since starting DTG based regimen and or the last visit. Include start and stop dates for medicines that were started or stopped during the interval since the patient was last interviewed and indicate which medicines continue to be taken. Record the details of any prescription or over-the counter medicines and any traditional medicines, herbal remedies or health supplements taken during this interval.<strong>&nbsp;</strong></span></p>
+                </td>
+                <td style="width: 128.95pt;border-top: none;border-left: none;border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);background: rgb(218, 238, 243);padding: 1.4pt 5.4pt 0cm;height: 23.4pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;background: rgb(222, 234, 246);padding: 0cm 5.4pt;height: 3.6pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><strong><span style="font-size:12px;color:#00B050;">Reporter</span></strong></p>
+                </td>
+                <td style="width: 128.95pt;border-top: none;border-left: none;border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);background: rgb(218, 238, 243);padding: 1.4pt 5.4pt 0cm;height: 3.6pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+            <tr>
+                <td style="width: 416.6pt;border-top: none;border-left: 1pt solid rgb(218, 238, 243);border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid white;padding: 0cm 5.4pt;height: 3.6pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'><span style="font-size:12px;">Provide <strong><em>name, signature and phone number</em></strong> of the reporter. This will typically be the person that attends to the patient at the follow up visit.</span></p>
+                </td>
+                <td style="width: 128.95pt;border-top: none;border-left: none;border-bottom: 1pt solid rgb(218, 238, 243);border-right: 1pt solid rgb(218, 238, 243);background: rgb(218, 238, 243);padding: 1.4pt 5.4pt 0cm;height: 3.6pt;vertical-align: top;">
+                    <p style='margin:0cm;font-size:16px;font-family:"Times New Roman",serif;'>&nbsp;</p>
+                </td>
+            </tr>
+        </tbody>
+      </table>      
+    </div>
+
+    <div fxFlex="100" class="mt-1">
+      <span fxFlex></span>
+      <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Close" | translate }}</button>
+    </div>
+  </div>

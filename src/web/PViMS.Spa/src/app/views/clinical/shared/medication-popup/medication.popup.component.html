@@ -1,0 +1,151 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="viewModelForm">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="card-title-text light-mat-gray p-24 mb-24 rounded">
+        {{"L_TEXT_8" | translate }}
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-tab-group>
+          <mat-tab label="{{'Basic Information' | translate}}">
+            <mat-card-content class="m-1" style="height: 400px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                <div fxFlex="100" class="mt-12" *ngIf="viewModelForm.get('sourceDescription').value != '' && data.medicationId > 0">
+                  <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>{{'Medication description (As noted at source)' | translate }}</mat-label>
+                    <input matInput formControlName="sourceDescription" readonly>
+                  </mat-form-field>        
+                </div>
+                <div fxFlex="100" class="mt-12">
+                  <mat-form-field class="full-width" appearance="fill">
+                    <mat-label>{{'Medication' | translate }}</mat-label>
+                    <input matInput formControlName="medication" required readonly>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="100" class="mt-12" fxLayoutAlign="end">
+                  <button mat-mini-fab (click)="openConceptPopup()"><mat-icon>search</mat-icon></button>
+                </div>
+
+                <div fxFlex="50" class="pr-1 mt-12">
+                  <mat-form-field class="full-width">
+                    <input matInput formControlName="startDate" placeholder="{{'Start date' | translate}}" [matDatepicker]="startDateDatepicker" required>
+                    <mat-datepicker-toggle matSuffix [for]="startDateDatepicker"></mat-datepicker-toggle>
+                    <mat-error *ngIf="viewModelForm.get('startDate').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                  </mat-form-field>
+                  <mat-datepicker #startDateDatepicker></mat-datepicker>
+                </div>
+                <div fxFlex="50" class="pr-1 mt-12">
+                  <mat-form-field class="full-width">
+                    <input matInput formControlName="endDate" placeholder="{{'End date' | translate}}" [matDatepicker]="endDateDatepicker">
+                    <mat-datepicker-toggle matSuffix [for]="endDateDatepicker"></mat-datepicker-toggle>
+                  </mat-form-field>
+                  <mat-datepicker #endDateDatepicker></mat-datepicker>
+                </div>
+                <div fxFlex="50" class="pr-1 mt-12">
+                  <mat-form-field class="full-width">
+                    <input matInput formControlName="dose" placeholder="{{'Dose' | translate }}">
+                    <mat-error *ngIf="viewModelForm.get('dose').hasError('maxlength')">
+                      {{'Maximum length exceeded' | translate}}
+                    </mat-error>            
+                    <mat-error *ngIf="viewModelForm.get('dose').hasError('pattern')">
+                      {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, period, forward slash)
+                    </mat-error>            
+                  </mat-form-field>        
+                </div>
+                <div fxFlex="50" class="pr-1 mt-12">
+                  <mat-form-field class="full-width">
+                    <mat-select formControlName="doseUnit" placeholder="{{'Dose unit' | translate}}">
+                      <mat-option value=""></mat-option>
+                      <mat-option value="Bq">becquerel</mat-option>
+                      <mat-option value="Ci">curie</mat-option>
+                      <mat-option value="{DF}">dosage form</mat-option>
+                      <mat-option value="[drp]">drop</mat-option>
+                      <mat-option value="GBq">gigabecquerel</mat-option>
+                      <mat-option value="g">gram</mat-option>
+                      <mat-option value="[iU]">international unit</mat-option>
+                      <mat-option value="[iU]/kg">international unit/kilogram</mat-option>
+                      <mat-option value="kBq">killobecquerel</mat-option>
+                      <mat-option value="kg">kilogram</mat-option>
+                      <mat-option value="k[iU]">kilo-international unit</mat-option>
+                      <mat-option value="L">liter</mat-option>
+                      <mat-option value="MBq">megabecquerel</mat-option>
+                      <mat-option value="M[iU]">mega-international unit</mat-option>
+                      <mat-option value="uCi">microcurie</mat-option>
+                      <mat-option value="ug">microgram</mat-option>
+                      <mat-option value="ug/kg">microgram/kilogram</mat-option>
+                      <mat-option value="uL">microliter</mat-option>
+                      <mat-option value="mCi">millicurie</mat-option>
+                      <mat-option value="meq">milliequivalent</mat-option>
+                      <mat-option value="mg">milligram</mat-option>
+                      <mat-option value="mg/kg">milligram/kilogram</mat-option>
+                      <mat-option value="mg/m2">milligram/sq.meter</mat-option>
+                      <mat-option value="ug/m2">microgram/sq.meter</mat-option>
+                      <mat-option value="mL">milliliter</mat-option>
+                      <mat-option value="mmol">millimole</mat-option>
+                      <mat-option value="mol">mole</mat-option>
+                      <mat-option value="nCi">nanocurie</mat-option>
+                      <mat-option value="ng">nanogram</mat-option>
+                      <mat-option value="%">percent</mat-option>
+                      <mat-option value="pg">picogram</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1 mt-12">
+                  <mat-form-field class="full-width">
+                    <input matInput formControlName="doseFrequency" placeholder="{{'Dose frequency' | translate }}">
+                    <mat-error *ngIf="viewModelForm.get('doseFrequency').hasError('maxlength')">
+                      {{'Maximum length exceeded' | translate}}
+                    </mat-error>            
+                    <mat-error *ngIf="viewModelForm.get('doseFrequency').hasError('pattern')">
+                      {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, period, space)
+                    </mat-error>            
+                  </mat-form-field>        
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+          <mat-tab label="{{'Detail Information' | translate}}">
+            <mat-card-content class="m-1" style="height: 400px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start" formGroupName="attributes">
+                <div fxFlex="100" class="mt-12" *ngFor="let attribute of customAttributeList">
+                  <mat-form-field class="full-width" *ngIf="attribute.customAttributeType == 'String'">
+                    <input matInput formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" [required]="attribute.required">
+                  </mat-form-field>
+                  <mat-form-field class="full-width" *ngIf="attribute.customAttributeType == 'Numeric'">
+                    <input matInput formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" type="number" [required]="attribute.required">
+                    <mat-hint *ngIf="attribute.numericMinValue != null && attribute.numericMaxValue != null">
+                      {{'Valid between ' | translate}} {{attribute.numericMinValue}} {{'and ' | translate}} {{attribute.numericMaxValue}}
+                    </mat-hint>
+                  </mat-form-field>        
+                  <span *ngIf="attribute.customAttributeType == 'DateTime'">
+                    <mat-form-field class="full-width">
+                      <input matInput formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" [matDatepicker]="datepicker" [required]="attribute.required">
+                      <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                    </mat-form-field>        
+                    <mat-datepicker #datepicker startView="multi-year"></mat-datepicker>
+                  </span>
+                  <mat-form-field class="full-width" *ngIf="attribute.customAttributeType == 'Selection'">
+                    <mat-select formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" [required]="attribute.required">
+                      <mat-option *ngFor="let item of attribute.selectionDataItems" value="{{item.selectionKey}}">
+                        {{item.value | translate}}
+                      </mat-option>
+                    </mat-select>                        
+                  </mat-form-field>                
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="viewModelForm.invalid" (click)="submit()">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

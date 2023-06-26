@@ -1,0 +1,104 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width" appearance="fill">
+          <mat-label>{{'Report name' | translate}}</mat-label>
+          <input matInput formControlName="reportName" readonly>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" class="p-12 font-weight-bold default-light-bg rounded">
+        {{'L_TEXT_27' | translate}}
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <div class="p-2 table-container">
+          <div fxLayout="row wrap" fxLayout.lt-sm="column">
+            <div fxFlex="35" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="attributeName" placeholder="{{'Attribute name' | translate}}" required>
+                  <mat-option *ngFor="let metaColumn of coreMetaTable?.columns" [value]="metaColumn.columnName">
+                      {{metaColumn.columnName}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div fxFlex="35" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <input matInput formControlName="displayName" placeholder="{{'Display name' | translate }}">
+                <mat-hint>{{'Maximum length' | translate}} 50</mat-hint> 
+                <mat-error *ngIf="itemForm.get('displayName').hasError('maxlength')">
+                  {{'Maximum length exceeded' | translate}}
+                </mat-error>            
+                <mat-error *ngIf="itemForm.get('displayName').hasError('pattern')">
+                  {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space, hyphen, period, comma)
+                </mat-error>            
+              </mat-form-field>        
+            </div>
+            <div fxFlex="30" class="pr-1" *ngIf="itemForm.get('reportType').value == 'Summary'">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="aggregate" placeholder="{{'Aggregate' | translate}}">
+                  <mat-option value="GROUP">GROUP</mat-option>
+                  <mat-option value="AVG">AVG</mat-option>
+                  <mat-option value="COUNT">COUNT</mat-option>
+                  <mat-option value="MAX">MAX</mat-option>
+                  <mat-option value="MIN">MIN</mat-option>
+                  <mat-option value="SUM">SUM</mat-option>
+                </mat-select>
+              </mat-form-field>        
+            </div>
+          </div>
+          <div class="p-12" fxLayoutAlign="end">
+            <button mat-mini-fab (click)="addAttribute()"><mat-icon>add</mat-icon></button>
+          </div>
+          <mat-table [dataSource]="viewModel?.attributeGrid?.records"
+                    [@animate]="{value:'50'}">
+
+            <ng-container matColumnDef="attribute-name">
+                <mat-header-cell *matHeaderCellDef>{{'Attribute name' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    {{record.attributeName}}
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="aggregate">
+              <mat-header-cell *matHeaderCellDef>{{'Aggregate' | translate}}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  {{record.aggregate}}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="display-name">
+              <mat-header-cell *matHeaderCellDef>{{'Display name' | translate}}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  {{record.displayName}}
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+              <mat-header-cell *matHeaderCellDef>{{'Actions' | translate}}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                <button mat-icon-button color="warn" matTooltip="{{'Delete Attribute' | translate}}"
+                    (click)="removeAttribute(record.index)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </mat-cell>                    
+            </ng-container>                        
+          
+            <mat-header-row *matHeaderRowDef="viewModel?.attributeGrid?.displayedColumns; sticky:true"></mat-header-row>
+            <mat-row *matRowDef="let record; columns: viewModel?.attributeGrid?.displayedColumns;"></mat-row>
+          </mat-table>
+        </div>
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid" (click)="submit()">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

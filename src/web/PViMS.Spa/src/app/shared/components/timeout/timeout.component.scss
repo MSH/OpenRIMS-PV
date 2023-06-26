@@ -1,0 +1,22 @@
+#app-timeout {
+  position: fixed;
+  bottom: 0px;
+  top: 0;
+  right: 0;
+  width: 480px;
+  z-index: 999;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  color: #444;
+  background: #ffffff;
+  overflow: hidden;
+
+  .logo {
+    width: 134;
+    height: 136px;
+  }
+}

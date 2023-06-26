@@ -1,0 +1,21 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="card-title-text light-gray p-24 mb-24">
+        {{"L_TEXT_3" | translate }}
+      </div>
+      <div fxFlex="100" class="pr-1">
+        <input type="file" class="p-8 full-width" placeholder="{{'Please select the file to upload' | translate }}" required
+        (change)="handleFileInput($event.target.files)" accept=".zip">
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="fileToUpload == null || itemForm.invalid">{{"Import" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

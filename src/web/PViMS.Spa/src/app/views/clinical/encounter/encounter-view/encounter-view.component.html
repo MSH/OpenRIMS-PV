@@ -1,0 +1,508 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<div class="page-layout overflow-hidden pb-8">
+  <mat-card class="p-0">
+    <mat-card-title class="">
+      <div class="card-title-text">
+        <button mat-raised-button (click)="routeToSearch()" color="accent" class="mr-48">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        {{'Encounter View' | translate}} |
+        <button mat-button (click)="routeToPatient()" color="primary">
+          {{this.viewModel.patient?.firstName}} {{this.viewModel.patient?.lastName}} ({{this.viewModel.patient?.medicalRecordNumber}})
+        </button>
+        <span class="mat-color-primary">| {{this.viewModel.encounterType}} ({{this.viewModel.encounterDate}})</span>
+      </div>
+    </mat-card-title>
+  </mat-card>
+
+  <!-- Left Sidebar -->
+  <egret-sidebar name="layout-left-sidebar-card" class="default-bg-mobile height-100vh-70px" [perfectScrollbar]>
+    <div>
+      <mat-action-list>
+        <button mat-list-item (click)="selectAction(1)" [ngClass]="{'selected-action': selectedOption == 1}"> <h5>{{'Encounter Information' | translate}}</h5> </button>
+        <mat-divider></mat-divider>
+        <button mat-list-item (click)="selectAction(2)" [ngClass]="{'selected-action': selectedOption == 2}"> <h5>{{'Clinical Information' | translate}}</h5> </button>
+        <mat-divider></mat-divider>
+        <button mat-list-item (click)="selectAction(3)" [ngClass]="{'selected-action': selectedOption == 3}"> <h5>{{'Audit Information' | translate}}</h5> </button>
+        <mat-divider></mat-divider>
+        <button mat-list-item (click)="selectAction(4)" [ngClass]="{'selected-action': selectedOption == 4}"> <h5>{{'Condition Groups' | translate}}</h5> </button>
+        <mat-divider></mat-divider>
+        <button mat-list-item (click)="selectAction(5)" [ngClass]="{'selected-action': selectedOption == 5}" > <h5>{{'History of Weight Change' | translate}}</h5> </button>
+        <mat-divider ></mat-divider>
+      </mat-action-list>
+    </div>
+  </egret-sidebar>
+
+  <div class="content">
+    <!-- content card -->
+    <div class="content-body" [perfectScrollbar]>
+      <!-- card header -->
+      <div class="card-header px-24 py-8 border-bottom">
+        <button fxHide fxShow.lt-md mat-icon-button egretSidebarToggler="layout-left-sidebar-card" class="mr-8">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>          
+      <div class="card-body height-100vh-280px" *ngIf="selectedOption==1" style="overflow-y: auto">
+        <mat-card>
+          <form [formGroup]="viewEncounterForm">
+            <mat-tab-group>
+              <mat-tab [label]="category.datasetCategoryName" *ngFor="let category of datasetCategories">
+                <mat-card-content class="m-1 p-2">
+                  <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start" formGroupName="elements">
+                    <div fxFlex="50" class="pr-1" *ngFor="let element of category.datasetElements">
+                      <mat-form-field class="p-8 full-width" appearance="fill">
+                        <mat-label>{{element.datasetElementDisplayName | translate}}</mat-label>
+                        <input matInput formControlName="{{element.datasetElementId}}" readonly>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </mat-card-content>
+              </mat-tab>
+
+              <mat-tab label="{{'Notes' | translate}}">
+                <mat-card-content class="m-1 p-2">
+                  <form [formGroup]="viewNotesForm">
+                    <quill-editor theme="snow" formControlName="notes" readOnly="true"></quill-editor>
+                  </form>
+                </mat-card-content>
+              </mat-tab>
+            </mat-tab-group>
+            <div class="m-333" fxLayoutAlign="end">
+              <button mat-raised-button class="mb-05 mr-12" color="warn" 
+                          *ngIf="accountService.hasRole('Clinician')" 
+                          (click)="openDeletePopUp()">
+                {{"Delete Encounter" | translate }}
+              </button>
+              <!-- <span fxFlex></span> -->
+              <button mat-raised-button class="mb-05" color="primary" (click)="openUpdatePopUp()">{{"Update Encounter" | translate }}</button>
+            </div>
+          </form>
+        </mat-card>
+      </div>
+
+      <div class="card-body height-100vh-280px" *ngIf="selectedOption==2" style="overflow-y: auto">
+        <mat-card>
+            <mat-tab-group>
+              <mat-tab label="{{'Conditions' | translate}}">
+                <mat-card-content class="m-1 p-5">
+                  <div class="ml-05 mr-05 mt-05 pb-1">
+                    <div class="m-333" fxLayoutAlign="end">
+                      <!-- <span fxFlex></span> -->
+                      <button mat-raised-button class="mb-05" color="accent" (click)="openConditionPopUp({}, true)">{{'Add Condition' | translate }}</button>
+                    </div>
+
+                    <div class="table-container">
+                      <mat-table [dataSource]="viewGridModel?.conditionGrid?.records"
+                                [@animate]="{value:'50'}">
+            
+                        <ng-container matColumnDef="condition-name">
+                            <mat-header-cell *matHeaderCellDef>{{'Condition' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.sourceDescription}}
+                            </mat-cell>
+                        </ng-container>
+            
+                        <ng-container matColumnDef="start-date">
+                            <mat-header-cell *matHeaderCellDef>{{'Start date' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.startDate | date:'dd/MM/yyyy'}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="outcome-date">
+                          <mat-header-cell *matHeaderCellDef>{{'Outcome date' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.outcomeDate | date:'dd/MM/yyyy'}}
+                          </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="outcome">
+                          <mat-header-cell *matHeaderCellDef>{{'Outcome' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.outcome}}
+                          </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="actions">
+                          <mat-header-cell *matHeaderCellDef>
+                            {{'Actions' | translate}}
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                            <button mat-icon-button color="primary" matTooltip="{{'Update Condition' | translate}}"
+                                    (click)="openConditionPopUp(record, false)">
+                              <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" matTooltip="{{'Delete Condition' | translate}}"
+                                    (click)="openArchivePopUp('Patient Condition', record.id, record.sourceDescription)">
+                              <mat-icon>delete</mat-icon>
+                            </button>
+                          </mat-cell>
+                        </ng-container>                        
+                      
+                        <mat-header-row *matHeaderRowDef="viewGridModel?.conditionGrid?.displayedColumns; sticky:true"></mat-header-row>
+                        <mat-row *matRowDef="let record; columns: viewGridModel?.conditionGrid?.displayedColumns;"></mat-row>
+                      </mat-table>
+                    </div>
+                  </div>                  
+                </mat-card-content>
+              </mat-tab>
+
+              <mat-tab label="{{'Adverse Events' | translate}}">
+                <mat-card-content class="m-1 p-5">
+                  <div class="ml-05 mr-05 mt-05 pb-1">
+                    <div class="m-333" fxLayoutAlign="end">
+                      <!-- <span fxFlex></span> -->
+                      <button mat-raised-button class="mb-05" color="accent" (click)="openClinicalEventPopUp({}, true)">{{'Add Adverse Event' | translate }}</button>
+                    </div>
+
+                    <div class="table-container">
+                      <mat-table [dataSource]="viewGridModel?.clinicalEventGrid?.records"
+                                [@animate]="{value:'50'}">
+            
+                        <ng-container matColumnDef="description">
+                            <mat-header-cell *matHeaderCellDef>{{'Description' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.sourceDescription}}
+                            </mat-cell>
+                        </ng-container>
+            
+                        <ng-container matColumnDef="onset-date">
+                            <mat-header-cell *matHeaderCellDef>{{'Onset date' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.onsetDate | date:'dd/MM/yyyy'}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="reported-date">
+                          <mat-header-cell *matHeaderCellDef>{{'Reported date' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.reportDate | date:'dd/MM/yyyy'}}
+                          </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="resolution-date">
+                          <mat-header-cell *matHeaderCellDef>{{'Resolution date' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.resolutionDate | date:'dd/MM/yyyy'}}
+                          </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="is-serious">
+                          <mat-header-cell *matHeaderCellDef>{{'Is serious' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.isSerious}}
+                          </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="actions">
+                          <mat-header-cell *matHeaderCellDef>
+                            {{'Actions' | translate}}
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                            <button mat-icon-button color="primary" matTooltip="{{'Update Adverse Event' | translate}}"
+                                    (click)="openClinicalEventPopUp(record, false)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" matTooltip="{{'Delete Adverse Event' | translate}}"
+                                    (click)="openArchivePopUp('Patient Clinical Event', record.id, record.sourceDescription)">
+                              <mat-icon>delete</mat-icon>
+                            </button>
+                          </mat-cell>
+                        </ng-container>                        
+                      
+                        <mat-header-row *matHeaderRowDef="viewGridModel?.clinicalEventGrid?.displayedColumns; sticky:true"></mat-header-row>
+                        <mat-row *matRowDef="let record; columns: viewGridModel?.clinicalEventGrid?.displayedColumns;"></mat-row>
+                      </mat-table>
+                    </div>
+                  </div>                  
+                </mat-card-content>
+              </mat-tab>
+
+              <mat-tab label="{{'Medications' | translate}}">
+                <mat-card-content class="m-1 p-5">
+                  <div class="ml-05 mr-05 mt-05 pb-1">
+                    <div class="m-333" fxLayoutAlign="end">
+                      <!-- <span fxFlex></span> -->
+                      <button mat-raised-button class="mb-05" color="accent" (click)="openMedicationPopUp({}, true)">{{'Add Medication' | translate }}</button>
+                    </div>
+
+                    <div class="table-container">
+                      <mat-table [dataSource]="viewGridModel?.medicationGrid?.records"
+                                [@animate]="{value:'50'}">
+            
+                        <ng-container matColumnDef="drug-name">
+                            <mat-header-cell *matHeaderCellDef>{{'Drug name' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.sourceDescription}}
+                            </mat-cell>
+                        </ng-container>
+            
+                        <ng-container matColumnDef="dose">
+                            <mat-header-cell *matHeaderCellDef>{{'Dose' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.dose}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="dose-unit">
+                          <mat-header-cell *matHeaderCellDef>{{'Dose unit' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.doseUnit}}
+                          </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="dose-frequency">
+                          <mat-header-cell *matHeaderCellDef>{{'Frequency' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.doseFrequency}}
+                          </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="start-date">
+                          <mat-header-cell *matHeaderCellDef>{{'Start date' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.startDate | date:'dd/MM/yyyy'}}
+                          </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="end-date">
+                          <mat-header-cell *matHeaderCellDef>{{'End date' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.endDate | date:'dd/MM/yyyy'}}
+                          </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="indication-type">
+                          <mat-header-cell *matHeaderCellDef>{{'Indication' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.indicationType}}
+                          </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="actions">
+                          <mat-header-cell *matHeaderCellDef>
+                            {{'Actions' | translate}}
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                            <button mat-icon-button color="primary" matTooltip="{{'Update Medication' | translate}}"
+                                    (click)="openMedicationPopUp(record, false)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" matTooltip="{{'Delete Medication' | translate}}"
+                                    (click)="openArchivePopUp('Patient Medication', record.id, record.sourceDescription)">
+                              <mat-icon>delete</mat-icon>
+                            </button>
+                          </mat-cell>
+                        </ng-container>                        
+                      
+                        <mat-header-row *matHeaderRowDef="viewGridModel?.medicationGrid?.displayedColumns; sticky:true"></mat-header-row>
+                        <mat-row *matRowDef="let record; columns: viewGridModel?.medicationGrid?.displayedColumns;"></mat-row>
+                      </mat-table>
+                    </div>
+                  </div>                  
+                </mat-card-content>
+              </mat-tab>
+
+              <mat-tab label="{{'Tests and Procedures' | translate}}">
+                <mat-card-content class="m-1 p-5">
+                  <div class="ml-05 mr-05 mt-05 pb-1">
+                    <div class="m-333" fxLayoutAlign="end">
+                      <!-- <span fxFlex></span> -->
+                      <button mat-raised-button class="mb-05" color="accent" (click)="openLabTestPopUp({}, true)">{{'Add Test and Procedure' | translate }}</button>
+                    </div>
+
+                    <div class="table-container">
+                      <mat-table [dataSource]="viewGridModel?.labTestGrid?.records"
+                                [@animate]="{value:'50'}">
+            
+                        <ng-container matColumnDef="test">
+                            <mat-header-cell *matHeaderCellDef>{{'Test' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.labTest}}
+                            </mat-cell>
+                        </ng-container>
+            
+                        <ng-container matColumnDef="test-date">
+                            <mat-header-cell *matHeaderCellDef>{{'Test date' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.testDate | date:'dd/MM/yyyy'}}
+                            </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="test-result-coded">
+                          <mat-header-cell *matHeaderCellDef>{{'Test result (coded)' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.testResultCoded}}
+                          </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="test-result-value">
+                          <mat-header-cell *matHeaderCellDef>{{'Test result (value)' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.testResultValue}}
+                          </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="test-unit">
+                          <mat-header-cell *matHeaderCellDef>{{'Test unit' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.testUnit }}
+                          </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="range-limits">
+                          <mat-header-cell *matHeaderCellDef>{{'Range limits' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.rangeLimit}}
+                          </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="actions">
+                          <mat-header-cell *matHeaderCellDef>
+                            {{'Actions' | translate}}
+                          </mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                            <button mat-icon-button color="primary" matTooltip="{{'Update Test and Procedure' | translate}}"
+                                    (click)="openLabTestPopUp(record, false)">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button color="warn" matTooltip="{{'Delete Test and Procedure' | translate}}"
+                                    (click)="openArchivePopUp('Patient Lab Test', record.id, record.labTest)">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                          </mat-cell>
+                        </ng-container>                        
+                      
+                        <mat-header-row *matHeaderRowDef="viewGridModel?.labTestGrid?.displayedColumns; sticky:true"></mat-header-row>
+                        <mat-row *matRowDef="let record; columns: viewGridModel?.labTestGrid?.displayedColumns;"></mat-row>
+                      </mat-table>
+                    </div>
+                  </div>                  
+                </mat-card-content>
+              </mat-tab>
+            </mat-tab-group>
+        </mat-card>
+      </div>
+
+      <div class="card-body height-100vh-280px" *ngIf="selectedOption==3" style="overflow-y: auto">
+        <mat-card>
+          <mat-tab-group>
+            <mat-tab label="{{'Audit Information' | translate}}">
+              <mat-card-content class="m-1 p-2">
+                <form [formGroup]="viewAuditForm">
+                  <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="start start">
+                    <div fxFlex="40" class="pr-1">
+                      <mat-form-field class="p-8 full-width" appearance="fill">
+                        <mat-label>{{'Unique ID' | translate}}</mat-label>
+                        <input matInput formControlName="id" readonly>
+                      </mat-form-field>
+                    </div>
+                    <div fxFlex="40" class="pr-1">
+                      <mat-form-field class="p-8 full-width" appearance="fill">
+                        <mat-label>Guid</mat-label>
+                        <input matInput formControlName="encounterGuid" readonly>
+                      </mat-form-field>
+                    </div>
+                  </div>
+
+                  <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="start start">
+                    <div fxFlex="40" class="pr-1">
+                      <mat-form-field class="p-8 full-width" appearance="fill">
+                        <mat-label>{{'Created' | translate}}</mat-label>
+                        <input matInput formControlName="createdDetail" readonly>
+                      </mat-form-field>
+                    </div>
+                    <div fxFlex="40" class="pr-1">
+                      <mat-form-field class="p-8 full-width" appearance="fill">
+                        <mat-label>{{'Updated' | translate}}</mat-label>
+                        <input matInput formControlName="updatedDetail" readonly>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </form>
+              </mat-card-content>
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card>
+      </div>
+
+      <div class="card-body height-100vh-280px" *ngIf="selectedOption==4" style="overflow-y: auto">
+        <mat-card>
+          <mat-tab-group>
+            <mat-tab label="{{'Condition Groups' | translate}}">
+              <mat-card-content class="m-1 p-2">
+                <div class="ml-05 mr-05 mt-05 pb-1">
+                  <div class="table-container" >
+                    <mat-table [dataSource]="viewGridModel?.conditionGroupGrid?.records"
+                              [@animate]="{value:'50'}">
+          
+                      <ng-container matColumnDef="condition-status">
+                          <mat-header-cell *matHeaderCellDef>{{'Condition' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.conditionGroup}} {{record.status | translate}}
+                          </mat-cell>
+                      </ng-container>
+          
+                      <ng-container matColumnDef="detail">
+                          <mat-header-cell *matHeaderCellDef>{{'Details' | translate}}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                              {{record.detail}}
+                          </mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef>{{'Actions' | translate}}</mat-header-cell>
+                        <mat-cell *matCellDef="let record">
+                          <button mat-icon-button color="primary" matTooltip="{{'View Condition' | translate}}"
+                                (click)="openConditionViewPopUp(record.patientConditionId)">
+                            <mat-icon>visibility</mat-icon>
+                          </button>
+                        </mat-cell>
+                      </ng-container>
+        
+                      <mat-header-row *matHeaderRowDef="viewGridModel?.conditionGroupGrid?.displayedColumns; sticky:true"></mat-header-row>
+                      <mat-row *matRowDef="let record; columns: viewGridModel?.conditionGroupGrid?.displayedColumns;"></mat-row>
+                    </mat-table>
+                  </div>
+                </div>                       
+              </mat-card-content>
+            </mat-tab>
+  
+          </mat-tab-group>
+      </mat-card>
+      </div>
+
+      <div class="card-body height-100vh-280px" *ngIf="selectedOption==5" style="overflow-y: auto">
+        <div fxLayout="row wrap">
+          <div fxFlex="100" fxFlex.gt-sm="66.67" fxFlex.sm="50" [@animate]="{value:'*',params:{delay:'400ms',scale:'.9'}}">
+            <mat-card>
+              <div fxLayout="row wrap" fxLayoutAlign="start center">
+                <h6 class="m-0">{{'History of Weight Change' | translate}}</h6>
+                <span fxFlex></span>
+              </div>
+              <ngx-charts-line-chart
+                animations=true
+                [view]="view"
+                [scheme]="colorScheme"
+                schemeType="ordinal"
+                legend="false"
+                showXAxisLabel="true"
+                showYAxisLabel="true"
+                xAxis="true"
+                yAxis="true"
+                [xAxisLabel]="xAxisLabel"
+                [yAxisLabel]="yAxisLabel"
+                timeline="true"
+                [results]="weightSeries"
+                >
+              </ngx-charts-line-chart>
+            </mat-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

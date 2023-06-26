@@ -1,0 +1,129 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="viewModelForm">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1">
+        <mat-tab-group>
+          <mat-tab label="{{'Basic Information' | translate}}">
+            <mat-card-content class="m-1" style="height: 400px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                <div fxFlex="100" class="pr-1 mt-12">
+                  <mat-form-field class="full-width">
+                    <mat-select formControlName="labTest" placeholder="{{'Lab test' | translate}}" required [disabled]="data.labTestId > 0">
+                      <mat-option *ngFor="let labTest of labTestList" [value]="labTest.labTestName">
+                          {{labTest.labTestName}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1 mt-12">
+                  <mat-form-field class="full-width">
+                    <input matInput formControlName="testDate" placeholder="{{'Test date' | translate}}" [matDatepicker]="testDateDatepicker" required>
+                    <mat-datepicker-toggle matSuffix [for]="testDateDatepicker"></mat-datepicker-toggle>
+                    <mat-error *ngIf="viewModelForm.get('testDate').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                  </mat-form-field>
+                  <mat-datepicker #testDateDatepicker></mat-datepicker>
+                </div>
+                <div fxFlex="50" class="pr-1 mt-12">
+                  <mat-form-field class="full-width">
+                    <mat-select formControlName="testResultCoded" placeholder="{{'Test result (coded)' | translate}}">
+                      <mat-option value=""></mat-option>
+                      <mat-option *ngFor="let labResult of labResultList" [value]="labResult.labResultName">
+                          {{labResult.labResultName}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1 mt-12">
+                  <mat-form-field class="full-width">
+                      <input matInput formControlName="testResultValue" placeholder="{{'Test result (value)' | translate }}">
+                      <mat-hint>{{'Maximum length' | translate}} 20</mat-hint> 
+                      <mat-error *ngIf="viewModelForm.get('testResultValue').hasError('maxlength')">
+                        {{'Maximum length exceeded' | translate}}
+                      </mat-error>            
+                      <mat-error *ngIf="viewModelForm.get('testResultValue').hasError('pattern')">
+                        {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, hyphen, space, period)
+                      </mat-error>            
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1 mt-12">
+                  <mat-form-field class="full-width">
+                    <mat-select formControlName="testUnit" placeholder="{{'Test unit' | translate}}">
+                      <mat-option value=""></mat-option>
+                      <mat-option *ngFor="let labTestUnit of labTestUnitList" [value]="labTestUnit.labTestUnitName">
+                          {{labTestUnit.labTestUnitName}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1 mt-12">
+                  <mat-form-field class="full-width">
+                      <input matInput formControlName="referenceLower" placeholder="{{'Reference range - lower limit' | translate }}">
+                      <mat-hint>{{'Maximum length' | translate}} 20</mat-hint> 
+                      <mat-error *ngIf="viewModelForm.get('referenceLower').hasError('maxlength')">
+                        {{'Maximum length exceeded' | translate}}
+                      </mat-error>            
+                      <mat-error *ngIf="viewModelForm.get('referenceLower').hasError('pattern')">
+                        {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, hyphen, space, period)
+                      </mat-error>            
+                  </mat-form-field>
+                </div>
+                <div fxFlex="50" class="pr-1 mt-12">
+                  <mat-form-field class="full-width">
+                      <input matInput formControlName="referenceUpper" placeholder="{{'Reference range - upper limit' | translate }}">
+                      <mat-hint>{{'Maximum length' | translate}} 20</mat-hint> 
+                      <mat-error *ngIf="viewModelForm.get('referenceUpper').hasError('maxlength')">
+                        {{'Maximum length exceeded' | translate}}
+                      </mat-error>            
+                      <mat-error *ngIf="viewModelForm.get('referenceUpper').hasError('pattern')">
+                        {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, hyphen, space, period)
+                      </mat-error>            
+                  </mat-form-field>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+          <mat-tab label="{{'Detail Information' | translate}}">
+            <mat-card-content class="m-1 p-5" style="height: 400px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start" formGroupName="attributes">
+                <div fxFlex="100" class="mt-12" *ngFor="let attribute of customAttributeList">
+                  <mat-form-field class="full-width" *ngIf="attribute.customAttributeType == 'String'">
+                    <input matInput formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" [required]="attribute.required">
+                  </mat-form-field>
+                  <mat-form-field class="full-width" *ngIf="attribute.customAttributeType == 'Numeric'">
+                    <input matInput formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" type="number" [required]="attribute.required">
+                    <mat-hint *ngIf="attribute.numericMinValue != null && attribute.numericMaxValue != null">
+                      {{'Valid between ' | translate}} {{attribute.numericMinValue}} {{'and ' | translate}} {{attribute.numericMaxValue}}
+                    </mat-hint>
+                  </mat-form-field>        
+                  <span *ngIf="attribute.customAttributeType == 'DateTime'">
+                    <mat-form-field class="full-width">
+                      <input matInput formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" [matDatepicker]="datepicker" [required]="attribute.required">
+                      <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                    </mat-form-field>        
+                    <mat-datepicker #datepicker startView="multi-year"></mat-datepicker>
+                  </span>
+                  <mat-form-field class="full-width" *ngIf="attribute.customAttributeType == 'Selection'">
+                    <mat-select formControlName="{{attribute.id}}" placeholder="{{attribute.attributeKey | translate}}" [required]="attribute.required">
+                      <mat-option *ngFor="let item of attribute.selectionDataItems" value="{{item.selectionKey}}">
+                        {{item.value | translate}}
+                      </mat-option>
+                    </mat-select>                        
+                  </mat-form-field>                
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="viewModelForm.invalid" (click)="submit()">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

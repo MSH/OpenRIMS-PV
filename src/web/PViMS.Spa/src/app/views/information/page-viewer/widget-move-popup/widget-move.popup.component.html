@@ -1,0 +1,33 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width" appearance="fill">
+          <mat-label>{{'Widget name' | translate}}</mat-label>
+          <input matInput formControlName="widgetName" readonly>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <mat-select formControlName="destinationMetaPageId" placeholder="{{'Destination page' | translate}}" required>
+            <mat-option *ngFor="let page of pageList" [value]="page.id">
+              {{page.pageName}}
+            </mat-option>
+          </mat-select>               
+          <mat-error *ngIf="itemForm.get('destinationMetaPageId').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+        </mat-form-field>       
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

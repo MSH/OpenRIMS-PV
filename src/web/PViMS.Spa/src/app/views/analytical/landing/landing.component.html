@@ -1,0 +1,32 @@
+<div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+  <div fxFlex.gt-sm="25" fxFlex.sm="50" fxFlex.xs="100">
+    <mat-card class="p-12 mat-elevation-z6 rounded" style="height: 200px;">
+      <mat-card-title class="text-center">
+        <div class="card-title-text light-gray p-12">
+          {{'Active Reports' | translate}}
+        </div>
+      </mat-card-title>              
+      <mat-card-content>
+        <ul>
+          <li><a mat-button routerLink="/analytical/reportsearch/892F3305-7819-4F18-8A87-11CBA3AEE219">{{'Reports' | translate}}</a></li>
+          <li><a mat-button routerLink="/analytical/activeanalyser">{{'Analyser' | translate}}</a></li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div fxFlex.gt-sm="25" fxFlex.sm="50" fxFlex.xs="100">
+    <mat-card class="p-12 mat-elevation-z6 rounded" style="height: 200px;">
+      <mat-card-title class="text-center">
+        <div class="card-title-text light-gray p-12">
+          {{'Spontaneous Reports' | translate}}
+        </div>
+      </mat-card-title>              
+      <mat-card-content>
+        <ul>
+          <li><a mat-button routerLink="/analytical/reportsearch/4096D0A3-45F7-4702-BDA1-76AEDE41B986">{{'Reports' | translate}}</a></li>
+          <li><a mat-button routerLink="/analytical/spontaneousanalyser">{{'Analyser' | translate}}</a></li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

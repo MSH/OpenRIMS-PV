@@ -1,0 +1,389 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<mat-card class="p-0">
+  
+  <mat-card-title class="">
+      <div class="card-title-text" *ngIf="workflowId=='4096D0A3-45F7-4702-BDA1-76AEDE41B986'">{{'Spontaneous Reports' | translate}}</div>
+      <div class="card-title-text" *ngIf="workflowId=='892F3305-7819-4F18-8A87-11CBA3AEE219'">{{'Active Reports' | translate}}</div>
+  </mat-card-title>
+
+  <mat-card-content>
+    <form [formGroup]="viewModelForm">
+      <div class="p-0 default-light-bg rounded">
+        <mat-tab-group>
+          <mat-tab label="{{'Active Work' | translate}}">
+            <mat-card-content class="m-1 p-5" style="height: 130px;">
+              <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="5.5%" fxLayoutAlign="start">
+                <div fxFlex="100" class="pr-1 p-12">
+                  <mat-label>{{'Please select an activity below' | translate}}...</mat-label>
+                </div>
+                <div fxFlex="100" class="pr-1">
+                  <mat-chip-list #chipList>
+                    <div>
+                      <mat-chip color="primary" [selected]="viewModelForm.get('qualifiedName').value == 'New reports'" (click)="selectActivity('New reports')" *ngIf="workFlow?.newReportInstanceCount > 0" style="cursor: pointer;"> 
+                        {{'New reports' | translate}}
+                      </mat-chip>
+                      <span class="mr-24" matBadge="{{workFlow?.newReportInstanceCount}}" matBadgePosition="above after" matBadgeColor="warn" matBadgeOverlap="true" *ngIf="workFlow?.newReportInstanceCount > 0"></span>
+                    </div>
+                    <div *ngFor="let activity of workFlow?.analysisActivity">
+                      <mat-chip color="primary" [selected]="activity.qualifiedName == viewModelForm.get('qualifiedName').value" (click)="selectActivity(activity.qualifiedName)" style="cursor: pointer;"> 
+                        {{activity.qualifiedName | translate}}
+                      </mat-chip>
+                      <span class="mr-24" matBadge="{{activity.reportInstanceCount}}" matBadgePosition="above after" matBadgeColor="warn" matBadgeOverlap="true"></span>
+                    </div>
+                    <mat-chip color="primary" [selected]="viewModelForm.get('qualifiedName').value == 'Summary'" (click)="selectActivity('Summary')" style="cursor: pointer;"> 
+                      Summary
+                    </mat-chip>
+                  </mat-chip-list>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+
+          <mat-tab label="{{'Search by date' | translate}}">
+            <mat-card-content class="m-1 p-5" style="height: 130px;">
+              <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="start">
+                <div fxFlex="100" class="pr-1 p-12">
+                  <mat-label>{{'Please select a date range to list all reports within that range, irrespective of status' | translate}}...</mat-label>
+                </div>
+                <div fxFlex="25" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                    <input matInput formControlName="searchFrom" placeholder="{{'Search from' | translate}}" [matDatepicker]="searchFromDatepicker" required>
+                    <mat-datepicker-toggle matSuffix [for]="searchFromDatepicker"></mat-datepicker-toggle>
+                    <mat-error *ngIf="viewModelForm.get('searchFrom').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-datepicker #searchFromDatepicker></mat-datepicker>
+                </div>
+                <div fxFlex="25" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                    <input matInput formControlName="searchTo" placeholder="{{'Search to' | translate}}" [matDatepicker]="searchToDatepicker" required>
+                    <mat-datepicker-toggle matSuffix [for]="searchToDatepicker"></mat-datepicker-toggle>
+                    <mat-error *ngIf="viewModelForm.get('searchTo').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>
+                  </mat-form-field>
+                  <mat-datepicker #searchToDatepicker></mat-datepicker>
+                </div>
+              </div>
+              <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10" fxLayoutAlign="end" class="p-8">
+                <button mat-raised-button color="primary" (click)="searchByDate()" [disabled]="viewModelForm.invalid">{{'Search' | translate}}</button>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+
+          <mat-tab label="{{'Search by term' | translate}}">
+            <mat-card-content class="m-1 p-5" style="height: 130px;">
+              <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="start">
+                <div fxFlex="100" class="pr-1 p-12">
+                  <mat-label>{{'Please enter a term below to search by patient name, MedDra term as set by the clinician, the MedDra term as set by the PV specialist, the report identifier or medications used in the analysis' | translate}}...</mat-label>
+                </div>
+                <div fxFlex="50" class="pr-1">
+                  <mat-form-field class="p-8 full-width">
+                    <input matInput formControlName="searchTerm" placeholder="{{'Term' | translate}}">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10" fxLayoutAlign="end" class="p-8">
+                <button mat-raised-button color="primary" (click)="searchByTerm()" [disabled]="viewModelForm.invalid">{{'Search' | translate}}</button>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+    </form>
+
+    <div class="ml-05 mr-05 mt-05 pb-1" *ngIf="viewModelForm.get('qualifiedName').value == 'Summary'">
+      <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+        <div fxFlex.gt-sm="33" fxFlex.sm="75" fxFlex.xs="100">
+          <mat-card class="p-12 rounded" style="height:275px;">
+            <mat-card-title class="text-center">
+              <div class="card-title-text light-gray p-12">
+                {{'Overall Summary' | translate}}
+              </div>
+            </mat-card-title>              
+            <mat-card-content>
+              <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+                <div fxFlex="70" class="p-12 text-muted">Submitted</div>
+                <div fxFlex="30" class="light-gray p-12 text-center font-weight-bold">
+                  {{viewModel?.workFlowSummary?.submissionCount}}
+                </div>
+              </div>
+              <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+                <div fxFlex="70" class="p-12 text-muted">Deleted</div>
+                <div fxFlex="30" class="light-gray p-12 text-center font-weight-bold">
+                  {{viewModel?.workFlowSummary?.deletionCount}}
+                </div>
+              </div>
+              <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+                <div fxFlex="70" class="p-12 text-muted">Data quality confirmed</div>
+                <div fxFlex="30" class="light-gray p-12 text-center font-weight-bold">
+                  {{viewModel?.workFlowSummary?.reportDataConfirmedCount}}
+                </div>
+              </div>
+              <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+                <div fxFlex="70" class="p-12 text-muted">Terminology and causality confirmed</div>
+                <div fxFlex="30" class="light-gray p-12 text-center font-weight-bold">
+                  {{viewModel?.workFlowSummary?.terminologyAndCausalityConfirmedCount}}
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+      <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+        <div fxFlex.gt-sm="33" fxFlex.sm="75" fxFlex.xs="100" *ngFor="let classification of viewModel.workFlowSummary.classifications">
+          <mat-card class="p-12 rounded" style="height:275px;">
+            <mat-card-title class="text-center">
+              <div class="card-title-text light-gray p-12">
+                {{classification.classification | translate}}
+              </div>
+            </mat-card-title>              
+            <mat-card-content>
+              <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+                <div fxFlex="70" class="p-12 text-muted">Classifications</div>
+                <div fxFlex="30" class="light-gray p-12 text-center font-weight-bold">
+                  {{classification.classificationCount}}
+                </div>
+              </div>
+              <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+                <div fxFlex="70" class="p-12 text-muted">At least one causative drug</div>
+                <div fxFlex="30" class="light-gray p-12 text-center font-weight-bold">
+                  {{classification.causativeCount}}
+                </div>
+              </div>
+              <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+                <div fxFlex="70" class="p-12 text-muted">E2B submitted</div>
+                <div fxFlex="30" class="light-gray p-12 text-center font-weight-bold">
+                  {{classification.e2BCount}}
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>        
+      </div>
+      <div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+        <div fxFlex.gt-xs="75" fxFlex.xs="100" class="card-body p-12">
+          <apx-chart
+            [series]="classificationChartOptions?.series"
+            [chart]="classificationChartOptions?.chart"
+            [dataLabels]="classificationChartOptions?.dataLabels"
+            [plotOptions]="classificationChartOptions?.plotOptions"
+            [yaxis]="classificationChartOptions?.yaxis"
+            [legend]="classificationChartOptions?.legend"
+            [fill]="classificationChartOptions?.fill"
+            [stroke]="classificationChartOptions?.stroke"
+            [tooltip]="classificationChartOptions?.tooltip"
+            [xaxis]="classificationChartOptions?.xaxis"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>    
+
+    <div class="ml-05 mr-05 mt-05 pb-1" *ngIf="viewModelForm.get('qualifiedName').value != 'Summary'">
+      <div class="table-container">
+        <mat-table [dataSource]="viewModel?.mainGrid?.records"
+                    [@animate]="{value:'50'}">
+
+            <ng-container matColumnDef="Id">
+                <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <p>{{record.id}}</p>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="identifier">
+              <mat-header-cell *matHeaderCellDef>{{ 'Identifier' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.identifier}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="created">
+                <mat-header-cell *matHeaderCellDef>{{ 'Created' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <p>{{record.createdDetail}}</p><br/>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="patient-identifier">
+              <mat-header-cell *matHeaderCellDef>{{ 'Patient' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.patientIdentifier}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="medication-summary">
+                <mat-header-cell *matHeaderCellDef>{{ 'Medications' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <button mat-raised-button 
+                            *ngIf="record.medications?.length > 0"
+                            (click)="openMedicationPopUp(record.medications, {})">
+                            {{"View" | translate }}
+                    </button>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="adverse-event">
+              <mat-header-cell *matHeaderCellDef>{{ 'Adverse event' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.sourceIdentifier}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="meddra-term">
+              <mat-header-cell *matHeaderCellDef>{{ 'MedDra term' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.terminologyMedDra?.medDraTerm}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="task-count">
+              <mat-header-cell *matHeaderCellDef>{{ 'Tasks' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <div class="text-center pt-12 pb-12 border-right-light">
+                    <mat-icon matBadge="{{record.activeTaskCount}}" matBadgeOverlap="false" *ngIf="record.activeTaskCount == 0" matBadgeColor="accent">assignment</mat-icon>
+                    <mat-icon matBadge="{{record.activeTaskCount}}" matBadgeOverlap="false" *ngIf="record.activeTaskCount > 0" matBadgeColor="warn">assignment</mat-icon>
+                  </div>                
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+              <mat-header-cell *matHeaderCellDef>{{ 'Status' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.qualifiedName | translate}} | {{record.currentStatus | translate}}</p>
+              </mat-cell>
+            </ng-container>                
+
+            <ng-container matColumnDef="actions">
+                <mat-header-cell *matHeaderCellDef>
+                  {{ 'Actions' | translate }}
+                </mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                  <button mat-icon-button [matMenuTriggerFor]="menuMain">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                  <mat-menu #menuMain="matMenu" [xPosition]="'before'">
+                    <button mat-menu-item (click)="detailActivity(record)">
+                      <mat-icon>history</mat-icon>
+                      <span style="vertical-align: middle;">
+                          {{ 'View activity history' | translate }}
+                      </span>
+                    </button>
+                    
+                    <mat-divider></mat-divider>
+
+                    <button mat-menu-item *ngIf="hasLink(record, 'delete')" (click)="detailTask(record)">
+                      <mat-icon>assignment</mat-icon>
+                      <span style="vertical-align: middle;">
+                        {{ 'Tasks' | translate }}
+                      </span>
+                    </button>
+
+                    <mat-divider *ngIf="hasLink(record, 'confirm')"></mat-divider>
+
+                    <button mat-menu-item *ngIf="hasLink(record, 'confirm')" (click)="openActivityChangePopUp('Confirm Report', record, 'CONFIRMED')">
+                      <mat-icon>check</mat-icon>
+                      <span style="vertical-align: middle;">
+                        {{ 'Confirm report' | translate }}
+                      </span>
+                    </button>
+                    <button mat-menu-item *ngIf="hasLink(record, 'delete')" (click)="openActivityChangePopUp('Delete Report', record, 'DELETED')">
+                      <mat-icon>delete</mat-icon>
+                      <span style="vertical-align: middle;">
+                        {{ 'Delete report' | translate }}
+                      </span>
+                    </button>
+                    <button mat-menu-item *ngIf="hasLink(record, 'setmeddra')" (click)="openSetMeddraPopUp(record)">
+                      <mat-icon>send</mat-icon>
+                      <span style="vertical-align: middle;">
+                        {{ 'Set terminology' | translate }}
+                      </span>
+                    </button>
+                    <button mat-menu-item *ngIf="hasLink(record, 'setclassification')" (click)="openSetClassificationPopUp(record)">
+                      <mat-icon>send</mat-icon>
+                      <span style="vertical-align: middle;">
+                        {{ 'Set classification' | translate }}
+                      </span>
+                    </button>
+                    <button mat-menu-item *ngIf="hasLink(record, 'whocausalityset')" (click)="openWhoPopUp(record)">
+                      <mat-icon>layers</mat-icon>
+                      <span style="vertical-align: middle;">
+                        {{ 'WHO causality' | translate }}
+                      </span>
+                    </button>
+                    <button mat-menu-item *ngIf="hasLink(record, 'naranjocausalityset')" (click)="openNaranjoPopUp(record)">
+                      <mat-icon>layers</mat-icon>
+                      <span style="vertical-align: middle;">
+                        {{ 'Naranjo causality' | translate }}
+                      </span>
+                    </button>
+                    <button mat-menu-item *ngIf="hasLink(record, 'causalityset')" (click)="openActivityChangePopUp('Confirm Causality Set', record, 'CAUSALITYCONFIRMED')">
+                      <mat-icon>check</mat-icon>
+                      <span style="vertical-align: middle;">
+                        {{ 'Confirm causality set' | translate }}
+                      </span>
+                    </button>
+                    <button mat-menu-item *ngIf="hasLink(record, 'createe2b')" (click)="createE2B(record)">
+                      <mat-icon>insert_drive_file</mat-icon>
+                      <span style="vertical-align: middle;">
+                        {{ 'Create E2B' | translate }}
+                      </span>
+                    </button>
+                    <button mat-menu-item *ngIf="hasLink(record, 'updatee2b')" (click)="openDatasetPopUp('Update E2B', record.e2BInstance.datasetId, record.e2BInstance.datasetInstanceId)">
+                      <mat-icon>edit</mat-icon>
+                      <span style="vertical-align: middle;">
+                        {{ 'Update E2B' | translate }}
+                      </span>
+                    </button>
+                    <button mat-menu-item *ngIf="hasLink(record, 'updatee2b')" (click)="openActivityChangePopUp('Prepare report for E2B submission', record, 'E2BGENERATED')">
+                      <mat-icon>file_upload</mat-icon>
+                      <span style="vertical-align: middle;">
+                        {{ 'Prepare for E2B submission' | translate }}
+                      </span>
+                    </button>
+                    <button mat-menu-item *ngIf="hasLink(record, 'confirmsubmissione2b')" (click)="openActivityChangePopUp('Confirm E2B submission', record, 'E2BSUBMITTED')">
+                      <mat-icon>file_upload</mat-icon>
+                      <span style="vertical-align: middle;">
+                        {{ 'Confirm E2B submission' | translate }}
+                      </span>
+                    </button>
+                    <button mat-menu-item *ngIf="hasLink(record, 'confirmsubmissione2b')" (click)="downloadAttachment(record)">
+                      <mat-icon>cloud_download</mat-icon>
+                      <span style="vertical-align: middle;">
+                        {{ 'Download XML' | translate }}
+                      </span>
+                    </button>
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item *ngIf="hasLink(record, 'viewpatient')" (click)="detailClinical(record.patientId, record.patientClinicalEventId)">
+                        <mat-icon>person</mat-icon>
+                        <span style="vertical-align: middle;">
+                          {{ 'View details' | translate }}
+                        </span>
+                    </button>
+                    <button mat-menu-item (click)="downloadSummary(record)">
+                      <mat-icon>cloud_download</mat-icon>
+                      <span style="vertical-align: middle;">
+                        {{ 'Download summary' | translate }}
+                      </span>
+                  </button>
+                  </mat-menu>
+                </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="viewModel?.mainGrid?.displayedColumns; sticky:true"></mat-header-row>
+            <mat-row *matRowDef="let record; columns: viewModel?.mainGrid?.displayedColumns;"></mat-row>
+        </mat-table>
+      </div>
+
+      <mat-paginator #mainGridPaginator="matPaginator" [length]="viewModel?.mainGrid?.count"
+                    [pageIndex]="0" [pageSize]="10"
+                    [pageSizeOptions]="[5, 10, 25, 50]">
+      </mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>
+

@@ -1,0 +1,44 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="p-12">
+        <div class="light-gray p-12 text-center rounded">
+          <div class="font-weight-bold">{{task?.source}}</div>
+          {{task?.description}}
+        </div>
+      </div>
+
+      <div fxFlex="100" class="p-12" *ngIf="task?.taskStatus == 'Completed' || task?.taskStatus == 'Cancelled'">
+        <div class="mat-bg-warn p-12 text-center rounded">
+          Please note, status cannot be changed for tasks that are marked as completed or cancelled
+        </div>
+      </div>      
+
+      <div fxFlex="100" class="pr-1 pt-12">
+        <mat-form-field class="p-8 full-width" appearance="fill">
+          <mat-label>{{'Current status' | translate}}</mat-label>
+          <input matInput formControlName="taskStatus" readonly>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" class="p-12" fxLayoutAlign="center" *ngIf="task?.taskStatus != 'Completed' && task?.taskStatus != 'Cancelled'">
+        <div fxLayout="row wrap">
+          <button mat-raised-button color="primary" class="mr-12" type="button" *ngIf="allowStatusAcknowledge()" (click)="changeTaskStatus('Acknowledged')">{{"Acknowledge Task" | translate }}</button>
+          <button mat-raised-button color="primary" class="mr-12" type="button" *ngIf="allowStatusDone()" (click)="changeTaskStatus('Done')">{{"Confirm as Done" | translate }}</button>
+          <button mat-raised-button color="primary" class="mr-12" type="button" *ngIf="allowStatusOnHold()" (click)="changeTaskStatus('On Hold')">{{"On Hold" | translate }}</button>
+          <button mat-raised-button color="warn" class="mr-12" type="button" *ngIf="allowStatusCancelled()" (click)="changeTaskStatus('Cancelled')">{{"Cancel" | translate }}</button>
+          <button mat-raised-button color="primary" class="mr-12" type="button" *ngIf="allowStatusComplete()" (click)="changeTaskStatus('Completed')">{{"Complete" | translate }}</button>
+        </div>
+        <div fxLayout="row wrap">
+        </div>
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <span fxFlex></span>
+        <button mat-raised-button color="primary" type="button" (click)="dialogRef.close(false)">{{"Close" | translate }}</button>
+      </div>
+    </div>
+  </form>

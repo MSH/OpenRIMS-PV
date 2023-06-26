@@ -1,0 +1,57 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <div fxLayout="row wrap">
+    <div fxFlex="50" fxFlex.sm="75" fxFlex.sm="100" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+      <mat-card class="p-12 rounded" style="height: 200px;">
+        <mat-card-title class="text-center">
+          <div class="card-title-text light-gray p-12">
+            {{'Test connection' | translate }}
+          </div>
+        </mat-card-title>              
+        <mat-card-content>
+          <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start" class="mt-6">
+            <div fxFlex="100" class="text-center pt-16 pb-16 border-right-light">
+              <mat-icon [ngClass]="{'error-status': !viewModel?.connected, 'connected-status': viewModel?.connected, 'spin' : viewModel?.checking} ">gps_fixed</mat-icon><br/>
+              <small class="m-0 text-muted">{{ viewModel?.pingStatusMessage | translate}}</small>
+            </div>
+          </div>
+          <div class="m-8 text-center">
+            <button mat-raised-button color="accent" (click)="pingAPI()" [disabled]="viewModel?.checking || viewModel?.forcedOffline">
+              {{'Ping' | translate }}
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>  
+    </div>
+    <div fxFlex="50" fxFlex.sm="75" fxFlex.sm="100" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+      <mat-card class="p-12 rounded" style="height: 200px;">
+        <mat-card-title class="text-center">
+          <div class="card-title-text light-gray p-12">
+            {{'Go into offline mode' | translate }}
+          </div>
+        </mat-card-title>              
+        <mat-card-content>
+          <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start" class="mt-6">
+            <div fxFlex="100" class="text-center pt-16 pb-16 border-right-light">
+              <mat-icon [ngClass]="{'error-status': viewModel?.forcedOffline, 'connected-status': !viewModel?.forcedOffline} ">gps_fixed</mat-icon><br/>
+              <small class="m-0 text-muted">{{ viewModel?.forcedStatusMessage | translate}}</small>
+            </div>        
+          </div>
+          <div class="m-8 text-center">
+            <button mat-raised-button color="warn" (click)="goOffline()" *ngIf="!viewModel?.forcedOffline">
+              {{'Go Offline' | translate }}
+            </button>
+            <button mat-raised-button color="accent" (click)="goOnline()" *ngIf="viewModel?.forcedOffline">
+              {{'Go Online' | translate }}
+            </button>
+          </div>
+        </mat-card-content>
+      </mat-card>  
+    </div>
+    <div fxFlex="100" class="mt-1">
+      <span fxFlex></span>
+      <button mat-raised-button color="primary" type="button" (click)="dialogRef.close(false)">{{"Close" | translate }}</button>
+    </div>    
+  </div>  

@@ -1,0 +1,85 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input type="text" placeholder="{{'Medication' | translate}}" aria-label="Number" matInput formControlName="medication" [matAutocomplete]="autoMedication" required>
+          <mat-autocomplete #autoMedication="matAutocomplete">
+              <mat-option *ngFor="let product of filteredProductList | async" [value]="product.displayName">
+                  {{product.displayName}}
+              </mat-option>
+          </mat-autocomplete>
+          <mat-hint>{{'Type at least 3 letters' | translate}}</mat-hint> 
+          <mat-error *ngIf="itemForm.get('medication').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input matInput formControlName="medicationStartDate" placeholder="{{'Start date' | translate}}" [matDatepicker]="medStDatepicker" required>
+          <mat-datepicker-toggle matSuffix [for]="medStDatepicker"></mat-datepicker-toggle>
+          <mat-error>
+            {{'This is a required field' | translate}}
+          </mat-error>            
+        </mat-form-field>
+        <mat-datepicker #medStDatepicker></mat-datepicker>            
+      </div>
+
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input matInput formControlName="medicationEndDate" placeholder="{{'End date' | translate}}" [matDatepicker]="medEdDatepicker">
+          <mat-datepicker-toggle matSuffix [for]="medEdDatepicker"></mat-datepicker-toggle>
+        </mat-form-field>
+        <mat-datepicker #medEdDatepicker></mat-datepicker>            
+      </div>
+
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input matInput formControlName="dose" placeholder="{{'Dose' | translate}}">
+          <mat-hint>{{'Maximum length' | translate}} 30</mat-hint> 
+          <mat-error>
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>            
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input type="text" placeholder="{{'Frequency' | translate}}" aria-label="Number" matInput formControlName="frequency" [matAutocomplete]="autoFrequency">
+          <mat-autocomplete #autoFrequency="matAutocomplete">
+              <mat-option *ngFor="let frequency of frequencyList" [value]="frequency">
+                  {{frequency}}
+              </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="itemForm.get('frequency').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>            
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <mat-select formControlName="continued" placeholder="{{'Continued' | translate}}">
+            <mat-option value=""></mat-option>
+            <mat-option value="Yes">  
+              {{'Yes' | translate}}
+            </mat-option>
+            <mat-option value="No">
+              {{'No' | translate}}
+            </mat-option>
+          </mat-select>                        
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

@@ -1,0 +1,78 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+  <div fxLayout="row wrap" fxLayout.lt-sm="column">
+    <div fxFlex="100" class="pr-1">
+      <mat-form-field class="p-8 full-width">
+        <input type="text" placeholder="{{'Active ingredient' | translate}}" aria-label="Number" matInput formControlName="conceptName" [matAutocomplete]="autoConcept" required>
+        <mat-autocomplete #autoConcept="matAutocomplete">
+          <mat-option *ngFor="let concept of filteredConceptList| async" [value]="concept.displayName">
+            {{concept.displayName}}
+          </mat-option>
+        </mat-autocomplete>
+        <mat-hint>{{'Type at least 3 letters' | translate}}</mat-hint> 
+        <mat-error *ngIf="itemForm.get('conceptName').hasError('required')">
+          {{'This is a required field' | translate}}
+        </mat-error>
+        <mat-error *ngIf="itemForm.get('conceptName').hasError('maxlength')">
+          {{'Maximum length exceeded' | translate}}
+        </mat-error>
+        <mat-error *ngIf="itemForm.get('conceptName').hasError('pattern')">
+          {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space, hyphen, period, semi-colon, comma, brackets, percentage, forward slash)
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div fxFlex="100" class="pr-1">
+      <mat-form-field class="p-8 full-width">
+        <input matInput formControlName="productName" placeholder="{{'Product name' | translate }}" required>
+        <mat-hint>{{'Maximum length' | translate}} 200</mat-hint> 
+        <mat-error *ngIf="itemForm.get('productName').hasError('required')">
+          {{'This is a required field' | translate}}
+        </mat-error>
+        <mat-error *ngIf="itemForm.get('productName').hasError('maxlength')">
+          {{'Maximum length exceeded' | translate}}
+        </mat-error>            
+        <mat-error *ngIf="itemForm.get('productName').hasError('pattern')">
+          {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space, hyphen, period, comma, brackets, percentage)
+        </mat-error>            
+      </mat-form-field>        
+    </div>
+
+    <div fxFlex="100" class="pr-1">
+      <mat-form-field class="p-8 full-width">
+        <input matInput formControlName="manufacturer" placeholder="{{'Manufacturer' | translate }}" required>
+        <mat-hint>{{'Maximum length' | translate}} 200</mat-hint> 
+        <mat-error *ngIf="itemForm.get('manufacturer').hasError('required')">
+          {{'This is a required field' | translate}}
+        </mat-error>
+        <mat-error *ngIf="itemForm.get('manufacturer').hasError('maxlength')">
+          {{'Maximum length exceeded' | translate}}
+        </mat-error>            
+        <mat-error *ngIf="itemForm.get('manufacturer').hasError('pattern')">
+          {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space, hyphen, period, comma, brackets, percentage)
+        </mat-error>            
+      </mat-form-field>        
+    </div>
+
+    <div fxFlex="50" class="pr-1">
+      <mat-form-field class="p-8 full-width">
+        <mat-select formControlName="active" placeholder="{{'Active' | translate}}" required>
+          <mat-option value="Yes">{{'Yes' | translate}}</mat-option>
+          <mat-option value="No">{{'No' | translate}}</mat-option>
+        </mat-select>               
+        <mat-error *ngIf="itemForm.get('active').hasError('required')">
+          {{'This is a required field' | translate}}
+        </mat-error>            
+      </mat-form-field>       
+    </div>
+
+    <div fxFlex="100" class="mt-1">
+      <button mat-raised-button color="primary" [disabled]="itemForm.invalid">{{"Save" | translate }}</button>
+      <span fxFlex></span>
+      <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+    </div>
+  </div>
+</form>

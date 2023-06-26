@@ -1,0 +1,216 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<mat-sidenav-container>
+  <mat-card class="p-0">
+  
+    <mat-card-title class="">
+      <div class="card-title-text">
+        {{'Report Meta Data' | translate}}
+      </div>
+      <mat-divider></mat-divider>
+    </mat-card-title>
+  
+    <mat-card-content>
+  
+      <mat-tab-group>
+  
+        <mat-tab label="{{'Tables' | translate}}">
+          <mat-card-content class="m-1 p-5">
+    
+            <div class="ml-05 mr-05 mt-05 pb-1">
+              <div class="table-container" >
+                <mat-table [dataSource]="viewModel?.tableGrid?.records"
+                          [@animate]="{value:'50'}">
+      
+                  <ng-container matColumnDef="table-name">
+                      <mat-header-cell *matHeaderCellDef>{{'Table name' | translate}}</mat-header-cell>
+                      <mat-cell *matCellDef="let record">
+                          {{record.tableName}}
+                      </mat-cell>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="friendly-name">
+                    <mat-header-cell *matHeaderCellDef>{{'Friendly name' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        {{record.friendlyName}}
+                    </mat-cell>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="description">
+                    <mat-header-cell *matHeaderCellDef>{{'Description' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        {{record.friendlyDescription}}
+                    </mat-cell>
+                  </ng-container>
+                  
+                  <ng-container matColumnDef="type">
+                      <mat-header-cell *matHeaderCellDef>{{'Table type' | translate}}</mat-header-cell>
+                      <mat-cell *matCellDef="let record">
+                          {{record.tableType}}
+                      </mat-cell>
+                  </ng-container>
+    
+                  <mat-header-row *matHeaderRowDef="viewModel?.tableGrid?.displayedColumns; sticky:true"></mat-header-row>
+                  <mat-row *matRowDef="let record; columns: viewModel?.tableGrid?.displayedColumns;" matRipple></mat-row>
+                </mat-table>
+              </div>
+    
+              <mat-paginator #tableGridPaginator="matPaginator" [length]="viewModel?.tableGrid?.count"
+                [pageIndex]="0" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 50]">
+              </mat-paginator>      
+              
+            </div>                  
+            
+          </mat-card-content>
+        </mat-tab>
+    
+        <mat-tab label="{{'Columns' | translate}}">
+          <mat-card-content class="m-1 p-5">
+    
+            <div class="ml-05 mr-05 mt-05 pb-1">
+    
+              <div class="table-container">
+                <mat-table [dataSource]="viewModel?.columnGrid?.records"
+                          [@animate]="{value:'50'}">
+      
+                  <ng-container matColumnDef="table-name">
+                      <mat-header-cell *matHeaderCellDef>{{'Table name' | translate}}</mat-header-cell>
+                      <mat-cell *matCellDef="let record">
+                          <p>{{record.tableName}}</p>
+                      </mat-cell>
+                  </ng-container>
+      
+                  <ng-container matColumnDef="column-name">
+                      <mat-header-cell *matHeaderCellDef>{{'Column name' | translate}}</mat-header-cell>
+                      <mat-cell *matCellDef="let record">
+                          <p>{{record.columnName}}</p>
+                      </mat-cell>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="identity">
+                    <mat-header-cell *matHeaderCellDef>{{'Identity' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        <p>{{record.isIdentity}}</p>
+                    </mat-cell>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="nullable">
+                    <mat-header-cell *matHeaderCellDef>{{'Nullable' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        <p>{{record.isNullable}}</p>
+                    </mat-cell>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="type">
+                    <mat-header-cell *matHeaderCellDef>{{'Column type' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        <p>{{record.columnType}}</p>
+                    </mat-cell>
+                  </ng-container>
+                  
+                  <mat-header-row *matHeaderRowDef="viewModel?.columnGrid?.displayedColumns; sticky:true"></mat-header-row>
+                  <mat-row *matRowDef="let record; columns: viewModel?.columnGrid?.displayedColumns;" matRipple></mat-row>
+                </mat-table>
+              </div>
+    
+              <mat-paginator #columnGridPaginator="matPaginator" [length]="viewModel?.columnGrid?.count"
+                [pageIndex]="0" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 50]">
+              </mat-paginator>      
+    
+            </div>                  
+            
+          </mat-card-content>
+        </mat-tab>
+    
+        <mat-tab label="{{'Dependencies' | translate}}">
+          <mat-card-content class="m-1 p-5">
+    
+            <div class="ml-05 mr-05 mt-05 pb-1">
+              <div class="table-container" >
+                <mat-table [dataSource]="viewModel?.dependencyGrid?.records"
+                          [@animate]="{value:'50'}">
+      
+                  <ng-container matColumnDef="parent-table-name">
+                      <mat-header-cell *matHeaderCellDef>{{'Parent table' | translate}}</mat-header-cell>
+                      <mat-cell *matCellDef="let record">
+                          {{record.parentTableName}}
+                      </mat-cell>
+                  </ng-container>
+      
+                  <ng-container matColumnDef="parent-column-name">
+                      <mat-header-cell *matHeaderCellDef>{{'Parent column' | translate}}</mat-header-cell>
+                      <mat-cell *matCellDef="let record">
+                          {{record.parentColumnName}}
+                      </mat-cell>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="reference-table-name">
+                    <mat-header-cell *matHeaderCellDef>{{'Reference table' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        {{record.referenceTableName}}
+                    </mat-cell>
+                  </ng-container>
+    
+                  <ng-container matColumnDef="reference-column-name">
+                    <mat-header-cell *matHeaderCellDef>{{'Reference column' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        {{record.referenceColumnName}}
+                    </mat-cell>
+                  </ng-container>
+    
+                  <mat-header-row *matHeaderRowDef="viewModel?.dependencyGrid?.displayedColumns; sticky:true"></mat-header-row>
+                  <mat-row *matRowDef="let record; columns: viewModel?.dependencyGrid?.displayedColumns;" matRipple></mat-row>
+                </mat-table>
+              </div>
+    
+              <mat-paginator #dependencyGridPaginator="matPaginator" [length]="viewModel?.dependencyGrid?.count"
+                [pageIndex]="0" [pageSize]="10"
+                [pageSizeOptions]="[5, 10, 25, 50]">
+              </mat-paginator>      
+    
+            </div>                  
+            
+          </mat-card-content>
+        </mat-tab>
+    
+      </mat-tab-group>
+    
+    </mat-card-content>
+  
+  </mat-card>
+  
+  <mat-sidenav EgretSideNavToggle position="end" class="sidebar-right default-light-bg">
+    <div class="sidebar-wrap">
+      <div class="p-2 m-2">
+        <form [formGroup]="viewModelForm">
+          <div class="light-gray p-8">
+            <span class="font-weight-bold">{{'Summary' | translate}}</span>
+          </div>
+          <mat-list>
+            <mat-list-item>{{this.viewModel.tableCount}} {{'table(s)' | translate}}</mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>{{this.viewModel.columnCount}} {{'column(s)' | translate}}</mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>{{this.viewModel.dependencyCount}} {{'dependency(ies)' | translate}}</mat-list-item>
+            <mat-divider></mat-divider>
+            <mat-list-item>{{this.viewModel.patientCount}} {{'patient record(s)' | translate}}</mat-list-item>
+            <mat-divider></mat-divider>
+          </mat-list>        
+          <div class="light-gray p-8 mt-8">
+            <span class="font-weight-bold">{{'Meta data last refreshed' | translate}}</span>
+          </div>
+          <mat-list>
+            <mat-list-item>{{this.viewModel.latestRefreshDate}}</mat-list-item>
+            <mat-divider></mat-divider>
+          </mat-list>        
+        </form>
+      </div>
+    </div>
+  </mat-sidenav>   
+
+</mat-sidenav-container>
+ 

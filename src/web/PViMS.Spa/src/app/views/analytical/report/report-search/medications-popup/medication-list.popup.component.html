@@ -1,0 +1,53 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+<div fxLayout="row wrap" fxLayout.lt-sm="column">
+  <div fxFlex="100" class="pr-1">
+    <div fxLayout="row" fxLayoutGap="5px" class="float-right">
+      <div class="tag-red">
+        <div>Naranjo</div>
+      </div>
+      <div class="tag-black">
+        <div>WHO</div>
+      </div>
+    </div> 
+  </div>
+  <div fxFlex="100" class="pr-1">
+    <div style="height:390px; overflow-y: auto" class="mt-12">
+      <div class="table-container">
+        <mat-table [dataSource]="viewModel?.medicationGrid?.records"
+                  [@animate]="{value:'50'}">
+      
+          <ng-container matColumnDef="medication">
+              <mat-header-cell *matHeaderCellDef>{{'Medication' | translate}}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  {{ record.medicationIdentifier}}
+              </mat-cell>
+          </ng-container>
+      
+          <ng-container matColumnDef="naranjo-causality">
+              <mat-header-cell *matHeaderCellDef>{{'Naranjo' | translate}}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                <span class="tag-red">{{ record.naranjoCausality }}</span>
+              </mat-cell>
+          </ng-container>
+      
+          <ng-container matColumnDef="who-causality">
+            <mat-header-cell *matHeaderCellDef>{{'WHO' | translate}}</mat-header-cell>
+            <mat-cell *matCellDef="let record">
+              <span class="tag-black">{{ record.whoCausality }}</span>
+            </mat-cell>
+          </ng-container>
+      
+          <mat-header-row *matHeaderRowDef="viewModel?.medicationGrid?.displayedColumns; sticky:true"></mat-header-row>
+          <mat-row *matRowDef="let record; columns: viewModel?.medicationGrid?.displayedColumns;"></mat-row>
+        </mat-table>
+      </div>
+    </div>
+  </div>
+  <div fxFlex="100" class="mt-1">
+    <span fxFlex></span>
+    <button mat-raised-button color="primary" type="button" (click)="dialogRef.close(false)">{{"Close" | translate }}</button>
+  </div>
+</div>
+
+

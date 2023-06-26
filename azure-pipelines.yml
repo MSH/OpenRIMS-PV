@@ -1,0 +1,57 @@
+# Node.js with Angular
+# Build a Node.js project that uses Angular.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- development
+
+name: $(Build.DefinitionName)-$(Year:yy).$(Month).$(DayOfYear)$(Rev:.rr)
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '12.x'
+  displayName: 'Install Node.js'
+
+- script: |
+    npm install -g @angular/cli@8.0.2
+
+- task: Npm@1
+  displayName: 'NPM install dependencies'
+  inputs:
+    workingDir: src/web/PViMS.Spa
+    verbose: false
+
+- task: Npm@1
+  displayName: 'NPM build'
+  inputs:
+    command: custom
+    workingDir: src/web/PViMS.Spa
+    verbose: false
+    customCommand: 'run buildMSHTest'
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(System.DefaultWorkingDirectory)/src/web/PViMS.Spa'
+    Contents: 'web.config'
+    TargetFolder: '$(System.DefaultWorkingDirectory)/src/web/PViMS.Spa/dist'
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(System.DefaultWorkingDirectory)/src/web/PViMS.Spa/dist' 
+    includeRootFolder: false
+    archiveType: 'zip'
+    tarCompression: 'gz'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/WebApp.zip' 
+    verbose: true
+    quiet: false
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+    ArtifactName: 'drop'

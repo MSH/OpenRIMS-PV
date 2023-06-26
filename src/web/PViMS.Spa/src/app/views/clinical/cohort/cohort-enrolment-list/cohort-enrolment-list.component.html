@@ -1,0 +1,149 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<mat-card class="p-0">
+    <mat-card-title class="">
+    <div class="card-title-text">
+      <button mat-raised-button (click)="navigateToCohortSearch()" color="accent" class="mr-48">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      {{'Cohort View' | translate}}
+    </div>
+  </mat-card-title>
+
+  <mat-card-content>
+    <form [formGroup]="viewModelForm">
+      <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="center" >
+        <div fxFlex="45" class="p-0 default-light-bg rounded">
+          <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="center" >
+            <div fxFlex="100" class="pr-1 card-title-text text-center">
+              <h2>{{'Cohort Details' | translate}}</h2>
+            </div>
+            <div fxFlex="30" class="pr-1">
+              <mat-form-field class="p-8 full-width" appearance="fill">
+                <mat-label>{{'Cohort name' | translate}}</mat-label>
+                <input matInput formControlName="cohortName" readonly>
+              </mat-form-field>
+            </div>
+            <div fxFlex="30" class="pr-1">
+              <mat-form-field class="p-8 full-width" appearance="fill">
+                <mat-label>{{'Code' | translate}}</mat-label>
+                <input matInput formControlName="cohortCode" readonly>
+              </mat-form-field>
+            </div>
+            <div fxFlex="30" class="pr-1">
+              <mat-form-field class="p-8 full-width" appearance="fill">
+                <mat-label>{{'Primary condition' | translate}}</mat-label>
+                <input matInput formControlName="conditionName" readonly>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <div fxFlex="45" class="p-0 default-light-bg rounded">
+          <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="center" >
+            <div fxFlex="100" class="pr-1 card-title-text text-center">
+              <h2>{{'Event Summary' | translate}}</h2>
+            </div>
+            <div fxFlex="30" class="pr-1">
+              <mat-form-field class="p-8 full-width" appearance="fill">
+                <mat-label>{{'Patient count' | translate}}</mat-label>
+                <input matInput formControlName="enrolmentCount" readonly>
+              </mat-form-field>
+            </div>
+            <div fxFlex="30" class="pr-1">
+              <mat-form-field class="p-8 full-width" appearance="fill">
+                <mat-label>{{'Non serious events' | translate}}</mat-label>
+                <input matInput formControlName="nonSeriousEventCount" readonly>
+              </mat-form-field>
+            </div>
+            <div fxFlex="30" class="pr-1">
+              <mat-form-field class="p-8 full-width" appearance="fill">
+                <mat-label>{{'Serious events' | translate}}</mat-label>
+                <input matInput formControlName="seriousEventCount" readonly>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="ml-05 mr-05 mt-05 pb-1">
+
+        <div class="table-container">
+          <mat-table [dataSource]="viewGridModel?.mainGrid?.records"
+                      [@animate]="{value:'50'}">
+
+              <ng-container matColumnDef="patient-name">
+                  <mat-header-cell *matHeaderCellDef>{{'Patient name' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      <p>{{record.fullName}}</p>
+                  </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="facility-name">
+                  <mat-header-cell *matHeaderCellDef>{{'Facility' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      <p>{{record.facilityName}}</p>
+                  </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="date-of-birth">
+                  <mat-header-cell *matHeaderCellDef>{{'Date of birth' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                    <p>{{record.dateOfBirth}}<span class="ml-16" matBadge="{{record.age}}" matBadgePosition="below after" matBadgeColor="accent" matBadgeOverlap="true" *ngIf="record.dateOfBirth != ''"></span></p>
+                  </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="last-encounter">
+                <mat-header-cell *matHeaderCellDef>{{'Last encounter' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <p>{{record.latestEncounterDate}}</p>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="current-weight">
+                  <mat-header-cell *matHeaderCellDef>{{'Weight' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      <p>{{record.currentWeight}}</p>
+                  </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="non-serious-events">
+                  <mat-header-cell *matHeaderCellDef>{{'Non serious events' | translate}}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      <p>{{record.nonSeriousEventCount}}</p>
+                  </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="serious-events">
+                <mat-header-cell *matHeaderCellDef>{{'Serious events' | translate}}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <p>{{record.seriousEventCount}}</p>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                  <mat-header-cell *matHeaderCellDef>
+                    {{'Actions' | translate}}
+                  </mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      <button mat-icon-button color="primary" matTooltip="{{'View patient' | translate}}"
+                              (click)="detail(record)">
+                        <mat-icon>visibility</mat-icon>
+                      </button>
+                  </mat-cell>
+              </ng-container>
+
+              <mat-header-row *matHeaderRowDef="viewGridModel?.mainGrid?.displayedColumns; sticky:true"></mat-header-row>
+              <mat-row *matRowDef="let record; columns: viewGridModel?.mainGrid?.displayedColumns;"></mat-row>
+          </mat-table>
+        </div>
+
+        <mat-paginator #mainGridPaginator="matPaginator" [length]="viewGridModel?.mainGrid?.count"
+                      [pageIndex]="0" [pageSize]="10"
+                      [pageSizeOptions]="[5, 10, 25, 50]">
+        </mat-paginator>
+
+    </div>
+  </mat-card-content>
+</mat-card>

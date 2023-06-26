@@ -1,0 +1,157 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<div class="form-wrap">
+  <div fxLayout="row" fxLayout.sm="column" fxLayoutWrap fxLayoutGap="0.1%" fxLayoutAlign="center center">
+    <div fxFlex.gt-sm="75" fxFlex.lt-md="100" class=" mat-elevation-z2 p-24">
+
+      <div class="text-center">
+        <h1 class="title center font-weight-bold">{{'Spontaneous Reports' | translate}}</h1>
+      </div>
+
+      <div class="card-title-text light-gray p-24">
+        {{'Please enter details of the reaction below' | translate}}
+      </div>
+
+      <form [formGroup]="viewModelForm">
+        <mat-horizontal-stepper formArrayName="formArray" linear="false">
+          <mat-step 
+            *ngFor="let form of viewModelForm.get('formArray')['controls']; let i = index"
+            [formGroupName]="i">
+            <ng-template matStepLabel>{{ datasetCategories[i]?.datasetCategoryDisplayName }}</ng-template>
+    
+            <div class="card-title-text light-gray p-24" *ngIf="datasetCategories[i]?.datasetCategoryHelp != ''">
+              {{ datasetCategories[i]?.datasetCategoryHelp }}
+            </div>
+
+            <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start" formGroupName="elements">
+              <div fxFlex="100" class="pr-1" *ngFor="let element of datasetCategories[i]?.datasetElements">
+                <mat-form-field class="p-8 full-width" appearance="fill" *ngIf="element.datasetElementSystem">
+                  <mat-label>{{element.datasetElementDisplayName | translate}}</mat-label>
+                  <input matInput formControlName="{{element.datasetElementId}}" placeholder="{{element.datasetElementDisplayName | translate}}" readonly>
+                  <mat-hint *ngIf="element.datasetElementHelp != ''">
+                    {{element.datasetElementHelp}}
+                  </mat-hint>
+                </mat-form-field>
+
+                <mat-form-field class="p-8 full-width" *ngIf="element.datasetElementType == 'AlphaNumericTextbox' && !element.datasetElementSystem && element.stringMaxLength <= 100">
+                  <input matInput formControlName="{{element.datasetElementId}}" placeholder="{{element.datasetElementDisplayName | translate}}" [required]="element.required">
+                  <mat-hint *ngIf="element.datasetElementHelp != ''">
+                    {{element.datasetElementHelp}}
+                  </mat-hint>
+                  <mat-hint *ngIf="element.datasetElementHelp == '' && element.stringMaxLength != null">
+                    {{'Maximum length' | translate}} {{element.stringMaxLength}}
+                  </mat-hint>
+                </mat-form-field>
+
+                <mat-form-field class="p-8 full-width" *ngIf="element.datasetElementType == 'AlphaNumericTextbox' && !element.datasetElementSystem && element.stringMaxLength > 100" appearance="outline">
+                  <textarea matInput formControlName="{{element.datasetElementId}}" placeholder="{{element.datasetElementDisplayName | translate}}" [required]="element.required" rows="8"></textarea>
+                  <mat-hint *ngIf="element.datasetElementHelp != ''">
+                    {{element.datasetElementHelp}}
+                  </mat-hint>
+                  <mat-hint *ngIf="element.datasetElementHelp == '' && element.stringMaxLength != null">
+                    {{'Maximum length' | translate}} {{element.stringMaxLength}}
+                  </mat-hint>
+                </mat-form-field>
+
+                <mat-form-field class="p-8 full-width" *ngIf="element.datasetElementType == 'NumericTextbox' && !element.datasetElementSystem">
+                  <input matInput formControlName="{{element.datasetElementId}}" placeholder="{{element.datasetElementDisplayName | translate}}" type="number" [required]="element.required">
+                  <mat-hint *ngIf="element.datasetElementHelp != ''">
+                    {{element.datasetElementHelp}}
+                  </mat-hint>
+                  <mat-hint *ngIf="element.datasetElementHelp == '' && element.numericMinValue != null && element.numericMaxValue != null">
+                    {{'Valid between ' | translate}} {{element.numericMinValue}} {{'and ' | translate}} {{element.numericMaxValue}}
+                  </mat-hint>
+                </mat-form-field>
+
+                <span *ngIf="element.datasetElementType == 'Date' && !element.datasetElementSystem">
+                  <mat-form-field class="p-8 full-width">
+                    <input matInput formControlName="{{element.datasetElementId}}" placeholder="{{element.datasetElementDisplayName | translate}}" [matDatepicker]="datepicker" [required]="element.required">
+                    <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                    <mat-hint *ngIf="element.datasetElementHelp != ''">
+                      {{element.datasetElementHelp}}
+                    </mat-hint>
+                  </mat-form-field>        
+                  <mat-datepicker #datepicker startView="multi-year"></mat-datepicker>
+                </span>
+
+                <mat-form-field class="p-8 full-width" *ngIf="element.datasetElementType == 'DropDownList' && !element.datasetElementSystem">
+                  <mat-select formControlName="{{element.datasetElementId}}" placeholder="{{element.datasetElementDisplayName | translate}}" [required]="element.required">
+                    <mat-option value=""></mat-option>
+                    <mat-option *ngFor="let item of element.selectionDataItems" value="{{item.selectionKey}}">
+                      {{item.value | translate}}
+                    </mat-option>
+                  </mat-select>                        
+                  <mat-hint *ngIf="element.datasetElementHelp != ''">
+                    {{element.datasetElementHelp}}
+                  </mat-hint>
+                </mat-form-field>
+
+                <mat-form-field class="p-8 full-width" *ngIf="element.datasetElementType == 'YesNo' && !element.datasetElementSystem">
+                  <mat-select formControlName="{{element.datasetElementId}}" placeholder="{{element.datasetElementDisplayName | translate}}" [required]="element.required">
+                    <mat-option value=""></mat-option>
+                    <mat-option value="Yes">Yes</mat-option>
+                    <mat-option value="No">No</mat-option>
+                  </mat-select>                        
+                  <mat-hint *ngIf="element.datasetElementHelp != ''">
+                    {{element.datasetElementHelp}}
+                  </mat-hint>
+                </mat-form-field>
+
+                <span class="ml-05 mr-05 mt-05" *ngIf="element.datasetElementType == 'Table'">
+                  <div class="p-12 table-container">
+                    <div class="pt-12 pb-12" fxLayoutAlign="end">
+                      <button mat-mini-fab (click)="openPopup(i, 0, element.datasetElementId, element.datasetElementSubs, {}, true)"><mat-icon>add</mat-icon></button>
+                    </div>
+                    <mat-table [dataSource]="getTableDataSource(i)"
+                              [@animate]="{value:'50'}">
+          
+                      <ng-container matColumnDef="{{ elementSub.datasetElementSubName }}" *ngFor="let elementSub of element.datasetElementSubs">
+                          <mat-header-cell *matHeaderCellDef>{{ elementSub.datasetElementSubName }}</mat-header-cell>
+                          <mat-cell *matCellDef="let record">
+                            {{ formatOutput(record[elementSub.datasetElementSubId]) }}
+                          </mat-cell>
+                      </ng-container>
+      
+                      <ng-container matColumnDef="actions">
+                        <mat-header-cell *matHeaderCellDef>{{'Actions' | translate}}</mat-header-cell>
+                        <mat-cell *matCellDef="let record, let rowIndex = index; ">
+                          <button mat-icon-button color="primary" matTooltip="{{'Update' | translate }}"
+                                  (click)="openPopup(i, rowIndex, element.datasetElementId, element.datasetElementSubs, record, false)">
+                              <mat-icon>edit</mat-icon>
+                          </button>
+                          <button mat-icon-button color="warn" matTooltip="{{'Delete' | translate}}"
+                              (click)="removeRecord(i, rowIndex, element.datasetElementId)">
+                              <mat-icon>delete</mat-icon>
+                          </button>
+                        </mat-cell>                    
+                      </ng-container>                        
+                    
+                      <mat-header-row *matHeaderRowDef="generateColumnArray(element.datasetElementSubs); sticky:true"></mat-header-row>
+                      <mat-row *matRowDef="let record; columns: generateColumnArray(element.datasetElementSubs);"></mat-row>
+                    </mat-table>
+                  </div>
+      
+                </span>              
+    
+              </div>
+            </div>
+    
+            <div fxLayout="row" class="mt-12">
+              <button mat-raised-button matStepperPrevious type="button" *ngIf="i > 0">{{'Previous' | translate}}</button>
+              <span fxFlex></span>
+              <button mat-raised-button matStepperNext type="button"  *ngIf="i < datasetCategories.length - 1">{{'Next' | translate}}</button>
+            </div>
+          </mat-step>
+        </mat-horizontal-stepper>
+      </form>
+
+      <div class="text-center">
+        <button mat-raised-button color="warn" (click)="goBack()" class="mr-12">{{'Cancel' | translate}}</button>
+        <button mat-raised-button color="accent" (click)="saveForm()" [disabled]="viewModelForm.invalid"><mat-icon class="mr-4">save</mat-icon>{{'Save Report' | translate}}</button>
+      </div>
+
+    </div>
+  </div>
+</div>

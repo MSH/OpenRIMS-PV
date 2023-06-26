@@ -1,0 +1,63 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <div fxLayout="row wrap" fxLayout.lt-sm="column">
+    <div fxFlex="100" class="pr-1 height-100vh-280px" style="overflow-y: auto">
+
+      <mat-card class="p-0">
+        <mat-card-title>
+          <div class="card-title-text default-light-bg rounded p-8">{{'Facilities' | translate}}</div>
+        </mat-card-title>
+        <mat-card-content class="m-1 p-2">
+
+          <mat-chip-list #chipList>
+            <div *ngFor="let orgUnit of viewModel?.orgUnitList">
+              <mat-chip color="accent" [selected]="orgUnit.orgUnitName == viewModel?.selectedOrgUnit?.orgUnitName" (click)="selectOrgUnit(orgUnit)" style="cursor: pointer;"> 
+                {{orgUnit.orgUnitName}}
+              </mat-chip>
+            </div>
+          </mat-chip-list>
+
+          <div class="p-24 mt-12 light-gray rounded" *ngIf="viewModel?.facilitiesGrid?.records.data.length == 0">
+            No facilities from this region have been assigned to user
+          </div>          
+
+          <div class="ml-05 mr-05 mt-12 pb-1" *ngIf="viewModel?.facilitiesGrid?.records.data.length > 0">
+            <div class="table-container">
+              <mat-table [dataSource]="viewModel?.facilitiesGrid?.records"
+                        [@animate]="{value:'50'}">
+    
+                <ng-container matColumnDef="facility-name">
+                    <mat-header-cell *matHeaderCellDef>{{'Facility name' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        <p>{{record.facilityName}}</p>
+                    </mat-cell>
+                </ng-container>
+    
+                <mat-header-row *matHeaderRowDef="viewModel?.facilitiesGrid?.displayedColumns; sticky:true"></mat-header-row>
+                <mat-row *matRowDef="let record; columns: viewModel?.facilitiesGrid?.displayedColumns;"></mat-row>
+              </mat-table>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="p-0">
+        <mat-card-title>
+          <div class="card-title-text default-light-bg rounded p-8">{{'Roles' | translate}}</div>
+        </mat-card-title>
+        <mat-card-content class="m-1 p-2">
+          <div class="icon-menu-item pl-8" *ngFor="let item of viewModel?.user?.roles">
+            {{item | translate}}
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div fxFlex="100" class="mt-1">
+      <span fxFlex></span>
+      <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Close" | translate }}</button>
+    </div>
+  </div>
+  

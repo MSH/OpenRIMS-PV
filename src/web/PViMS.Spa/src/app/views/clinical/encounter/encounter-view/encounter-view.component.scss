@@ -1,0 +1,119 @@
+// Columns widths
+mat-column {
+  word-wrap: break-word !important;
+  white-space: unset !important;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  word-break: break-word;
+
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+}
+
+.mat-column-id {
+  flex: 0 0 5% !important;
+  width: 5% !important;
+}
+
+.mat-column-effective-date {
+  flex: 0 0 20% !important;
+  width: 20% !important;
+}
+
+.mat-column-start-date {
+  flex: 0 0 15% !important;
+  width: 15% !important;
+}
+
+.mat-column-end-date {
+  flex: 0 0 10% !important;
+  width: 10% !important;
+}
+
+.mat-column-onset-date {
+  flex: 0 0 15% !important;
+  width: 15% !important;
+}
+
+.mat-column-test-date {
+  flex: 0 0 10% !important;
+  width: 10% !important;
+}
+
+.mat-column-outcome-date {
+  flex: 0 0 15% !important;
+  width: 15% !important;
+}
+
+.mat-column-outcome {
+  flex: 0 0 20% !important;
+  width: 20% !important;
+}
+
+.mat-column-reported-date {
+  flex: 0 0 15% !important;
+  width: 15% !important;
+}
+
+.mat-column-resolution-date {
+  flex: 0 0 15% !important;
+  width: 15% !important;
+}
+
+.mat-column-is-serious {
+  flex: 0 0 10% !important;
+  width: 10% !important;
+}
+
+.mat-column-enroled-date {
+  flex: 0 0 15% !important;
+  width: 20% !important;
+}
+
+.mat-column-de-enroled-date {
+  flex: 0 0 15% !important;
+  width: 15% !important;
+}
+
+.mat-column-dose {
+  flex: 0 0 10% !important;
+  width: 10% !important;
+}
+
+.mat-column-dose-unit {
+  flex: 0 0 10% !important;
+  width: 10% !important;
+}
+
+.mat-column-dose-frequency {
+  flex: 0 0 10% !important;
+  width: 10% !important;
+}
+
+.mat-column-test-result-coded {
+  flex: 0 0 15% !important;
+  width: 15% !important;
+}
+
+.mat-column-test-result-value {
+  flex: 0 0 15% !important;
+  width: 15% !important;
+}
+
+.mat-column-test-unit {
+  flex: 0 0 15% !important;
+  width: 15% !important;
+}
+
+.mat-column-clinical-event {
+  flex: 0 0 20% !important;
+  width: 20% !important;
+}
+
+.mat-column-actions {
+  flex: 0 0 10% !important;
+  width: 10% !important;
+}

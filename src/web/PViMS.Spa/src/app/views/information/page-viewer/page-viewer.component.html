@@ -1,0 +1,56 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<mat-card class="p-0">
+  
+  <mat-card-title class="">
+      <div class="card-title-text">
+        {{ metaPage?.pageName }}
+        <div class="mainButton" *ngIf="accountService.hasRole('PublisherAdmin')">
+          <span fxFlex></span>
+          <button mat-mini-fab class="mr-05" color="primary" (click)="openPageConfigurePopup()" matTooltip="{{'Update Page' | translate }}"><mat-icon>settings</mat-icon></button>
+          <button mat-mini-fab class="mr-05" color="primary" (click)="openWidgetConfigurePopup(0)" matTooltip="{{'Add Widget' | translate }}"><mat-icon>widgets</mat-icon></button>
+          <button mat-mini-fab class="mr-05" color="warn" (click)="openDeletePopUp()" matTooltip="{{'Delete Page' | translate }}"><mat-icon>delete</mat-icon></button>
+        </div>
+      </div>
+  </mat-card-title>
+</mat-card>
+
+<div class="p-0 default-light-bg rounded" *ngIf="accountService.hasRole('PublisherAdmin')">
+  <div fxLayout="row wrap" fxLayoutGap="0.1%" fxLayoutAlign="start start">
+    <div fxFlex="100" class="p-05 font-weight-bold"><h3>{{ 'Unpublished Widgets' | translate}}</h3> </div>
+    <div fxFlex="15" class="pr-1" *ngFor="let widget of metaPage?.unpublishedWidgets">
+      <mat-card class="p-05">
+        <mat-card-title class="">
+          <div class="card-title-text"> {{ widget.widgetName }}</div>
+          <div class="mainButton">
+            <span fxFlex></span>
+            <button mat-icon-button color="primary" (click)="openWidgetConfigurePopup(widget.id)" matTooltip="{{'Update Widget' | translate }}"><mat-icon>settings</mat-icon></button>
+            <button mat-icon-button color="primary" (click)="openWidgetMovePopup(widget.id, widget.widgetName)" matTooltip="{{'Move Widget' | translate }}"><mat-icon>arrow_forward</mat-icon></button>
+            <button mat-icon-button color="warn" (click)="openDeleteWidgetPopUp(widget.id, widget.widgetName)" matTooltip="{{'Delete Widget' | translate }}"><mat-icon>delete</mat-icon></button>
+          </div>
+        </mat-card-title>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<div fxLayout="row wrap" fxLayoutGap="0.1%" fxLayoutAlign="start start">
+  <section fxFlex="49">
+    <div class="row" *ngFor="let widget of leftWidgetList">
+      <app-item-list-widget [widget]="widget" [pageId]="id" (initialiseReport)="initialiseReport()" *ngIf="widget?.widgetType == 'ItemList'"></app-item-list-widget>
+      <app-subitem-widget [widget]="widget" [pageId]="id" (initialiseReport)="initialiseReport()" *ngIf="widget?.widgetType == 'SubItems'"></app-subitem-widget>
+      <app-general-widget [widget]="widget" [pageId]="id" (initialiseReport)="initialiseReport()" *ngIf="widget?.widgetType == 'General'"></app-general-widget>
+    </div>
+  </section>
+  <section fxFlex="49">
+    <div class="row" *ngFor="let widget of rightWidgetList">
+      <app-item-list-widget [widget]="widget" [pageId]="id" (initialiseReport)="initialiseReport()" *ngIf="widget?.widgetType == 'ItemList'"></app-item-list-widget>
+      <app-subitem-widget [widget]="widget" [pageId]="id" (initialiseReport)="initialiseReport()" *ngIf="widget?.widgetType == 'SubItems'"></app-subitem-widget>
+      <app-general-widget [widget]="widget" [pageId]="id" (initialiseReport)="initialiseReport()" *ngIf="widget?.widgetType == 'General'"></app-general-widget>
+    </div>
+  </section>
+</div>
+
+

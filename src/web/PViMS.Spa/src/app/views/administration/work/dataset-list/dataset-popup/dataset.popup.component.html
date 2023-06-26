@@ -1,0 +1,44 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <mat-label>{{'Dataset name' | translate }}</mat-label>
+          <input matInput formControlName="datasetName">
+          <mat-error *ngIf="itemForm.get('datasetName').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+          <mat-error *ngIf="itemForm.get('datasetName').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>
+          <mat-error *ngIf="itemForm.get('datasetName').hasError('pattern')">
+            {{'Value contains invalid characters' | translate}} (A-Z, a-z, space)
+          </mat-error>              
+        </mat-form-field>        
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <mat-label>{{'Help' | translate }}</mat-label>
+          <input matInput formControlName="help">
+          <mat-error *ngIf="itemForm.get('help').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>
+          <mat-error *ngIf="itemForm.get('help').hasError('pattern')">
+            {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, period, space)
+          </mat-error>              
+        </mat-form-field>        
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+
+  </form>

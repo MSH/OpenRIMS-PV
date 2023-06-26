@@ -1,0 +1,106 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<mat-card class="p-0">
+  
+  <mat-card-title class="">
+    <div class="card-title-text">
+      {{'Cohorts' | translate}}
+      <div fxLayout="row" fxLayoutAlign="end" *ngIf="accountService.hasRole('Admin')">
+        <button mat-raised-button class="mb-05" color="accent" (click)="openPopUp({}, true)">{{'Add Cohort' | translate }}</button>
+      </div>
+    </div>
+  </mat-card-title>
+
+  <mat-card-content>
+      <div class="ml-05 mr-05 mt-05 pb-1">
+
+          <div class="table-container">
+            <mat-table [dataSource]="viewModel?.mainGrid?.records"
+                       [@animate]="{value:'50'}">
+
+                <ng-container matColumnDef="cohort-id">
+                    <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        <p>{{record.id}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="cohort-name">
+                    <mat-header-cell *matHeaderCellDef>{{'Cohort name' | translate }}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        <p>{{record.cohortName}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="cohort-code">
+                    <mat-header-cell *matHeaderCellDef>{{'Code' | translate }}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        <p>{{record.cohortCode}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="primary-condition">
+                    <mat-header-cell *matHeaderCellDef>{{'Primary condition' | translate }}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        <p>{{record.conditionName}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="patient-count">
+                    <mat-header-cell *matHeaderCellDef>{{'Patient count' | translate }}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        <p>{{record.enrolmentCount}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="start-date">
+                    <mat-header-cell *matHeaderCellDef>{{'Start date' | translate }}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        <p>{{record.startDate}}</p>
+                    </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="finish-date">
+                  <mat-header-cell *matHeaderCellDef>{{'End date' | translate }}</mat-header-cell>
+                  <mat-cell *matCellDef="let record">
+                      <p>{{record.finishDate}}</p>
+                  </mat-cell>
+              </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>
+                      {{'Actions' | translate }}
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        <button mat-icon-button color="primary" matTooltip="{{'View Cohort' | translate }}"
+                                (click)="detail(record)" *ngIf="record.enrolmentCount > 0">
+                          <mat-icon>person</mat-icon>
+                        </button>
+                        <button mat-icon-button color="primary" matTooltip="{{'Update Cohort' | translate }}"
+                                (click)="openPopUp(record, false)" *ngIf="accountService.hasRole('Admin')">
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="warn" matTooltip="{{'Delete Cohort' | translate }}"
+                                (click)="openDeletePopUp(record)" *ngIf="accountService.hasRole('Admin') && record.enrolmentCount == 0">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                    </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="viewModel?.mainGrid?.displayedColumns; sticky:true"></mat-header-row>
+                <mat-row *matRowDef="let record; columns: viewModel?.mainGrid?.displayedColumns;"></mat-row>
+            </mat-table>
+          </div>
+
+          <mat-paginator #mainGridPaginator="matPaginator" [length]="viewModel?.mainGrid?.count"
+                       [pageIndex]="0" [pageSize]="10"
+                       [pageSizeOptions]="[5, 10, 25, 50]">
+          </mat-paginator>
+
+      </div>
+      
+  </mat-card-content>
+</mat-card>
+

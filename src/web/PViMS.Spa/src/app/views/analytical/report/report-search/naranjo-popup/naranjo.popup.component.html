@@ -1,0 +1,353 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="viewModelForm">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1">
+        <mat-tab-group #mainTabGroup="matTabGroup">
+          <mat-tab label="{{'Additional Information' | translate}}">
+            <mat-card-content class="m-1 p-5" style="height: 500px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                <div fxFlex="100" class="pr-1">
+                  <mat-form-field class="p-8 full-width" appearance="fill">
+                    <mat-label>{{'L_TEXT_7' | translate }}</mat-label>
+                      <input matInput formControlName="sourceIdentifier" readonly>
+                  </mat-form-field>        
+                </div>
+                <div fxFlex="100" class="pr-1">
+                  <mat-form-field class="p-8 full-width" appearance="fill">
+                    <mat-label>{{'Terminology set by specialist' | translate }}</mat-label>
+                      <input matInput formControlName="meddraTerm" readonly>
+                  </mat-form-field>        
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+          <mat-tab label="{{'Legend' | translate}}">
+            <mat-card-content class="m-1 p-5" style="height: 500px;">
+              <div class="table-container">
+                <mat-table [dataSource]="legendDataSource"
+                          [@animate]="{value:'50'}">
+
+                  <ng-container matColumnDef="legend-term">
+                      <mat-header-cell *matHeaderCellDef>{{'Term' | translate}}</mat-header-cell>
+                      <mat-cell *matCellDef="let record">
+                          {{record.term | translate}}
+                      </mat-cell>
+                  </ng-container>
+                          
+                  <ng-container matColumnDef="legend-description">
+                      <mat-header-cell *matHeaderCellDef>{{'Description' | translate}}</mat-header-cell>
+                      <mat-cell *matCellDef="let record">
+                          {{record.description | translate}}
+                      </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="viewModel?.mainGrid?.displayedColumns; sticky:true"></mat-header-row>
+                  <mat-row *matRowDef="let record; columns: viewModel?.mainGrid?.displayedColumns;"></mat-row>
+                </mat-table>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+          <mat-tab label="{{'Medications' | translate}}" *ngIf="viewModel?.medicationGrid?.records.data.length > 0">
+            <mat-card-content class="m-1 p-5" style="height: 500px;">
+              <div class="table-container">
+                <mat-table [dataSource]="viewModel?.medicationGrid?.records"
+                          [@animate]="{value:'50'}">
+
+                  <ng-container matColumnDef="medication">
+                      <mat-header-cell *matHeaderCellDef>{{'Medication' | translate}}</mat-header-cell>
+                      <mat-cell *matCellDef="let record">
+                          {{ record.medicationIdentifier}}
+                      </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="start-date">
+                      <mat-header-cell *matHeaderCellDef>{{'Start date' | translate}}</mat-header-cell>
+                      <mat-cell *matCellDef="let record">
+                          {{ record.startDate }}
+                      </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="end-date">
+                    <mat-header-cell *matHeaderCellDef>{{'End date' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        {{ record.endDate }}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="causality">
+                    <mat-header-cell *matHeaderCellDef>{{'Causality' | translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                        {{record.naranjoCausality | translate}}
+                    </mat-cell>
+                  </ng-container>
+
+                  <ng-container matColumnDef="actions">
+                    <mat-header-cell *matHeaderCellDef>
+                      {{'Actions' | translate}}
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let record">
+                      <button mat-icon-button color="primary" matTooltip="{{'Set causality' | translate}}"
+                              (click)="openCausality(record)">
+                          <mat-icon>send</mat-icon>
+                      </button>
+                      <button mat-icon-button color="accent" matTooltip="{{'Ignore medication' | translate}}"
+                              (click)="ignore(record)">
+                        <mat-icon>cancel</mat-icon>
+                      </button>
+                    </mat-cell>
+                  </ng-container>                        
+              
+                  <mat-header-row *matHeaderRowDef="viewModel?.medicationGrid?.displayedColumns; sticky:true"></mat-header-row>
+                  <mat-row *matRowDef="let record; columns: viewModel?.medicationGrid?.displayedColumns;"></mat-row>
+                </mat-table>
+
+              </div>
+            </mat-card-content>
+          </mat-tab>
+          <mat-tab label="{{'Naranjo Scale' | translate}}" *ngIf="viewModel?.medicationGrid?.records.data.length > 0 && selectedMedication != null">
+            <mat-card-content class="m-1 p-5" style="height: 500px;">
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="center center">
+                <div fxFlex="100" class="p-8 font-weight-bold light-gray">
+                  {{"Setting causality for " | translate }} : {{ selectedMedication.medicationIdentifier }}
+                </div>
+              </div>
+              <div style="height:390px; overflow-y: auto" class="mt-12">
+                <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                  <div fxFlex="70">
+                    <mat-label>{{'NARANJO_Q1' | translate }}</mat-label>
+                  </div>
+                  <div fxFlex="25">
+                    <mat-form-field class="full-width">
+                      <mat-select formControlName="question1" placeholder="" (selectionChange)="calculate()">
+                        <mat-option value=""></mat-option>
+                        <mat-option value="Yes">  
+                          {{'Yes' | translate}}
+                        </mat-option>
+                        <mat-option value="No">
+                          {{'No' | translate}}
+                        </mat-option>
+                        <mat-option value="Do not know">
+                          {{'Do not know' | translate}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                  <div fxFlex="70">
+                    <mat-label>{{'NARANJO_Q2' | translate }}</mat-label>
+                  </div>
+                  <div fxFlex="25">
+                    <mat-form-field class="full-width">
+                      <mat-select formControlName="question2" placeholder="" (selectionChange)="calculate()">
+                        <mat-option value=""></mat-option>
+                        <mat-option value="Yes">  
+                          {{'Yes' | translate}}
+                        </mat-option>
+                        <mat-option value="No">
+                          {{'No' | translate}}
+                        </mat-option>
+                        <mat-option value="Do not know">
+                          {{'Do not know' | translate}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                  <div fxFlex="70">
+                    <mat-label>{{'NARANJO_Q3' | translate }}</mat-label>
+                  </div>
+                  <div fxFlex="25">
+                    <mat-form-field class="full-width">
+                      <mat-select formControlName="question3" placeholder="" (selectionChange)="calculate()">
+                        <mat-option value=""></mat-option>
+                        <mat-option value="Yes">  
+                          {{'Yes' | translate}}
+                        </mat-option>
+                        <mat-option value="No">
+                          {{'No' | translate}}
+                        </mat-option>
+                        <mat-option value="Do not know">
+                          {{'Do not know' | translate}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                  <div fxFlex="70">
+                    <mat-label>{{'NARANJO_Q4' | translate }}</mat-label>
+                  </div>
+                  <div fxFlex="25">
+                    <mat-form-field class="full-width">
+                      <mat-select formControlName="question4" placeholder="" (selectionChange)="calculate()">
+                        <mat-option value=""></mat-option>
+                        <mat-option value="Yes">  
+                          {{'Yes' | translate}}
+                        </mat-option>
+                        <mat-option value="No">
+                          {{'No' | translate}}
+                        </mat-option>
+                        <mat-option value="Do not know">
+                          {{'Do not know' | translate}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                  <div fxFlex="70">
+                    <mat-label>{{'NARANJO_Q5' | translate }}</mat-label>
+                  </div>
+                  <div fxFlex="25">
+                    <mat-form-field class="full-width">
+                      <mat-select formControlName="question5" placeholder="" (selectionChange)="calculate()">
+                        <mat-option value=""></mat-option>
+                        <mat-option value="Yes">  
+                          {{'Yes' | translate}}
+                        </mat-option>
+                        <mat-option value="No">
+                          {{'No' | translate}}
+                        </mat-option>
+                        <mat-option value="Do not know">
+                          {{'Do not know' | translate}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                  <div fxFlex="70">
+                    <mat-label>{{'NARANJO_Q6' | translate }}</mat-label>
+                  </div>
+                  <div fxFlex="25">
+                    <mat-form-field class="full-width">
+                      <mat-select formControlName="question6" placeholder="" (selectionChange)="calculate()">
+                        <mat-option value=""></mat-option>
+                        <mat-option value="Yes">  
+                          {{'Yes' | translate}}
+                        </mat-option>
+                        <mat-option value="No">
+                          {{'No' | translate}}
+                        </mat-option>
+                        <mat-option value="Do not know">
+                          {{'Do not know' | translate}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                  <div fxFlex="70">
+                    <mat-label>{{'NARANJO_Q7' | translate }}</mat-label>
+                  </div>
+                  <div fxFlex="25">
+                    <mat-form-field class="full-width">
+                      <mat-select formControlName="question7" placeholder="" (selectionChange)="calculate()">
+                        <mat-option value=""></mat-option>
+                        <mat-option value="Yes">  
+                          {{'Yes' | translate}}
+                        </mat-option>
+                        <mat-option value="No">
+                          {{'No' | translate}}
+                        </mat-option>
+                        <mat-option value="Do not know">
+                          {{'Do not know' | translate}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                  <div fxFlex="70">
+                    <mat-label>{{'NARANJO_Q8' | translate }}</mat-label>
+                  </div>
+                  <div fxFlex="25">
+                    <mat-form-field class="full-width">
+                      <mat-select formControlName="question8" placeholder="" (selectionChange)="calculate()">
+                        <mat-option value=""></mat-option>
+                        <mat-option value="Yes">  
+                          {{'Yes' | translate}}
+                        </mat-option>
+                        <mat-option value="No">
+                          {{'No' | translate}}
+                        </mat-option>
+                        <mat-option value="Do not know">
+                          {{'Do not know' | translate}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                  <div fxFlex="70">
+                    <mat-label>{{'NARANJO_Q9' | translate }}</mat-label>
+                  </div>
+                  <div fxFlex="25">
+                    <mat-form-field class="full-width">
+                      <mat-select formControlName="question9" placeholder="" (selectionChange)="calculate()">
+                        <mat-option value=""></mat-option>
+                        <mat-option value="Yes">  
+                          {{'Yes' | translate}}
+                        </mat-option>
+                        <mat-option value="No">
+                          {{'No' | translate}}
+                        </mat-option>
+                        <mat-option value="Do not know">
+                          {{'Do not know' | translate}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+
+                <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+                  <div fxFlex="70">
+                    <mat-label>{{'NARANJO_Q10' | translate }}</mat-label>
+                  </div>
+                  <div fxFlex="25">
+                    <mat-form-field class="full-width">
+                      <mat-select formControlName="question10" placeholder="" (selectionChange)="calculate()">
+                        <mat-option value=""></mat-option>
+                        <mat-option value="Yes">  
+                          {{'Yes' | translate}}
+                        </mat-option>
+                        <mat-option value="No">
+                          {{'No' | translate}}
+                        </mat-option>
+                        <mat-option value="Do not know">
+                          {{'Do not know' | translate}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                  </div>
+                </div>
+              </div>
+              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="end" class="mt-12">
+                <div fxFlex="20" class="p-12" *ngIf="calculation != ''">
+                  <mat-chip class="icon-chip" color="primary" selected="true">{{calculation}}</mat-chip>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
+      <div fxFlex="100" class="mt-1">
+        <span fxFlex></span>
+        <button mat-raised-button color="accent" mattooltip="Save causality" class="mr-05" (click)="setCausality()" *ngIf="!viewModelForm.invalid && calculation != '' && selectedMedication != null">{{"Save" | translate }}</button>
+        <button mat-raised-button color="primary" type="button" (click)="dialogRef.close(false)">{{"Close" | translate }}</button>
+      </div>
+    </div>
+  </form>

@@ -1,0 +1,45 @@
+<div fxLayout="row wrap">
+  <div fxFlex="25" fxFlex.md="50" fxFlex.sm="75" fxFlex.sm="100" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }" *ngIf="!viewModel?.connected">
+    <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start" class="mt-6">
+      <div fxFlex="100" class="text-center p-12 m-12 mat-red rounded">
+        <span class="m-0">{{'CURRENTLY OFFLINE' | translate}}</span>
+      </div>        
+    </div>
+  </div>
+</div>
+<div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+  <div fxFlex.xl="25" fxFlex.gt-sm="50" fxFlex.sm="75" fxFlex.sm="100" *ngFor="let action of viewModel?.formList">
+    <mat-card class="p-12 mat-elevation-z6 rounded">
+      <mat-card-title class="text-center">
+        <div class="card-title-text light-gray p-12">
+          {{action.formName | translate}}
+        </div>
+      </mat-card-title>              
+      <mat-card-content>
+        <div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="1.0%" fxLayoutAlign="start" class="mt-6">
+          <div fxFlex="50" class="text-center pt-16 pb-16 border-right-light">
+            <mat-icon class="text-red">cloud_download</mat-icon>
+            <h4 class="m-0">{{action.unsynchedCount}}</h4>
+            <small class="m-0 text-muted">Forms unsynched</small>
+          </div>        
+          <div fxFlex="50" class="text-center pt-16 pb-16 border-right-light">
+            <mat-icon class="text-blue">cloud_done</mat-icon>
+            <h4 class="m-0">{{action.synchedCount}}</h4>
+            <small class="m-0 text-muted">Forms synched</small>
+          </div>        
+        </div>
+        <div class="m-8 text-center">
+          <button mat-raised-button color="accent" class="mr-16" (click)="addForm(action.actionName)" >
+            {{'Add Form' | translate }}
+          </button>
+          <button mat-raised-button color="accent" class="mr-16" (click)="listForm(action.actionName)" *ngIf="action.unsynchedCount > 0 || action.synchedCount > 0">
+            {{'List Forms' | translate }}
+          </button>
+          <button mat-raised-button color="primary" (click)="synchroniseForm(action.actionName)" *ngIf="action.completedCount > 0">
+            {{'Submit Forms' | translate }}
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>  
+  </div>
+</div>

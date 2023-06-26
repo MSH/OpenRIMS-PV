@@ -1,0 +1,1 @@
+sqlcmd -E -S **SERVERANDINSTANCENAME** -d master -i backup_all_sys_dbs.sql -o **OUTPUTFILENAME**

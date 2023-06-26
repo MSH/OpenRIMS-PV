@@ -1,0 +1,131 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+            <input matInput formControlName="firstName" placeholder="{{'First name' | translate }}">
+            <mat-hint>{{'Maximum length' | translate}} 30</mat-hint> 
+            <mat-error *ngIf="itemForm.get('firstName').hasError('required')">
+              {{'This is a required field' | translate}}
+            </mat-error>            
+            <mat-error *ngIf="itemForm.get('firstName').hasError('maxlength')">
+              {{'Maximum length exceeded' | translate}}
+            </mat-error>            
+            <mat-error *ngIf="itemForm.get('firstName').hasError('pattern')">
+              {{'Value contains invalid characters' | translate}} (A-Z, a-z, space)
+            </mat-error>              
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+            <input matInput formControlName="lastName" placeholder="{{'Last name' | translate }}">
+            <mat-hint>{{'Maximum length' | translate}} 30</mat-hint> 
+            <mat-error *ngIf="itemForm.get('lastName').hasError('required')">
+              {{'This is a required field' | translate}}
+            </mat-error>            
+            <mat-error *ngIf="itemForm.get('lastName').hasError('maxlength')">
+              {{'Maximum length exceeded' | translate}}
+            </mat-error>            
+            <mat-error *ngIf="itemForm.get('lastName').hasError('pattern')">
+              {{'Value contains invalid characters' | translate}} (A-Z, a-z, space)
+            </mat-error>             
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+            <input matInput formControlName="userName" placeholder="{{'Username' | translate }}">
+            <mat-hint>{{'Maximum length' | translate}} 30</mat-hint> 
+            <mat-error *ngIf="itemForm.get('userName').hasError('required')">
+              {{'This is a required field' | translate}}
+            </mat-error>            
+            <mat-error *ngIf="itemForm.get('userName').hasError('maxlength')">
+              {{'Maximum length exceeded' | translate}}
+            </mat-error>            
+            <mat-error *ngIf="itemForm.get('userName').hasError('pattern')">
+              {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space)
+            </mat-error>             
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input matInput formControlName="email" placeholder="{{'Email' | translate }}" required>
+          <mat-hint>{{'L_TEXT_9' | translate}}</mat-hint>
+          <mat-error *ngIf="itemForm.get('email').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+          <mat-error *ngIf="itemForm.get('email').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>            
+          <mat-error *ngIf="itemForm.get('email').hasError('pattern')">
+            {{'Invalid email address' | translate}}
+          </mat-error>            
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input matInput formControlName="password" placeholder="{{'Password' | translate }}" type="password">
+          <mat-hint>{{'L_TEXT_10' | translate}}</mat-hint> 
+          <mat-error *ngIf="itemForm.get('password').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+          <mat-error *ngIf="itemForm.get('password').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>            
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input matInput formControlName="confirmPassword" placeholder="{{'Confirm password' | translate }}" type="password">
+          <mat-error *ngIf="itemForm.get('confirmPassword').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+          <mat-error *ngIf="itemForm.get('confirmPassword').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>
+          <mat-error *ngIf="!itemForm.get('confirmPassword').hasError('required') && itemForm.get('confirmPassword').hasError('passwordsNotMatching')">
+            {{'Passwords must match' | translate}}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <mat-select formControlName="roles" placeholder="{{'Roles' | translate}}" multiple>
+            <mat-option *ngFor="let role of roleList" [value]="role.name">
+                {{role.name}}
+            </mat-option>
+          </mat-select>               
+          <mat-error *ngIf="itemForm.get('roles').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+        </mat-form-field>
+      </div>
+      
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <mat-select formControlName="facilities" placeholder="{{'Facilities' | translate}}" multiple>
+            <mat-option *ngFor="let facility of facilityList" [value]="facility.facilityName">
+                {{facility.facilityName}}
+            </mat-option>
+          </mat-select>               
+          <mat-error *ngIf="itemForm.get('facilities').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+        </mat-form-field>       
+      </div>      
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

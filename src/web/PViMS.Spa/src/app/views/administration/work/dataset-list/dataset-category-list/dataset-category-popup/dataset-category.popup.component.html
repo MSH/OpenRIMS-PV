@@ -1,0 +1,78 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input matInput formControlName="datasetCategoryName" placeholder="{{'Category' | translate }}">
+          <mat-error *ngIf="itemForm.get('datasetCategoryName').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+          <mat-error *ngIf="itemForm.get('datasetCategoryName').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>
+          <mat-error *ngIf="itemForm.get('datasetCategoryName').hasError('pattern')">
+            {{'Value contains invalid characters' | translate}} (A-Z, a-z, space)
+          </mat-error>              
+        </mat-form-field>        
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input matInput formControlName="friendlyName" placeholder="{{'Friendly name' | translate }}">
+          <mat-error *ngIf="itemForm.get('friendlyName').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>
+          <mat-error *ngIf="itemForm.get('friendlyName').hasError('pattern')">
+            {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, period, space)
+          </mat-error>              
+        </mat-form-field>        
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input matInput formControlName="help" placeholder="{{'Help' | translate }}">
+          <mat-error *ngIf="itemForm.get('help').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>
+          <mat-error *ngIf="itemForm.get('help').hasError('pattern')">
+            {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, period, space)
+          </mat-error>              
+        </mat-form-field>        
+      </div>
+
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <mat-select formControlName="acute" placeholder="{{'Acute' | translate}}">
+            <mat-option value="Yes">{{'Yes' | translate}}</mat-option>
+            <mat-option value="No">{{'No' | translate}}</mat-option>
+          </mat-select>               
+          <mat-error *ngIf="itemForm.get('acute').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+        </mat-form-field>       
+      </div>
+      
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <mat-select formControlName="chronic" placeholder="{{'Chronic' | translate}}">
+            <mat-option value="Yes">{{'Yes' | translate}}</mat-option>
+            <mat-option value="No">{{'No' | translate}}</mat-option>
+          </mat-select>               
+          <mat-error *ngIf="itemForm.get('chronic').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+        </mat-form-field>       
+      </div>      
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+
+  </form>

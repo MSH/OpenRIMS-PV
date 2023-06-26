@@ -1,0 +1,74 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1" *ngIf="data.metaPageId > 0">
+        <mat-form-field class="p-8 full-width" appearance="fill">
+          <mat-label>{{'Identifier' | translate}}</mat-label>
+          <input matInput formControlName="metaPageGuid" readonly>
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input matInput formControlName="pageName" placeholder="{{'Page name' | translate }}" required>
+          <mat-hint>{{'Maximum length' | translate}} 50</mat-hint> 
+          <mat-error *ngIf="itemForm.get('pageName').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+          <mat-error *ngIf="itemForm.get('pageName').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>            
+          <mat-error *ngIf="itemForm.get('pageName').hasError('pattern')">
+            {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space)
+          </mat-error>            
+        </mat-form-field>        
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input matInput formControlName="pageDefinition" placeholder="{{'Definition' | translate }}">
+          <mat-hint>{{'Maximum length' | translate}} 250</mat-hint> 
+          <mat-error *ngIf="itemForm.get('pageDefinition').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>            
+          <mat-error *ngIf="itemForm.get('pageDefinition').hasError('pattern')">
+            {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space, hyphen, period, comma)
+          </mat-error>            
+        </mat-form-field>        
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <input matInput formControlName="breadcrumb" placeholder="{{'Breadcrumb' | translate }}">
+          <mat-hint>{{'Maximum length' | translate}} 250</mat-hint> 
+          <mat-error *ngIf="itemForm.get('breadcrumb').hasError('maxlength')">
+            {{'Maximum length exceeded' | translate}}
+          </mat-error>            
+          <mat-error *ngIf="itemForm.get('breadcrumb').hasError('pattern')">
+            {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space, hyphen, period, comma)
+          </mat-error>            
+        </mat-form-field>        
+      </div>
+
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="p-8 full-width">
+          <mat-select formControlName="visible" placeholder="{{'Visible to menu' | translate}}" required>
+            <mat-option value="Yes">{{'Yes' | translate}}</mat-option>
+            <mat-option value="No">{{'No' | translate}}</mat-option>
+          </mat-select>               
+          <mat-error *ngIf="itemForm.get('visible').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+        </mat-form-field>       
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

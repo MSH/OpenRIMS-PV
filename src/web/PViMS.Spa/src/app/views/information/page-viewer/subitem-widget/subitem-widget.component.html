@@ -1,0 +1,21 @@
+<mat-card class="p-0">
+  <mat-card-title class="">
+    <div class="mainButton" *ngIf="accountService.hasRole('PublisherAdmin')">
+      <span fxFlex></span>
+      <button mat-icon-button color="primary" (click)="openWidgetConfigurePopup(widget.id)" matTooltip="{{'Update Widget' | translate }}"><mat-icon>settings</mat-icon></button>
+      <button mat-icon-button color="warn" (click)="openDeleteWidgetPopUp(widget.id, widget.widgetName)" matTooltip="{{'Delete Widget' | translate }}"><mat-icon>delete</mat-icon></button>
+    </div>
+    <div class="card-title-text"><mat-icon class="mr-24">{{ widget.icon }}</mat-icon> {{ widget.widgetName}}</div>
+  </mat-card-title>
+  <mat-card-content>
+    <div class="table-container">
+      <div fxLayout="row wrap" fxLayoutGap="0.1%" fxLayoutAlign="start start" *ngFor="let item of widget.contentItems">
+        <div fxFlex="83" class="pr-1">
+          <button mat-button color="primary" (click)="openPageViewerPopup(item.contentPage)">{{ item.title }}</button><br/>
+          <span class="mr-16"></span><small>{{ item.subTitle }}</small>
+        </div>
+        <div fxFlex="15" class="pr-1">{{ item.modified }}</div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

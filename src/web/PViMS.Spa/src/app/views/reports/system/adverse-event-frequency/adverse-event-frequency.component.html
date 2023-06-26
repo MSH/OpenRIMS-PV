@@ -1,0 +1,129 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<mat-card class="p-0">
+  <mat-card-title class="">
+      <div class="card-title-text">
+        {{'Adverse Event Frequency Report' | translate}} | 
+        <small>({{'Meta data last refreshed' | translate }} : {{metaDate}})</small>
+      </div>
+  </mat-card-title>
+
+  <mat-card-content>
+    <form [formGroup]="viewModelForm">
+      <div class="p-0 default-light-bg rounded">
+        <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="0.1%" fxLayoutAlign="start">
+          <div fxFlex="30" class="pr-1">
+            <mat-form-field class="p-8 full-width">
+              <mat-select formControlName="criteriaId" placeholder="{{'Frequency' | translate}}" required>
+                <mat-option value="1">{{'Annual' | translate}}</mat-option>
+                <mat-option value="2">{{'Quarterly' | translate}}</mat-option>
+                <mat-option value="3">{{'Monthly' | translate}}</mat-option>
+              </mat-select>                        
+            </mat-form-field>
+          </div>
+          <div fxFlex="30" class="pr-1">
+            <mat-form-field class="p-8 full-width">
+              <input matInput formControlName="searchFrom" placeholder="{{'Search from' | translate }}" [matDatepicker]="searchFromDatepicker" required>
+              <mat-datepicker-toggle matSuffix [for]="searchFromDatepicker"></mat-datepicker-toggle>
+              <mat-error *ngIf="viewModelForm.get('searchFrom').hasError('required')">
+                {{'This is a required field' | translate}}
+              </mat-error>            
+            </mat-form-field>
+            <mat-datepicker #searchFromDatepicker></mat-datepicker>
+          </div>
+          <div fxFlex="30" class="pr-1">
+            <mat-form-field class="p-8 full-width">
+              <input matInput formControlName="searchTo" placeholder="{{'Search to' | translate }}" [matDatepicker]="searchToDatepicker" required>
+              <mat-datepicker-toggle matSuffix [for]="searchToDatepicker"></mat-datepicker-toggle>
+              <mat-error *ngIf="viewModelForm.get('searchTo').hasError('required')">
+                {{'This is a required field' | translate}}
+              </mat-error>
+            </mat-form-field>
+            <mat-datepicker #searchToDatepicker></mat-datepicker>
+          </div>
+        </div>
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10" fxLayoutAlign="start" class="p-8">
+          <div class="light-mat-gray rounded p-24">
+            {{ 'Please note that report uses MedDra term set by the PV specialist and AE onset date for stratification ...' | translate }}
+          </div>
+        </div>
+        <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="10" fxLayoutAlign="end" class="p-8">
+          <button mat-raised-button color="primary" (click)="loadGrid()" [disabled]="viewModelForm.invalid">{{'Search' | translate }}</button>
+        </div>
+      </div>
+    </form>
+
+    <div class="ml-05 mr-05 mt-05 pb-1">
+      <div class="table-container">
+        <mat-table [dataSource]="viewModel?.mainGrid?.records"
+                    [@animate]="{value:'50'}">
+
+            <ng-container matColumnDef="system-organ-class">
+                <mat-header-cell *matHeaderCellDef>{{'System Organ Class' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <p>{{record.systemOrganClass}}</p>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="period">
+                <mat-header-cell *matHeaderCellDef>{{'Period' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <p>{{record.periodDisplay}}</p>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="grade-1">
+                <mat-header-cell *matHeaderCellDef>{{'Grade 1 (mild)' | translate }}</mat-header-cell>
+                <mat-cell *matCellDef="let record">
+                    <p>{{record.grade1Count}}</p>
+                </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="grade-2">
+              <mat-header-cell *matHeaderCellDef>{{'Grade 2 (moderate)' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.grade2Count}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="grade-3">
+              <mat-header-cell *matHeaderCellDef>{{'Grade 3 (severe)' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.grade3Count}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="grade-4">
+              <mat-header-cell *matHeaderCellDef>{{'Grade 4 (life threatening)' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.grade4Count}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="grade-5">
+              <mat-header-cell *matHeaderCellDef>{{'Grade 5 (death)' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.grade5Count}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="grade-unknown">
+              <mat-header-cell *matHeaderCellDef>{{'Grade unknown' | translate }}</mat-header-cell>
+              <mat-cell *matCellDef="let record">
+                  <p>{{record.gradeUnknownCount}}</p>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="viewModel?.mainGrid?.displayedColumns; sticky:true"></mat-header-row>
+            <mat-row *matRowDef="let record; columns: viewModel?.mainGrid?.displayedColumns;" matRipple></mat-row>
+        </mat-table>
+      </div>
+      <mat-paginator #mainGridPaginator="matPaginator" [length]="viewModel?.mainGrid?.count"
+                  [pageIndex]="0" [pageSize]="10"
+                  [pageSizeOptions]="[5, 10, 25, 50]">
+      </mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>
