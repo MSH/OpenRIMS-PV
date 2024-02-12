@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace PViMS.BuildingBlocks.EventBus.Extensions
+namespace OpenRIMS.PV.BuildingBlocks.EventBus.Extensions
 {
     public static class GenericTypeExtensions
     {

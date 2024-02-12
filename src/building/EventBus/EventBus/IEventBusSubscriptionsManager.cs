@@ -1,10 +1,10 @@
-﻿using PViMS.BuildingBlocks.EventBus.Abstractions;
-using PViMS.BuildingBlocks.EventBus.Events;
+﻿using OpenRIMS.PV.BuildingBlocks.EventBus.Abstractions;
+using OpenRIMS.PV.BuildingBlocks.EventBus.Events;
 using System;
 using System.Collections.Generic;
-using static PViMS.BuildingBlocks.EventBus.InMemoryEventBusSubscriptionsManager;
+using static OpenRIMS.PV.BuildingBlocks.EventBus.InMemoryEventBusSubscriptionsManager;
 
-namespace PViMS.BuildingBlocks.EventBus
+namespace OpenRIMS.PV.BuildingBlocks.EventBus
 {
     public interface IEventBusSubscriptionsManager
     {

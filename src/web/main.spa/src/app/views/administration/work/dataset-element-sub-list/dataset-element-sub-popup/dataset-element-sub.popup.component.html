@@ -1,0 +1,162 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm" (ngSubmit)="submit()">
+
+    <mat-tab-group>
+      <mat-tab label="{{'Details' | translate}}">
+        <mat-card-content class="m-1 p-2">
+
+          <div fxLayout="row wrap" fxLayout.lt-sm="column">
+            <div fxFlex="100" class="pr-1">
+                <mat-form-field class="p-8 full-width">
+                    <input matInput formControlName="elementName" placeholder="{{'Element name' | translate }}">
+                    <mat-error *ngIf="itemForm.get('elementName').hasError('required')">
+                      {{'This is a required field' | translate}}
+                    </mat-error>            
+                    <mat-error *ngIf="itemForm.get('elementName').hasError('maxlength')">
+                      {{'Maximum length exceeded' | translate}}
+                    </mat-error>
+                    <mat-error *ngIf="itemForm.get('elementName').hasError('pattern')">
+                      {{'Value contains invalid characters' | translate}} (A-Z, a-z, space)
+                    </mat-error>              
+                </mat-form-field>        
+            </div>
+
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                  <input matInput formControlName="friendlyName" placeholder="{{'Friendly name' | translate }}">
+                  <mat-error *ngIf="itemForm.get('friendlyName').hasError('maxlength')">
+                    {{'Maximum length exceeded' | translate}}
+                  </mat-error>
+              </mat-form-field>        
+            </div>
+
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                  <input matInput formControlName="help" placeholder="{{'Help' | translate }}">
+                  <mat-error *ngIf="itemForm.get('help').hasError('maxlength')">
+                    {{'Maximum length exceeded' | translate}}
+                  </mat-error>
+              </mat-form-field>        
+            </div>
+            
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                  <input matInput formControlName="oid" placeholder="{{'OID' | translate }}">
+                  <mat-error *ngIf="itemForm.get('oid').hasError('maxlength')">
+                    {{'Maximum length exceeded' | translate}}
+                  </mat-error>
+                  <mat-error *ngIf="itemForm.get('oid').hasError('pattern')">
+                    {{'Value contains invalid characters' | translate}} (A-Z, a-z, space)
+                  </mat-error>              
+              </mat-form-field>        
+            </div>
+      
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                  <input matInput formControlName="defaultValue" placeholder="{{'Default value' | translate }}">
+                  <mat-error *ngIf="itemForm.get('defaultValue').hasError('maxlength')">
+                    {{'Maximum length exceeded' | translate}}
+                  </mat-error>
+                  <mat-error *ngIf="itemForm.get('defaultValue').hasError('pattern')">
+                    {{'Value contains invalid characters' | translate}} (A-Z, a-z, space)
+                  </mat-error>              
+              </mat-form-field>
+            </div>
+      
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="mandatory" placeholder="{{'Mandatory' | translate}}">
+                  <mat-option value="Yes">{{'Yes' | translate}}</mat-option>
+                  <mat-option value="No">{{'No' | translate}}</mat-option>
+                </mat-select>               
+                <mat-error *ngIf="itemForm.get('mandatory').hasError('required')">
+                  {{'This is a required field' | translate}}
+                </mat-error>            
+              </mat-form-field>       
+            </div>        
+      
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="anonymise" placeholder="{{'Anonymise' | translate}}">
+                  <mat-option value="Yes">{{'Yes' | translate}}</mat-option>
+                  <mat-option value="No">{{'No' | translate}}</mat-option>
+                </mat-select>               
+                <mat-error *ngIf="itemForm.get('anonymise').hasError('required')">
+                  {{'This is a required field' | translate}}
+                </mat-error>            
+              </mat-form-field>       
+            </div>        
+      
+            <div fxFlex="50" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="system" placeholder="{{'System' | translate}}">
+                  <mat-option value="Yes">{{'Yes' | translate}}</mat-option>
+                  <mat-option value="No">{{'No' | translate}}</mat-option>
+                </mat-select>               
+                <mat-error *ngIf="itemForm.get('system').hasError('required')">
+                  {{'This is a required field' | translate}}
+                </mat-error>            
+              </mat-form-field>       
+            </div>        
+          </div>          
+        </mat-card-content>
+      </mat-tab>
+
+      <mat-tab label="{{'Field type' | translate}}">
+        <mat-card-content class="m-1 p-2">
+          <div fxLayout="row wrap" fxLayout.lt-sm="column">
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-select formControlName="fieldTypeName" placeholder="{{'Field type' | translate}}">
+                  <mat-option value="AlphaNumericTextbox">AlphaNumericTextbox</mat-option>
+                  <mat-option value="Date">Date</mat-option>
+                  <mat-option value="DropDownList">DropDownList</mat-option>
+                  <mat-option value="Listbox">Listbox</mat-option>
+                  <mat-option value="NumericTextbox">NumericTextbox</mat-option>
+                  <mat-option value="System">System</mat-option>
+                  <mat-option value="Table">Table</mat-option>
+                  <mat-option value="YesNo">YesNo</mat-option>
+                </mat-select>               
+                <mat-error *ngIf="itemForm.get('fieldTypeName').hasError('required')">
+                  {{'This is a required field' | translate}}
+                </mat-error>            
+              </mat-form-field>       
+            </div>
+            <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('fieldTypeName').value == 'AlphaNumericTextbox'">
+              <mat-form-field class="p-8 full-width">
+                  <input matInput formControlName="maxLength" placeholder="{{'Maximum length' | translate }}" type="number">
+              </mat-form-field>        
+            </div>
+            <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('fieldTypeName').value == 'NumericTextbox'">
+              <mat-form-field class="p-8 full-width">
+                  <input matInput formControlName="decimals" placeholder="{{'Decimals' | translate }}" type="number">
+              </mat-form-field>        
+            </div>
+            <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('fieldTypeName').value == 'NumericTextbox'">
+              <mat-form-field class="p-8 full-width">
+                  <input matInput formControlName="minSize" placeholder="{{'Minimum' | translate }}" type="number">
+              </mat-form-field>        
+            </div>
+            <div fxFlex="50" class="pr-1" *ngIf="itemForm.get('fieldTypeName').value == 'NumericTextbox'">
+              <mat-form-field class="p-8 full-width">
+                  <input matInput formControlName="maxSize" placeholder="{{'Maximum' | translate }}" type="number">
+              </mat-form-field>        
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-tab>      
+
+    </mat-tab-group>
+
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="itemForm.invalid">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+
+  </form>

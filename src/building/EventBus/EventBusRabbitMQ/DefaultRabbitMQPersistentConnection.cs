@@ -8,7 +8,7 @@ using System;
 using System.IO;
 using System.Net.Sockets;
 
-namespace PViMS.BuildingBlocks.EventBusRabbitMQ
+namespace OpenRIMS.PV.BuildingBlocks.EventBusRabbitMQ
 {
     public class DefaultRabbitMQPersistentConnection
         : IRabbitMQPersistentConnection

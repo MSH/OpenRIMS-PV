@@ -1,6 +1,6 @@
-﻿using PViMS.BuildingBlocks.EventBus.Events;
+﻿using OpenRIMS.PV.BuildingBlocks.EventBus.Events;
 
-namespace PViMS.BuildingBlocks.EventBus.Abstractions
+namespace OpenRIMS.PV.BuildingBlocks.EventBus.Abstractions
 {
     public interface IEventBus
     {

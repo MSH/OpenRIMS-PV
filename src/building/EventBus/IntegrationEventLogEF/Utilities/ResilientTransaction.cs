@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace PViMS.BuildingBlocks.IntegrationEventLogEF
+namespace OpenRIMS.PV.BuildingBlocks.IntegrationEventLogEF
 {
     public class ResilientTransaction
     {

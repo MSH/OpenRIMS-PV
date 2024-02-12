@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace PViMS.BuildingBlocks.EventBus.Events
+namespace OpenRIMS.PV.BuildingBlocks.EventBus.Events
 {
     public record IntegrationEvent
     {

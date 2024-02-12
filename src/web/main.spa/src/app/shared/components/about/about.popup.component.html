@@ -1,0 +1,45 @@
+<div fxLayout="column" fxFlexAlign="center" class="main" style="overflow-y: auto;">
+  <div fxFlex="100" class="pr-1">
+    <span class="title">{{"About" | translate }}</span>
+  </div>
+  <div fxFlex="100" class="mt-05 p-4">
+    <span>This PharmacoVigilance Monitoring System, is a web-based application used to monitor the safety of medicines. The application was developed by the USAID-funded Systems for Improved Access to Pharmaceuticals and Services [SIAPS] program (2011-2018) and is  implemented by the USAID-funded Medicines, Technologies, and Pharmaceutical Services [MTaPS] program (2018-2023), both led by Management Sciences for Health (MSH), a global health nonprofit.  PViMS is maintained by MSH.</span>
+  </div>
+
+  <div fxFlex="100" class="pr-1 mt-12">
+    <span class="title">Management Sciences for Health</span>
+  </div>
+  <div fxFlex="100" class="pr-1">
+    <span>4301 N. Fairfax Dr., Suite 400</span>
+  </div>
+  <div fxFlex="100" class="pr-1">
+    <span>Arlington, VA 22203 USA</span>
+  </div>
+
+  <div fxFlex="100" class="mt-05 p-2">
+    <span class="font-weight-bold mr-4">Phone:</span><span class="mr-05">+1.703.524.6575</span>
+    <span class="font-weight-bold mr-4">E-mail:</span><span>digital@msh.org</span>
+  </div>
+
+  <div fxFlex="100" class="p-2">
+    <span class="font-weight-bold mr-4">Version:</span><span class="mr-05">{{ version }}</span>
+    <span class="font-weight-bold mr-4">Last Updated:</span><span>{{ installationDate }}</span>
+  </div>
+
+  <div fxFlex="100" class="mt-05 p-2 hide">
+    <span class="font-weight-bold mr-4">Manuals:</span><span><a href="https://github.com/MSH/PViMS-2/tree/master/Manuals" target="_blank">https://github.com/MSH/PViMS-2/tree/master/Manuals</a></span>
+  </div>
+  
+  <div fxFlex="100" class="mt-12 p-4">
+    <span>This application is made possible by the generous support of the American people through the U.S. Agency for International Development (USAID) contract no. 7200AA18C00074 (MTaPS Program, 2018-2023) and cooperative agreement no. AID-OAA-A-11-00021 (SIAPS Program, 2011-2018). The contents are the responsibility of Management Sciences for Health and do not necessarily reflect the views of USAID or the United States Government.</span>
+  </div>
+  
+  <div fxFlex="100" class="pr-1 mt-24 mb-24">
+    <img src="assets/images/usaid_logo.png" alt="" />
+  </div>
+
+  <div fxFlex="100" class="mt-1">
+    <span fxFlex></span>
+    <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Close" | translate }}</button>
+  </div>
+</div>

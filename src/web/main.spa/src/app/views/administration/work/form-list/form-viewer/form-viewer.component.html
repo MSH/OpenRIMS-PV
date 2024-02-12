@@ -1,0 +1,38 @@
+<div style="height: 5px;">
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+</div>
+
+<div fxLayout="row wrap" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+  <div fxFlex="25" class="p-12">
+    <button mat-raised-button (click)="goBack()" color="accent">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </div>
+</div>
+
+<mat-card class="p-0" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+  <mat-card-title class="">
+      <div class="card-title-text">
+        {{ metaForm?.formName }} ({{ metaForm?.cohortGroup }})
+        <div class="mainButton">
+          <span fxFlex></span>
+          <button mat-mini-fab class="mr-05" color="primary" (click)="openFormPopUp()" matTooltip="{{'Update Form' | translate }}"><mat-icon>settings</mat-icon></button>
+          <button mat-mini-fab class="mr-05" color="primary" (click)="openCategoryConfigurePopup(0)" matTooltip="{{'Add Category' | translate }}"><mat-icon>widgets</mat-icon></button>
+          <button mat-mini-fab class="mr-05" color="warn" (click)="openDeletePopUp()" matTooltip="{{'Delete Form' | translate }}"><mat-icon>delete</mat-icon></button>
+        </div>
+      </div>
+  </mat-card-title>
+</mat-card>
+
+<div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
+  <div fxFlex="100">
+    <mat-card class="p-12 rounded" *ngIf="metaForm?.categories.length == 0" [@animate]="{value:'50'}">
+      <mat-card-content class="text-center">
+        <div class="light-gray p-12">
+          {{'There are currently no categories associated to this form, please click on the button below to add a new category ...' | translate}}
+        </div>
+        <button mat-raised-button class="mr-05 mt-12" color="accent" (click)="openCategoryConfigurePopup()">{{'Add Category' | translate}}</button>
+      </mat-card-content>
+    </mat-card>       
+  </div>
+</div>  

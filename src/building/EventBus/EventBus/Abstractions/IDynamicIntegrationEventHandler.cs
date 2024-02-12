@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace PViMS.BuildingBlocks.EventBus.Abstractions
+namespace OpenRIMS.PV.BuildingBlocks.EventBus.Abstractions
 {
     public interface IDynamicIntegrationEventHandler
     {

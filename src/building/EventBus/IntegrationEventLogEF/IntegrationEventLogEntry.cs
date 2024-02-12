@@ -1,10 +1,10 @@
-﻿using PViMS.BuildingBlocks.EventBus.Events;
+﻿using OpenRIMS.PV.BuildingBlocks.EventBus.Events;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text.Json;
 
-namespace PViMS.BuildingBlocks.IntegrationEventLogEF
+namespace OpenRIMS.PV.BuildingBlocks.IntegrationEventLogEF
 {
     public class IntegrationEventLogEntry
     {

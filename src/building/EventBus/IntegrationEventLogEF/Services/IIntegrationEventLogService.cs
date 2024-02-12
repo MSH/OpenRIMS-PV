@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore.Storage;
-using PViMS.BuildingBlocks.EventBus.Events;
+using OpenRIMS.PV.BuildingBlocks.EventBus.Events;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace PViMS.BuildingBlocks.IntegrationEventLogEF
+namespace OpenRIMS.PV.BuildingBlocks.IntegrationEventLogEF
 {
     public interface IIntegrationEventLogService
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PViMS.BuildingBlocks.EventBus
+namespace OpenRIMS.PV.BuildingBlocks.EventBus
 {
     public partial class InMemoryEventBusSubscriptionsManager : IEventBusSubscriptionsManager
     {

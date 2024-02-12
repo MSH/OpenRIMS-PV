@@ -2,10 +2,10 @@
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Retry;
-using PViMS.BuildingBlocks.EventBus;
-using PViMS.BuildingBlocks.EventBus.Abstractions;
-using PViMS.BuildingBlocks.EventBus.Events;
-using PViMS.BuildingBlocks.EventBus.Extensions;
+using OpenRIMS.PV.BuildingBlocks.EventBus;
+using OpenRIMS.PV.BuildingBlocks.EventBus.Abstractions;
+using OpenRIMS.PV.BuildingBlocks.EventBus.Events;
+using OpenRIMS.PV.BuildingBlocks.EventBus.Extensions;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
@@ -15,7 +15,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace PViMS.BuildingBlocks.EventBusRabbitMQ
+namespace OpenRIMS.PV.BuildingBlocks.EventBusRabbitMQ
 {
     public class EventBusRabbitMQ : IEventBus, IDisposable
     {

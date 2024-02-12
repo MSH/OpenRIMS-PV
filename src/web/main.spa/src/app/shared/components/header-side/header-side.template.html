@@ -1,0 +1,53 @@
+<mat-toolbar class="topbar">
+  <!-- Sidenav toggle button -->
+  <button *ngIf="layoutConf.sidebarStyle !== 'compact'" mat-icon-button id="sidenavToggle" (click)="toggleSidenav()" matTooltip="Toggle Hide/Open">
+    <mat-icon>menu</mat-icon>
+  </button>
+  
+  <span fxFlex></span>
+  <button mat-icon-button matTooltip="{{'Refresh meta' | translate }}" (click)="refreshMeta()" [ngClass]="{'error-status': viewModel?.refreshError && !viewModel?.checking, 'connected-status': !viewModel?.refreshError && !viewModel?.checking, 'checking-status': viewModel?.checking, 'spin' : viewModel?.checking}">
+    <mat-icon>refresh</mat-icon>
+  </button>  
+  <button mat-icon-button matTooltip="{{'Install to device' | translate }}" *ngIf="pwaService.promptEvent" (click)="installPwa()">
+    <mat-icon>system_update</mat-icon>
+  </button>  
+
+  <app-notifications></app-notifications>
+  <app-timeout></app-timeout>
+  <app-ping></app-ping>
+  <app-customizer></app-customizer>
+  
+  <button mat-icon-button matTooltip="{{'About' | translate }}" (click)="openAboutPopUp()">
+    <mat-icon>help</mat-icon>
+  </button>
+
+  <button mat-icon-button class="topbar-button-right img-button" matTooltip="{{'About' | translate }}" (click)="navigateToPharmadex()">
+    <img src="assets/images/openrims_logo.png" alt="" />
+  </button>
+
+  <button mat-button [matMenuTriggerFor]="menu" matTooltip="{{'Select language' | translate }}">
+    <span class="flag-icon {{currentLang.flag}} mr-05"></span>
+    <span>{{currentLang.name}}</span>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item *ngFor="let lang of availableLangs" (click)="setLang(lang)">
+          <span class="flag-icon mr-05 {{lang.flag}}"></span>
+          <span>{{lang.name}}</span>
+    </button>
+  </mat-menu>
+
+  <button mat-icon-button [matMenuTriggerFor]="accountMenu" class="topbar-button-right img-button" matTooltip="{{'Profile' | translate }}">
+    <img src="assets/images/profile.jpg" alt="" />
+  </button>
+
+  <mat-menu #accountMenu="matMenu">
+    <button mat-menu-item (click)="openProfilePopup()">
+      <mat-icon>person</mat-icon>
+      <span>{{'User profile' | translate}}</span>
+    </button>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>exit_to_app</mat-icon>
+      <span>{{'Sign out' | translate}}</span>
+    </button>
+  </mat-menu>
+</mat-toolbar>

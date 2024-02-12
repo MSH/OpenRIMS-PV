@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>OpenRIMS.PVBuildingBlocks.EventBus</RootNamespace>
+    <AssemblyName>OpenRIMS.PVBuildingBlocks.EventBus</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>    
+  </ItemGroup>
+
+</Project>

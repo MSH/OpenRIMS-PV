@@ -1,4 +1,4 @@
-﻿namespace PViMS.BuildingBlocks.IntegrationEventLogEF
+﻿namespace OpenRIMS.PV.BuildingBlocks.IntegrationEventLogEF
 {
     public enum EventStateEnum
     {

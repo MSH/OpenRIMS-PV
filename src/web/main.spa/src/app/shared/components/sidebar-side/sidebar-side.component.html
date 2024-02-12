@@ -1,0 +1,14 @@
+<div class="sidebar-panel">
+    <div id="scroll-area" [perfectScrollbar] class="navigation-hold" fxLayout="column">
+        <div class="sidebar-hold">
+            
+            <!-- App Logo -->
+            <div class="branding">
+                <span class="app-logo-text mt-8">{{ appName }}</span><br/>
+                <span style="margin: auto" *ngIf="layoutConf.sidebarStyle !== 'compact'"></span>
+            </div>
+            <!-- Navigation -->
+            <app-sidenav [items]="menuItems" [hasIconMenu]="hasIconTypeMenuItem" [iconMenuTitle]="iconTypeMenuTitle"></app-sidenav>
+        </div>
+    </div>
+</div>
