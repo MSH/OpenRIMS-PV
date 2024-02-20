@@ -5,6 +5,7 @@ export interface MetaFormExpandedModel {
     formName: string;
     metaFormGuid: string;
     system: string;
+    cohortGroupId: number;
     cohortGroup: string;
     actionName: string;
     version: string;

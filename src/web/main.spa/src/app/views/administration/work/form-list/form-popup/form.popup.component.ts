@@ -44,6 +44,7 @@ export class FormPopupComponent extends BasePopupComponent implements OnInit, Af
 
     self.itemForm = this._formBuilder.group({
       cohortGroupId: ['', Validators.required],
+      cohortGroup: [''],
       formName: ['', [Validators.required, Validators.maxLength(50), Validators.pattern('[a-zA-Z0-9 ]*')]],
       actionName: ['', [Validators.required, Validators.maxLength(20), Validators.pattern('[a-zA-Z0-9 ]*')]],
     })
@@ -52,20 +53,13 @@ export class FormPopupComponent extends BasePopupComponent implements OnInit, Af
   ngAfterViewInit(): void {
     let self = this;
     if (self.data.formId > 0) {
-        self.loadData();
+        self.fetchView();
     }
   }
 
-  loadData(): void {
+  fetchView(): void {
     let self = this;
-    self.setBusy(true);
-    // self.labTestService.getLabResultIdentifier(self.data.labResultId)
-    //   .pipe(finalize(() => self.setBusy(false)))
-    //   .subscribe(result => {
-    //     self.updateForm(self.itemForm, (self.data.payload = result));
-    //   }, error => {
-    //     self.throwError(error, error.statusText);
-    //   });
+    self.updateForm(self.itemForm, self.data.payload);
   }  
 
   submit() {
@@ -105,6 +99,7 @@ export class FormPopupComponent extends BasePopupComponent implements OnInit, Af
 export interface FormPopupData {
   formId: number;
   title: string;
+  payload: any;
 }
 
 class ViewModel {

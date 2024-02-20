@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Location } from '@angular/common';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -9,10 +9,10 @@ import { AccountService } from 'app/shared/services/account.service';
 import { Router } from '@angular/router';
 import { ConceptService } from 'app/shared/services/concept.service';
 import { finalize } from 'rxjs/operators';
+import { MetaFormService } from 'app/shared/services/meta-form.service';
 
 @Component({
   templateUrl: './generic-delete.popup.component.html',
-  encapsulation: ViewEncapsulation.None,
   animations: egretAnimations
 })
 export class GenericDeletePopupComponent extends BasePopupComponent implements OnInit {
@@ -28,6 +28,7 @@ export class GenericDeletePopupComponent extends BasePopupComponent implements O
     protected popupService: PopupService,
     protected accountService: AccountService,
     protected conceptService: ConceptService,
+    protected metaFormService: MetaFormService,
   ) { 
     super(_router, _location, popupService, accountService);
   }
@@ -56,7 +57,19 @@ export class GenericDeletePopupComponent extends BasePopupComponent implements O
         });
   
         break;
-    }    
+
+      case "MetaForm":
+        self.metaFormService.deleteMetaForm(self.data.id)
+        .pipe(finalize(() => self.setBusy(false)))
+        .subscribe(result => {
+          self.notify(self.data.type + " deleted successfully", self.data.type);
+          this.dialogRef.close(this.itemForm.value);
+        }, error => {
+          this.handleError(error, "Error deleting " + self.data.type);
+        });
+  
+        break;
+      }    
   }
 }
 

@@ -108,7 +108,7 @@ export class FormViewerComponent extends BaseComponent implements OnInit, OnDest
     let dialogRef: MatDialogRef<any> = self.dialog.open(FormPopupComponent, {
       width: '720px',
       disableClose: true,
-      data: { formId: self.viewModel.formId, title: title }
+      data: { formId: self.viewModel.formId, title: title, payload: self.viewModel.metaForm }
     })
     dialogRef.afterClosed()
       .subscribe(res => {

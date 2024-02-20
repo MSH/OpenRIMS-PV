@@ -37,6 +37,12 @@ namespace OpenRIMS.PV.Main.Core.Aggregates.MetaFormAggregate
 
         public virtual ICollection<MetaFormCategory> Categories { get; private set; }
 
+        public void ChangeDetails(string formName, string actionName)
+        {
+            FormName = formName;
+            ActionName = actionName;
+        }
+
         public MetaFormCategory AddCategory(MetaTable metaTable, string categoryName, string help, string icon)
         {
             var newCategory = new MetaFormCategory(metaTable, categoryName, help, icon);
@@ -54,6 +60,22 @@ namespace OpenRIMS.PV.Main.Core.Aggregates.MetaFormAggregate
             }
 
             category.ChangeDetails(categoryName, help, icon);
+        }
+
+        public void RemoveCategory(int categoryId)
+        {
+            var category = Categories.SingleOrDefault(c => c.Id == categoryId);
+            if (category == null)
+            {
+                throw new KeyNotFoundException($"Unable to locate category {categoryId}");
+            }
+
+            foreach (var attribute in category.Attributes)
+            {
+                category.Attributes.Remove(attribute);
+            }
+
+            Categories.Remove(category);
         }
 
         public MetaFormCategoryAttribute AddCategoryAttribute(int categoryId, string attributeName, CustomAttributeConfiguration customAttributeConfiguration, string label, string help)

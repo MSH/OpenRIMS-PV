@@ -73,7 +73,7 @@ export class CategoryConfigurePopupComponent extends BasePopupComponent implemen
 
   private fetchView(): void {
     let self = this;
-    self.updateForm(self.itemForm, self.data.payload);    
+    self.updateForm(self.itemForm, self.data.payload);
   }  
 }
 

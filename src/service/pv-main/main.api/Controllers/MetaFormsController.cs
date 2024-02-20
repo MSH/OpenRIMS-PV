@@ -213,6 +213,64 @@ namespace OpenRIMS.PV.Main.API.Controllers
         }
 
         /// <summary>
+        /// Update a meta form
+        /// </summary>
+        /// <param name="id">The unique id of the meta form</param>
+        /// <param name="metaFormForUpdate">The meta form payload</param>
+        /// <returns></returns>
+        [HttpPut("{id}", Name = "UpdateMetaForm")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> UpdateMetaForm(int id,
+            [FromBody] MetaFormForUpdateDto metaFormForUpdate)
+        {
+            if (metaFormForUpdate == null)
+            {
+                ModelState.AddModelError("Message", "Unable to locate payload for new request");
+            }
+
+            var command = new ChangeMetaFormDetailsCommand(
+                id,
+                metaFormForUpdate.FormName,
+                metaFormForUpdate.ActionName);
+
+            _logger.LogInformation(
+                $"----- Sending command: ChangeMetaFormDetailsCommand - {id}");
+
+            var commandResult = await _mediator.Send(command);
+
+            if (!commandResult)
+            {
+                return BadRequest("Command not created");
+            }
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Delete a meta form
+        /// </summary>
+        /// <param name="id">The unique id of the form</param>
+        /// <returns></returns>
+        [HttpDelete("{id}", Name = "DeleteMetaForm")]
+        public async Task<IActionResult> DeleteMetaForm(int id)
+        {
+            var command = new DeleteMetaFormCommand(
+                id);
+
+            _logger.LogInformation(
+                $"----- Sending command: DeleteMetaFormCommand - {command.MetaFormId}");
+
+            var commandResult = await _mediator.Send(command);
+
+            if (!commandResult)
+            {
+                return BadRequest("Command not created");
+            }
+
+            return NoContent();
+        }
+
+        /// <summary>
         /// Create a new meta form category
         /// </summary>
         /// <param name="metaFormId">The unique id of the meta form</param>

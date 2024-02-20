@@ -4,7 +4,7 @@
 
   <form [formGroup]="itemForm" (ngSubmit)="submit()">
     <div fxLayout="row wrap" fxLayout.lt-sm="column">
-      <div fxFlex="100" class="pr-1">
+      <div fxFlex="100" class="pr-1" *ngIf="data.formId == 0">
         <mat-form-field class="p-8 full-width">
           <mat-select formControlName="cohortGroupId" placeholder="{{'Cohort' | translate}}" required>
             <mat-option value="0"></mat-option>
@@ -17,6 +17,13 @@
           </mat-error>
         </mat-form-field>
       </div>
+
+      <div fxFlex="100" class="pr-1" *ngIf="data.formId > 0">
+        <mat-form-field class="p-8 full-width" appearance="fill">
+          <mat-label>{{'Cohort name' | translate}}</mat-label>
+          <input matInput formControlName="cohortGroup" readonly>
+        </mat-form-field>
+      </div>      
 
       <div fxFlex="100" class="pr-1">
         <mat-form-field class="p-8 full-width">

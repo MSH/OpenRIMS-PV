@@ -15,6 +15,12 @@ namespace OpenRIMS.PV.Main.API.Models
         public string System { get; set; }
 
         /// <summary>
+        /// The unique id of the cohort group that the meta form belongs to
+        /// </summary>
+        [DataMember]
+        public int CohortGroupId { get; set; }
+
+        /// <summary>
         /// The name of the cohort group that the meta form belongs to
         /// </summary>
         [DataMember]
