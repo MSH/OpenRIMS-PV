@@ -35,5 +35,12 @@ namespace OpenRIMS.PV.Main.Core.Aggregates.MetaFormAggregate
         public string Icon { get; private set; }
 
         public virtual ICollection<MetaFormCategoryAttribute> Attributes { get; private set; }
+
+        public void ChangeDetails(string categoryName, string help, string icon)
+        {
+            CategoryName = categoryName;
+            Help = help;
+            Icon = icon;
+        }
     }
 }

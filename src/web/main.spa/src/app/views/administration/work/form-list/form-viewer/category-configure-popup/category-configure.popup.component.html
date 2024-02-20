@@ -5,261 +5,125 @@
   <form [formGroup]="itemForm">
     <div fxLayout="row wrap" fxLayout.lt-sm="column">
       <div fxFlex="100" class="pr-1">
-        <mat-tab-group #mainTabGroup="matTabGroup">
-          <mat-tab label="{{'Details' | translate}}">
-            <mat-card-content class="m-1 p-05" style="height: 500px;">
-              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
-                <div fxFlex="100" class="pr-1" *ngIf="data.metaWidgetId > 0">
-                  <mat-form-field class="p-8 full-width" appearance="fill">
-                    <mat-label>{{'Identifier' | translate}}</mat-label>
-                    <input matInput formControlName="metaWidgetGuid" readonly>
-                  </mat-form-field>
-                </div>
+        <mat-card-content class="m-1 p-05">
+          <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+            <div fxFlex="100" class="pr-1" *ngIf="data.metaCategoryId > 0">
+              <mat-form-field class="p-8 full-width" appearance="fill">
+                <mat-label>{{'Identifier' | translate}}</mat-label>
+                <input matInput formControlName="metaFormCategoryGuid" readonly>
+              </mat-form-field>
+            </div>
 
-                <div fxFlex="50" class="pr-1" *ngIf="data.metaWidgetId > 0">
-                  <mat-form-field class="p-8 full-width" appearance="fill">
-                    <mat-label>{{'Widget type' | translate}}</mat-label>
-                    <input matInput formControlName="widgetType" readonly>
-                  </mat-form-field>
-                </div>
+            <div fxFlex="100" class="pr-1" *ngIf="data.metaCategoryId > 0">
+              <mat-form-field class="p-8 full-width" appearance="fill">
+                <mat-label>{{'Table name' | translate}}</mat-label>
+                <input matInput formControlName="metaTableName" readonly>
+              </mat-form-field>
+            </div>
 
-                <div fxFlex="50" class="pr-1" *ngIf="data.metaWidgetId > 0">
-                  <mat-form-field class="p-8 full-width" appearance="fill">
-                    <mat-label>{{'Current location' | translate}}</mat-label>
-                    <input matInput formControlName="currentLocation" readonly>
-                  </mat-form-field>
-                </div>
+            <div fxFlex="100" class="pr-1" *ngIf="data.metaCategoryId == 0">
+              <mat-form-field class="p-8 full-width">
+                <mat-label>{{'Table type' | translate }}</mat-label>                    
+                <mat-select formControlName="metaTableId" required>
+                  <mat-option value="1">Patient</mat-option>
+                  <mat-option value="2">Clinical Events</mat-option>
+                  <mat-option value="3">Concomitant Conditions</mat-option>
+                  <mat-option value="5">Lab Tests</mat-option>
+                  <mat-option value="6">Medications</mat-option>
+                  <mat-option value="7">Encounters</mat-option>
+                </mat-select>               
+                <mat-error *ngIf="itemForm.get('metaTableId').hasError('required')">
+                  {{'This is a required field' | translate}}
+                </mat-error>            
+              </mat-form-field>       
+            </div>
 
-                <div fxFlex="100" class="pr-1">
-                  <mat-form-field class="p-8 full-width">
-                    <input matInput formControlName="widgetName" placeholder="{{'Widget name' | translate }}" required>
-                    <mat-hint>{{'Maximum length' | translate}} 50</mat-hint> 
-                    <mat-error *ngIf="itemForm.get('widgetName').hasError('required')">
-                      {{'This is a required field' | translate}}
-                    </mat-error>            
-                    <mat-error *ngIf="itemForm.get('widgetName').hasError('maxlength')">
-                      {{'Maximum length exceeded' | translate}}
-                    </mat-error>            
-                    <mat-error *ngIf="itemForm.get('widgetName').hasError('pattern')">
-                      {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space)
-                    </mat-error>            
-                  </mat-form-field>        
-                </div>
-          
-                <div fxFlex="100" class="pr-1" *ngIf="data.metaWidgetId == 0">
-                  <mat-form-field class="p-8 full-width">
-                    <mat-select formControlName="widgetType" placeholder="{{'Widget type' | translate}}" required>
-                      <mat-option value="General">{{'General' | translate}}</mat-option>
-                      <mat-option value="SubItems">{{'SubItems' | translate}}</mat-option>
-                      <mat-option value="ItemList">{{'ItemList' | translate}}</mat-option>
-                    </mat-select>               
-                    <mat-error *ngIf="itemForm.get('widgetType').hasError('required')">
-                      {{'This is a required field' | translate}}
-                    </mat-error>            
-                  </mat-form-field>       
-                </div>
-          
-                <div fxFlex="100" class="pr-1" *ngIf="data.metaWidgetId > 0">
-                  <mat-form-field class="p-8 full-width">
-                    <mat-select formControlName="widgetStatus" placeholder="{{'Widget status' | translate}}">
-                      <mat-option value="Published">{{'Published' | translate}}</mat-option>
-                      <mat-option value="Unpublished">{{'Unpublished' | translate}}</mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="itemForm.get('widgetStatus').hasError('invalidValue')">
-                      {{'Widget location must be assigned for published widget' | translate}}
-                    </mat-error>            
-                  </mat-form-field>       
-                </div>
-          
-                <div fxFlex="100" class="pr-1" *ngIf="data.metaWidgetId > 0">
-                  <mat-form-field class="p-8 full-width">
-                    <mat-select formControlName="widgetLocation" placeholder="{{'Widget location' | translate}}">
-                      <mat-option value="TopLeft">{{'Top left' | translate}}</mat-option>
-                      <mat-option value="TopRight">{{'Top right' | translate}}</mat-option>
-                      <mat-option value="MiddleLeft">{{'Middle left' | translate}}</mat-option>
-                      <mat-option value="MiddleRight">{{'Middle right' | translate}}</mat-option>
-                      <mat-option value="BottomLeft">{{'Bottom left' | translate}}</mat-option>
-                      <mat-option value="BottomRight">{{'Bottom right' | translate}}</mat-option>
-                      <mat-option value="Unassigned">{{'Unassigned' | translate}}</mat-option>
-                    </mat-select>               
-                    <mat-error *ngIf="itemForm.get('widgetLocation').hasError('invalidValue')">
-                      {{'Widget location must be assigned for published widget' | translate}}
-                    </mat-error>            
-                  </mat-form-field>       
-                </div>
-          
-                <div fxFlex="100" class="pr-1">
-                  <mat-form-field class="p-8 full-width">
-                    <mat-select formControlName="icon" placeholder="{{'Icon' | translate}}" [(value)]="viewModel.selectedIcon" required>
-                      <mat-select-trigger>
-                        <mat-icon>{{ viewModel.selectedIcon }}</mat-icon>
-                     </mat-select-trigger>
-          
-                      <mat-option value="alarm"><mat-icon>alarm</mat-icon> alarm</mat-option>
-                      <mat-option value="announcement"><mat-icon>announcement</mat-icon> announcement</mat-option>
-                      <mat-option value="archive"><mat-icon>archive</mat-icon> archive</mat-option>
-                      <mat-option value="assessment"><mat-icon>assessment</mat-icon> assessment</mat-option>
-                      <mat-option value="assistant"><mat-icon>assistant</mat-icon> assistant</mat-option>
-                      <mat-option value="attachment"><mat-icon>attachment</mat-icon> attachment</mat-option>
-                      <mat-option value="backup"><mat-icon>backup</mat-icon> backup</mat-option>
-                      <mat-option value="bookmark"><mat-icon>bookmark</mat-icon> bookmark</mat-option>
-                      <mat-option value="bubble_chart"><mat-icon>bubble_chart</mat-icon> bubble_chart</mat-option>
-                      <mat-option value="comment"><mat-icon>comment</mat-icon> comment</mat-option>
-                      <mat-option value="contacts"><mat-icon>contacts</mat-icon> contacts</mat-option>
-                      <mat-option value="data_usage"><mat-icon>data_usage</mat-icon> data_usage</mat-option>
-                      <mat-option value="description"><mat-icon>description</mat-icon> description</mat-option>
-                      <mat-option value="details"><mat-icon>details</mat-icon> details</mat-option>
-                      <mat-option value="event"><mat-icon>event</mat-icon> event</mat-option>
-                      <mat-option value="favorite"><mat-icon>favorite</mat-icon> favorite</mat-option>
-                      <mat-option value="forum"><mat-icon>forum</mat-icon> forum</mat-option>
-                      <mat-option value="group_work"><mat-icon>group_work</mat-icon> group_work</mat-option>
-                      <mat-option value="help"><mat-icon>help</mat-icon> help</mat-option>
-                      <mat-option value="history"><mat-icon>history</mat-icon> history</mat-option>
-                      <mat-option value="home"><mat-icon>home</mat-icon> home</mat-option>
-                      <mat-option value="info"><mat-icon>info</mat-icon> info</mat-option>
-                      <mat-option value="insert_chart"><mat-icon>insert_chart</mat-icon> insert_chart</mat-option>
-                      <mat-option value="insert_invitation"><mat-icon>insert_invitation</mat-icon> insert_invitation</mat-option>
-                      <mat-option value="language"><mat-icon>language</mat-icon> language</mat-option>
-                      <mat-option value="library_books"><mat-icon>library_books</mat-icon> library_books</mat-option>
-                      <mat-option value="message"><mat-icon>message</mat-icon> message</mat-option>
-                      <mat-option value="more"><mat-icon>more</mat-icon> more</mat-option>
-                      <mat-option value="new_releases"><mat-icon>new_releases</mat-icon> new_releases</mat-option>
-                      <mat-option value="note"><mat-icon>note</mat-icon> note</mat-option>
-                      <mat-option value="notifications"><mat-icon>notifications</mat-icon> notifications</mat-option>
-                      <mat-option value="public"><mat-icon>public</mat-icon> public</mat-option>
-                      <mat-option value="publish"><mat-icon>publish</mat-icon> publish</mat-option>
-                      <mat-option value="question_answer"><mat-icon>question_answer</mat-icon> question_answer</mat-option>
-                      <mat-option value="report"><mat-icon>report</mat-icon> report</mat-option>
-                      <mat-option value="schedule"><mat-icon>schedule</mat-icon> schedule</mat-option>
-                      <mat-option value="speaker_notes"><mat-icon>speaker_notes</mat-icon> speaker_notes</mat-option>
-                      <mat-option value="star"><mat-icon>star</mat-icon> star</mat-option>
-                      <mat-option value="work"><mat-icon>work</mat-icon> work</mat-option>
-                    </mat-select>               
-                    <mat-error *ngIf="itemForm.get('icon').hasError('required')">
-                      {{'This is a required field' | translate}}
-                    </mat-error>            
-                  </mat-form-field>       
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-tab>
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-label>{{'Category name' | translate }}</mat-label>
+                <input matInput formControlName="categoryName" required>
+                <mat-hint>{{'Maximum length' | translate}} 150</mat-hint> 
+                <mat-error *ngIf="itemForm.get('categoryName').hasError('required')">
+                  {{'This is a required field' | translate}}
+                </mat-error>            
+                <mat-error *ngIf="itemForm.get('categoryName').hasError('maxlength')">
+                  {{'Maximum length exceeded' | translate}}
+                </mat-error>            
+                <mat-error *ngIf="itemForm.get('categoryName').hasError('pattern')">
+                  {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space)
+                </mat-error>            
+              </mat-form-field>        
+            </div>
 
-          <mat-tab label="{{'Content' | translate}}" *ngIf="data.metaWidgetId > 0 && itemForm.get('widgetType').value == 'General'">
-            <mat-card-content class="m-1 p-05" style="height: 500px;">
-              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
-                <div fxFlex="100" class="pr-1">
-                  <div fxFlex="100" class="pr-1">
-                    <quill-editor theme="snow" formControlName="generalContent"></quill-editor>
-                  </div>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-tab>
-          
-          <mat-tab label="{{'Content' | translate}}" *ngIf="data.metaWidgetId > 0 && itemForm.get('widgetType').value == 'ItemList'">
-            <mat-card-content class="m-1 p-05" style="height: 500px;">
-              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
-                <div fxFlex="100" class="pr-1">
-                  <mat-chip-list #chipList>
-                    <div *ngFor="let item of viewModel?.contentItems">
-                      <mat-chip color="primary" [selected]="item.title == viewModel.selectedTitle" (click)="setContentTitle(item.title)"> 
-                        {{item.title}}
-                      </mat-chip>
-                    </div>
-                  </mat-chip-list>
-                </div>
-                <div fxFlex="100" class="p-2">
-                  <span fxFlex></span>
-                  <button mat-mini-fab color="accent" (click)="addItem()" matTooltip="{{'Add Item' | translate }}"><mat-icon>add</mat-icon></button>
-                </div>
-                <div class="card-title-text mat-bg-warn p-24" *ngIf="viewModel.displayDuplicateError">
-                  {{'L_TEXT_26' | translate}}
-                </div>
-                <div fxFlex="100" class="p-2" *ngIf="viewModel.selectedTitle != ''">
-                  <mat-form-field class="p-8 full-width">
-                    <input matInput formControlName="itemTitle" placeholder="{{'Title' | translate }}" required>
-                    <mat-hint>{{'Maximum length' | translate}} 100</mat-hint> 
-                    <mat-error *ngIf="itemForm.get('itemTitle').hasError('maxlength')">
-                      {{'Maximum length exceeded' | translate}}
-                    </mat-error>            
-                    <mat-error *ngIf="itemForm.get('itemTitle').hasError('pattern')">
-                      {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, hyphen space, comma, period, brackets, asterisk)
-                    </mat-error>            
-                  </mat-form-field>        
-                </div>
-                <div fxFlex="100" class="p-2 pb-05" *ngIf="viewModel.selectedTitle != ''">
-                  <quill-editor theme="snow" formControlName="itemContent"></quill-editor>
-                </div>
-                <div fxFlex="100" class="p-2" *ngIf="viewModel.selectedTitle != ''">
-                  <span fxFlex></span>
-                  <button mat-mini-fab color="accent" class="mr-05" (click)="updateItem()" matTooltip="{{'Update' | translate }}"><mat-icon>save</mat-icon></button>
-                  <button mat-mini-fab color="warn" (click)="removeItem()" matTooltip="{{'Delete' | translate }}"><mat-icon>delete</mat-icon></button>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-tab>
-
-          <mat-tab label="{{'Content' | translate}}" *ngIf="data.metaWidgetId > 0 && itemForm.get('widgetType').value == 'SubItems'">
-            <mat-card-content class="m-1 p-05" style="height: 500px;">
-              <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
-                <div fxFlex="100" class="pr-1">
-                  <mat-chip-list #chipList>
-                    <div *ngFor="let item of viewModel?.contentItems">
-                      <mat-chip color="primary" [selected]="item.title == viewModel.selectedTitle" (click)="setContentTitle(item.title)"> 
-                        {{item.title}}
-                      </mat-chip>
-                    </div>
-                  </mat-chip-list>
-                </div>
-                <div fxFlex="100" class="p-2">
-                  <span fxFlex></span>
-                  <button mat-mini-fab color="accent" (click)="addItem()" matTooltip="{{'Add Item' | translate }}"><mat-icon>add</mat-icon></button>
-                </div>
-                <div class="card-title-text mat-bg-warn p-24" *ngIf="viewModel.displayDuplicateError">
-                  {{'L_TEXT_26' | translate}}
-                </div>
-                <div fxFlex="100" class="p-2" *ngIf="viewModel.selectedTitle != ''">
-                  <mat-form-field class="p-8 full-width">
-                    <input matInput formControlName="itemTitle" placeholder="{{'Title' | translate }}" required>
-                    <mat-hint>{{'Maximum length' | translate}} 100</mat-hint> 
-                    <mat-error *ngIf="itemForm.get('itemTitle').hasError('maxlength')">
-                      {{'Maximum length exceeded' | translate}}
-                    </mat-error>            
-                    <mat-error *ngIf="itemForm.get('itemTitle').hasError('pattern')">
-                      {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, hyphen space, comma, period, brackets, asterisk)
-                    </mat-error>            
-                  </mat-form-field>        
-                </div>
-                <div fxFlex="100" class="p-2" *ngIf="viewModel.selectedTitle != ''">
-                  <mat-form-field class="p-8 full-width">
-                    <input matInput formControlName="itemSubtitle" placeholder="{{'Subtitle' | translate }}">
-                    <mat-hint>{{'Maximum length' | translate}} 100</mat-hint> 
-                    <mat-error *ngIf="itemForm.get('itemSubtitle').hasError('maxlength')">
-                      {{'Maximum length exceeded' | translate}}
-                    </mat-error>            
-                    <mat-error *ngIf="itemForm.get('itemSubtitle').hasError('pattern')">
-                      {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, hyphen space, comma, period, brackets, asterisk)
-                    </mat-error>            
-                  </mat-form-field>        
-                </div>
-                <div fxFlex="100" class="pr-1" *ngIf="viewModel.selectedTitle != ''">
-                  <mat-form-field class="p-8 full-width">
-                    <mat-select formControlName="itemContentPageId" placeholder="{{'Content page' | translate}}" required>
-                      <mat-option *ngFor="let page of pageList" [value]="page.id">
-                        {{page.pageName}}
-                      </mat-option>
-                    </mat-select>               
-                  </mat-form-field>       
-                </div>
-                <div fxFlex="100" class="p-2" *ngIf="viewModel.selectedTitle != ''">
-                  <span fxFlex></span>
-                  <button mat-mini-fab color="accent" class="mr-05" (click)="updateItem()" matTooltip="{{'Update' | translate }}"><mat-icon>save</mat-icon></button>
-                  <button mat-mini-fab color="warn" (click)="removeItem()" matTooltip="{{'Delete' | translate }}"><mat-icon>delete</mat-icon></button>
-                </div>
-              </div>
-            </mat-card-content>
-          </mat-tab>
-        </mat-tab-group>
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-label>{{'Additional help' | translate }}</mat-label>
+                <input matInput formControlName="help">
+                <mat-hint>{{'Maximum length' | translate}} 500</mat-hint> 
+                <mat-error *ngIf="itemForm.get('help').hasError('maxlength')">
+                  {{'Maximum length exceeded' | translate}}
+                </mat-error>            
+                <mat-error *ngIf="itemForm.get('help').hasError('pattern')">
+                  {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space)
+                </mat-error>            
+              </mat-form-field>        
+            </div>
+            
+            <div fxFlex="100" class="pr-1">
+              <mat-form-field class="p-8 full-width">
+                <mat-label>{{'Icon' | translate }}</mat-label>
+                <mat-select formControlName="icon" [(value)]="viewModel.selectedIcon" required>
+                  <mat-select-trigger>
+                    <mat-icon>{{ viewModel.selectedIcon }}</mat-icon>
+                  </mat-select-trigger>
+      
+                  <mat-option value="alarm"><mat-icon>alarm</mat-icon> alarm</mat-option>
+                  <mat-option value="announcement"><mat-icon>announcement</mat-icon> announcement</mat-option>
+                  <mat-option value="archive"><mat-icon>archive</mat-icon> archive</mat-option>
+                  <mat-option value="assessment"><mat-icon>assessment</mat-icon> assessment</mat-option>
+                  <mat-option value="assistant"><mat-icon>assistant</mat-icon> assistant</mat-option>
+                  <mat-option value="attachment"><mat-icon>attachment</mat-icon> attachment</mat-option>
+                  <mat-option value="backup"><mat-icon>backup</mat-icon> backup</mat-option>
+                  <mat-option value="bookmark"><mat-icon>bookmark</mat-icon> bookmark</mat-option>
+                  <mat-option value="bubble_chart"><mat-icon>bubble_chart</mat-icon> bubble_chart</mat-option>
+                  <mat-option value="comment"><mat-icon>comment</mat-icon> comment</mat-option>
+                  <mat-option value="contacts"><mat-icon>contacts</mat-icon> contacts</mat-option>
+                  <mat-option value="data_usage"><mat-icon>data_usage</mat-icon> data_usage</mat-option>
+                  <mat-option value="description"><mat-icon>description</mat-icon> description</mat-option>
+                  <mat-option value="details"><mat-icon>details</mat-icon> details</mat-option>
+                  <mat-option value="event"><mat-icon>event</mat-icon> event</mat-option>
+                  <mat-option value="favorite"><mat-icon>favorite</mat-icon> favorite</mat-option>
+                  <mat-option value="forum"><mat-icon>forum</mat-icon> forum</mat-option>
+                  <mat-option value="group_work"><mat-icon>group_work</mat-icon> group_work</mat-option>
+                  <mat-option value="help"><mat-icon>help</mat-icon> help</mat-option>
+                  <mat-option value="history"><mat-icon>history</mat-icon> history</mat-option>
+                  <mat-option value="home"><mat-icon>home</mat-icon> home</mat-option>
+                  <mat-option value="info"><mat-icon>info</mat-icon> info</mat-option>
+                  <mat-option value="insert_chart"><mat-icon>insert_chart</mat-icon> insert_chart</mat-option>
+                  <mat-option value="insert_invitation"><mat-icon>insert_invitation</mat-icon> insert_invitation</mat-option>
+                  <mat-option value="language"><mat-icon>language</mat-icon> language</mat-option>
+                  <mat-option value="library_books"><mat-icon>library_books</mat-icon> library_books</mat-option>
+                  <mat-option value="message"><mat-icon>message</mat-icon> message</mat-option>
+                  <mat-option value="more"><mat-icon>more</mat-icon> more</mat-option>
+                  <mat-option value="new_releases"><mat-icon>new_releases</mat-icon> new_releases</mat-option>
+                  <mat-option value="note"><mat-icon>note</mat-icon> note</mat-option>
+                  <mat-option value="notifications"><mat-icon>notifications</mat-icon> notifications</mat-option>
+                  <mat-option value="public"><mat-icon>public</mat-icon> public</mat-option>
+                  <mat-option value="publish"><mat-icon>publish</mat-icon> publish</mat-option>
+                  <mat-option value="question_answer"><mat-icon>question_answer</mat-icon> question_answer</mat-option>
+                  <mat-option value="report"><mat-icon>report</mat-icon> report</mat-option>
+                  <mat-option value="schedule"><mat-icon>schedule</mat-icon> schedule</mat-option>
+                  <mat-option value="speaker_notes"><mat-icon>speaker_notes</mat-icon> speaker_notes</mat-option>
+                  <mat-option value="star"><mat-icon>star</mat-icon> star</mat-option>
+                  <mat-option value="work"><mat-icon>work</mat-icon> work</mat-option>
+                </mat-select>               
+                <mat-error *ngIf="itemForm.get('icon').hasError('required')">
+                  {{'This is a required field' | translate}}
+                </mat-error>            
+              </mat-form-field>       
+            </div>
+          </div>
+        </mat-card-content>
       </div>
       
       <div fxFlex="100" class="mt-1">

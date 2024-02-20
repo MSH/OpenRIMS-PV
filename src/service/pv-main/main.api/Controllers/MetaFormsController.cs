@@ -213,6 +213,197 @@ namespace OpenRIMS.PV.Main.API.Controllers
         }
 
         /// <summary>
+        /// Create a new meta form category
+        /// </summary>
+        /// <param name="metaFormId">The unique id of the meta form</param>
+        /// <param name="metaFormCategoryForUpdate">The meta form category payload</param>
+        /// <returns></returns>
+        [HttpPost("{metaFormId}/categories", Name = "CreateMetaFormCategory")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [Consumes("application/json")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateMetaFormCategory(int metaFormId,
+            [FromBody] MetaFormCategoryForUpdateDto metaFormCategoryForUpdate)
+        {
+            if (metaFormCategoryForUpdate == null)
+            {
+                ModelState.AddModelError("Message", "Unable to locate payload for new request");
+            }
+
+            var command = new AddMetaFormCategoryCommand(
+                metaFormId,
+                metaFormCategoryForUpdate.MetaTableId,
+                metaFormCategoryForUpdate.CategoryName,
+                metaFormCategoryForUpdate.Help,
+                metaFormCategoryForUpdate.Icon);
+
+            _logger.LogInformation(
+                "----- Sending command: AddMetaFormCategoryCommand - {FormName}",
+                command.CategoryName);
+
+            var commandResult = await _mediator.Send(command);
+
+            if (commandResult == null)
+            {
+                return BadRequest("Command not created");
+            }
+
+            return CreatedAtAction("GetMetaFormCategory",
+                new
+                {
+                    id = commandResult.Id
+                }, commandResult);
+        }
+
+        /// <summary>
+        /// Update a meta form category
+        /// </summary>
+        /// <param name="metaFormId">The unique id of the meta form</param>
+        /// <param name="id">The unique id of the meta form category</param>
+        /// <param name="metaFormCategoryForUpdate">The meta form category payload</param>
+        /// <returns></returns>
+        [HttpPut("{metaFormId}/categories/{id}", Name = "UpdateMetaFormCategory")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> UpdateMetaFormCategory(int metaFormId, int id,
+            [FromBody] MetaFormCategoryForUpdateDto metaFormCategoryForUpdate)
+        {
+            if (metaFormCategoryForUpdate == null)
+            {
+                ModelState.AddModelError("Message", "Unable to locate payload for new request");
+            }
+
+            var command = new ChangeMetaFormCategoryDetailsCommand(
+                metaFormId,
+                id,
+                metaFormCategoryForUpdate.CategoryName,
+                metaFormCategoryForUpdate.Help,
+                metaFormCategoryForUpdate.Icon);
+
+            _logger.LogInformation(
+                $"----- Sending command: ChangeMetaFormCategoryDetailsCommand - {id}");
+
+            var commandResult = await _mediator.Send(command);
+
+            if (!commandResult)
+            {
+                return BadRequest("Command not created");
+            }
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Create a new meta form category attribute
+        /// </summary>
+        /// <param name="metaFormId">The unique id of the meta form category</param>
+        /// <param name="metaFormCategoryId">The unique id of the meta form category</param>
+        /// <param name="metaFormCategoryAttributeForUpdate">The meta form category attribute payload</param>
+        /// <returns></returns>
+        [HttpPost("{metaFormId}/categories/{metaFormCategoryId}/attributes", Name = "CreateMetaFormCategoryAttribute")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [Consumes("application/json")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateMetaFormCategoryAttribute(int metaFormId, int metaFormCategoryId,
+            [FromBody] MetaFormCategoryAttributeForUpdateDto metaFormCategoryAttributeForUpdate)
+        {
+            if (metaFormCategoryAttributeForUpdate == null)
+            {
+                ModelState.AddModelError("Message", "Unable to locate payload for new request");
+            }
+
+            var command = new AddMetaFormCategoryAttributeCommand(
+                metaFormId,
+                metaFormCategoryId,
+                metaFormCategoryAttributeForUpdate.AttributeName,
+                metaFormCategoryAttributeForUpdate.CustomAttributeConfigurationId,
+                metaFormCategoryAttributeForUpdate.Label,
+                metaFormCategoryAttributeForUpdate.Help);
+
+            _logger.LogInformation(
+                "----- Sending command: AddMetaFormCategoryAttributeCommand - {FormName}",
+                command.Label);
+
+            var commandResult = await _mediator.Send(command);
+
+            if (commandResult == null)
+            {
+                return BadRequest("Command not created");
+            }
+
+            return CreatedAtAction("GetMetaFormCategoryAttribute",
+                new
+                {
+                    id = commandResult.Id
+                }, commandResult);
+        }
+
+        /// <summary>
+        /// Update a meta form category attribute
+        /// </summary>
+        /// <param name="metaFormId">The unique id of the meta form</param>
+        /// <param name="metaFormCategoryId">The unique id of the meta form category</param>
+        /// <param name="id">The unique id of the attribute</param>
+        /// <param name="metaFormCategoryAttributeForUpdate">The meta form category attribute payload</param>
+        /// <returns></returns>
+        [HttpPut("{metaFormId}/categories/{metaFormCategoryId}/attributes/{id}", Name = "UpdateMetaFormCategoryAttribute")]
+        [Consumes("application/json")]
+        public async Task<IActionResult> UpdateMetaFormCategoryAttribute(int metaFormId, int metaFormCategoryId, int id,
+            [FromBody] MetaFormCategoryAttributeForUpdateDto metaFormCategoryAttributeForUpdate)
+        {
+            if (metaFormCategoryAttributeForUpdate == null)
+            {
+                ModelState.AddModelError("Message", "Unable to locate payload for new request");
+            }
+
+            var command = new ChangeMetaFormCategoryAttributeDetailsCommand(
+                metaFormId,
+                metaFormCategoryId,
+                id,
+                metaFormCategoryAttributeForUpdate.Label,
+                metaFormCategoryAttributeForUpdate.Help);
+
+            _logger.LogInformation(
+                $"----- Sending command: ChangeMetaFormCategoryAttributeDetailsCommand - {id}");
+
+            var commandResult = await _mediator.Send(command);
+
+            if (!commandResult)
+            {
+                return BadRequest("Command not created");
+            }
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Delete a meta form category attribute
+        /// </summary>
+        /// <param name="metaFormId">The unique id of the meta form</param>
+        /// <param name="metaFormCategoryId">The unique id of the meta form category</param>
+        /// <param name="id">The unique id of the attribute</param>
+        /// <returns></returns>
+        [HttpDelete("{metaFormId}/categories/{metaFormCategoryId}/attributes/{id}", Name = "DeleteMetaFormCategoryAttribute")]
+        public async Task<IActionResult> DeleteMetaFormCategoryAttribute(int metaFormId, int metaFormCategoryId, int id)
+        {
+            var command = new DeleteMetaFormCategoryAttributeCommand(
+                metaFormId,
+                metaFormCategoryId,
+                id);
+
+            _logger.LogInformation(
+                $"----- Sending command: DeleteMetaFormCategoryAttributeCommand - {command.MetaFormCategoryAttributeId}");
+
+            var commandResult = await _mediator.Send(command);
+
+            if (!commandResult)
+            {
+                return BadRequest("Command not created");
+            }
+
+            return NoContent();
+        }
+
+        /// <summary>
         /// Handle form upload and creation
         /// </summary>
         /// <param name="formForCreation">The form payload</param>

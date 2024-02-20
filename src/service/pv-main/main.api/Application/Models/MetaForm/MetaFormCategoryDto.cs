@@ -20,6 +20,12 @@ namespace OpenRIMS.PV.Main.API.Models
         /// The name of the meta table the category is associated to
         /// </summary>
         [DataMember]
+        public int MetaTableId { get; set; }
+
+        /// <summary>
+        /// The name of the meta table the category is associated to
+        /// </summary>
+        [DataMember]
         public string MetaTableName { get; set; }
 
         /// <summary>

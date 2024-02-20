@@ -30,7 +30,7 @@ import { MeddraListComponent } from './reference/meddra-list/meddra-list.compone
 import { ImportMeddraPopupComponent } from './reference/meddra-list/import-meddra-popup/import-meddra.popup.component';
 import { FormListComponent } from './work/form-list/form-list.component';
 import { FormPopupComponent } from './work/form-list/form-popup/form.popup.component';
-import { FormDeletePopupComponent } from './work/form-list/form-delete-popup/form-delete.popup.component';
+import { CategoryDeletePopupComponent } from './work/form-list/form-viewer/category-delete-popup/category-delete.popup.component';
 import { ConditionDeletePopupComponent } from './reference/condition-list/condition-delete-popup/condition-delete.popup.component';
 import { ConditionPopupComponent } from './reference/condition-list/condition-popup/condition.popup.component';
 import { LabTestSelectPopupComponent } from './shared/lab-test-select-popup/lab-test-select.popup.component';
@@ -68,6 +68,7 @@ import { DatasetElementSubDeletePopupComponent } from './work/dataset-element-su
 import { DatasetElementSubPopupComponent } from './work/dataset-element-sub-list/dataset-element-sub-popup/dataset-element-sub.popup.component';
 import { FormViewerComponent } from './work/form-list/form-viewer/form-viewer.component';
 import { CategoryConfigurePopupComponent } from './work/form-list/form-viewer/category-configure-popup/category-configure.popup.component';
+import { CategoryAttributeConfigurePopupComponent } from './work/form-list/form-viewer/category-attribute-configure-popup/category-attribute-configure.popup.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +76,9 @@ import { CategoryConfigurePopupComponent } from './work/form-list/form-viewer/ca
     CareEventDeletePopupComponent,
     CareEventListComponent,
     CareEventPopupComponent,
+    CategoryAttributeConfigurePopupComponent,
     CategoryConfigurePopupComponent,
+    CategoryDeletePopupComponent,
     ConceptListComponent,
     ConceptPopupComponent,
     ConfigListComponent,
@@ -104,7 +107,6 @@ import { CategoryConfigurePopupComponent } from './work/form-list/form-viewer/ca
     FacilityPopupComponent,
     FacilityDeletePopupComponent,
     FormListComponent,
-    FormDeletePopupComponent,
     FormPopupComponent,
     FormViewerComponent,
     GenericDeletePopupComponent,
@@ -145,7 +147,9 @@ import { CategoryConfigurePopupComponent } from './work/form-list/form-viewer/ca
   [
     CareEventPopupComponent,
     CareEventDeletePopupComponent,
+    CategoryAttributeConfigurePopupComponent,
     CategoryConfigurePopupComponent,
+    CategoryDeletePopupComponent,
     ConceptPopupComponent,
     ConditionPopupComponent,
     ConditionDeletePopupComponent,

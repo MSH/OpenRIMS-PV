@@ -13,12 +13,12 @@
 <mat-card class="p-0" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
   <mat-card-title class="">
       <div class="card-title-text">
-        {{ metaForm?.formName }} ({{ metaForm?.cohortGroup }})
+        {{ viewModel?.metaForm?.formName }} ({{ viewModel?.metaForm?.cohortGroup }})
         <div class="mainButton">
           <span fxFlex></span>
-          <button mat-mini-fab class="mr-05" color="primary" (click)="openFormPopUp()" matTooltip="{{'Update Form' | translate }}"><mat-icon>settings</mat-icon></button>
-          <button mat-mini-fab class="mr-05" color="primary" (click)="openCategoryConfigurePopup(0)" matTooltip="{{'Add Category' | translate }}"><mat-icon>widgets</mat-icon></button>
-          <button mat-mini-fab class="mr-05" color="warn" (click)="openDeletePopUp()" matTooltip="{{'Delete Form' | translate }}"><mat-icon>delete</mat-icon></button>
+          <button mat-mini-fab class="mr-05" color="" (click)="openFormPopUp()" matTooltip="{{'Update Form' | translate }}"><mat-icon>settings</mat-icon></button>
+          <button mat-mini-fab class="mr-05" color="" (click)="openCategoryConfigurePopup(null)" matTooltip="{{'Add Category' | translate }}"><mat-icon>widgets</mat-icon></button>
+          <button mat-mini-fab class="mr-05" color="warn" (click)="openDeleteFormPopUp()" matTooltip="{{'Delete Form' | translate }}"><mat-icon>delete</mat-icon></button>
         </div>
       </div>
   </mat-card-title>
@@ -26,13 +26,110 @@
 
 <div fxLayout="row" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start" [@animate]="{ value: '*', params: { y: '50px', delay: '600ms' } }">
   <div fxFlex="100">
-    <mat-card class="p-12 rounded" *ngIf="metaForm?.categories.length == 0" [@animate]="{value:'50'}">
+    <mat-card class="p-12 rounded" *ngIf="viewModel?.metaForm?.categories.length == 0" [@animate]="{value:'50'}">
       <mat-card-content class="text-center">
         <div class="light-gray p-12">
           {{'There are currently no categories associated to this form, please click on the button below to add a new category ...' | translate}}
         </div>
-        <button mat-raised-button class="mr-05 mt-12" color="accent" (click)="openCategoryConfigurePopup()">{{'Add Category' | translate}}</button>
+        <button mat-raised-button class="mr-05 mt-12" color="accent" (click)="openCategoryConfigurePopup(null)">{{'Add Category' | translate}}</button>
       </mat-card-content>
-    </mat-card>       
+    </mat-card>
+
+    <mat-card class="p-8">
+        <mat-card-title class="">
+          <div class="card-title-text">
+            Form Configuration
+          </div>
+        </mat-card-title>      
+      <mat-card-content class="m-1 p-2">
+        <div fxLayout="row" fxLayoutAlign="start">
+          <div fxFlex="20" class="mt-4">
+            <div class="p-12">
+              <div fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="start" class="p-05" *ngFor="let category of viewModel?.metaForm?.categories; ; let i = index;">
+                <mat-icon color="primary" *ngIf="viewModel.currentStep == i" class="mr-12">brightness_1</mat-icon>
+                <mat-icon color="primary" *ngIf="viewModel.currentStep != i" class="mr-12">panorama_fish_eye</mat-icon>
+                <span [class.font-weight-bold]="viewModel.currentStep == i">{{ category.categoryName }}</span>
+              </div>
+              <div fxLayout="row" fxLayoutGap="1.0%" fxLayoutAlign="center" class="p-12">
+                <button mat-raised-button color="" class="mr-12" (click)="previousStep()" [disabled]="viewModel.currentStep == 0" style="width: 120px;">Previous</button>
+                <button mat-raised-button color="accent" (click)="nextStep()" [disabled]="viewModel.currentStep >= viewModel?.metaForm?.categories.length - 1" style="width: 120px;">Next</button>
+              </div>
+            </div>
+          </div>
+
+          <div fxFlex="70" fxFlex.lt-md="100">
+            <div class="p-12">
+              <div fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="start" *ngFor="let category of viewModel?.metaForm?.categories; ; let i = index;">
+                <div fxFlex="100" fxFlex.lt-md="100" *ngIf="viewModel.currentStep == i">
+                  <div class="mainButton">
+                    <span fxFlex></span>
+                    <button mat-mini-fab class="mr-05" color="" (click)="openCategoryConfigurePopup(category)" matTooltip="{{'Update Category' | translate }}"><mat-icon>settings</mat-icon></button>
+                    <button mat-mini-fab class="mr-05" color="warn" (click)="openDeleteWidgetPopUp(widget.id, widget.widgetName)" matTooltip="{{'Delete Widget' | translate }}"><mat-icon>delete</mat-icon></button>
+                  </div>
+                  <div class="mt-24 p-12 light-gray rounded">
+                    <mat-icon class="mr-24">{{ category.icon }}</mat-icon>{{ category.help }} ...
+                  </div>
+
+                  <mat-tab-group #mainTabGroup="matTabGroup">
+                    <mat-tab label="{{'Form Attributes' | translate}}">
+                      <mat-card class="p-12 rounded" [@animate]="{value:'50'}">
+                        <mat-card-content class="text-center">
+                          <div class="light-gray p-12" *ngIf="filterSelectedAttributes(true, category.attributes)?.length == 0">
+                            {{'No attributes have been selected yet. Please select an attribute from the unselected attributes tab ...' | translate}}
+                          </div>
+
+                          <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                            <div fxFlex="48" *ngFor="let attribute of filterSelectedAttributes(true, category.attributes)" class="m-02">
+                              <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                                <div fxFlex="100">
+                                  <mat-form-field class="full-width" appearance="outline">
+                                    <mat-label>{{attribute.label}}</mat-label>
+                                    <input matInput formControlName="{{attribute.id}}" readonly >
+                                    <mat-hint>
+                                      {{attribute.help}}
+                                    </mat-hint>
+                                    <mat-icon matPrefix style="cursor: pointer;" (click)="openCategoryAttributeConfigurePopup(attribute)">edit</mat-icon>
+                                    <mat-icon matSuffix color="warn"  style="cursor: pointer;" (click)="deleteAttribute(attribute)">delete</mat-icon>
+                                  </mat-form-field>                                  
+                              </div>
+                              </div>
+                            </div>
+                          </div>                          
+                        </mat-card-content>
+                      </mat-card>                    
+                    </mat-tab>
+
+                    <mat-tab label="{{'Unselected Attributes' | translate}}">
+                      <mat-card class="p-12 rounded" *ngIf="filterSelectedAttributes(false, category.attributes)?.length > 0" [@animate]="{value:'50'}">
+                        <mat-card-title class="">
+                          <div class="card-title-text">
+                            Unselected Attributes
+                          </div>
+                        </mat-card-title>                     
+                        <mat-card-content class="text-center">
+                          <div class="light-gray p-12">
+                            {{'Select an attribute from the list below, attributes in yellow are custom  ...' | translate}}
+                          </div>
+    
+                          <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
+                            <div *ngFor="let attribute of filterSelectedAttributes(false, category.attributes)" class="p-05 m-02">
+                              <button mat-raised-button color="" (click)="openCategoryAttributeConfigurePopup(attribute)">
+                                <mat-icon>add_circle</mat-icon>
+                                {{attribute.attributeName}}
+                              </button>
+                            </div>
+                          </div>
+                        </mat-card-content>
+                      </mat-card>
+                    </mat-tab>
+
+                  </mat-tab-group>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
   </div>
 </div>  

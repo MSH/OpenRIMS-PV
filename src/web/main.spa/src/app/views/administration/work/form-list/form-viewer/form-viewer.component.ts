@@ -11,13 +11,14 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Subscription } from 'rxjs';
 import { takeUntil, finalize } from 'rxjs/operators';
 import { egretAnimations } from 'app/shared/animations/egret-animations';
-import { MetaWidgetDetailModel } from 'app/shared/models/meta/meta-widget.detail.model';
 import { NavigationService } from 'app/shared/services/navigation.service';
 import { MetaFormService } from 'app/shared/services/meta-form.service';
 import { MetaFormExpandedModel } from 'app/shared/models/meta/meta-form.expanded.model';
 import { FormPopupComponent } from '../form-popup/form.popup.component';
 import { GenericDeletePopupComponent } from 'app/views/administration/shared/generic-delete-popup/generic-delete.popup.component';
 import { CategoryConfigurePopupComponent } from './category-configure-popup/category-configure.popup.component';
+import { CategoryAttributeConfigurePopupComponent } from './category-attribute-configure-popup/category-attribute-configure.popup.component';
+import { CategoryDeletePopupComponent } from './category-delete-popup/category-delete.popup.component';
 
 @Component({
   templateUrl: './form-viewer.component.html',
@@ -59,15 +60,11 @@ export class FormViewerComponent extends BaseComponent implements OnInit, OnDest
     });    
   }
 
+  viewModel: ViewModel = new ViewModel();  
+
   navigationSubscription;
   currentScreenWidth: string = '';
   flexMediaWatcher: Subscription;
-
-  id: number;
-  metaForm: MetaFormExpandedModel;
-
-  leftWidgetList: MetaWidgetDetailModel[] = [];
-  rightWidgetList: MetaWidgetDetailModel[] = [];
 
   ngOnInit() {
     const self = this;
@@ -79,9 +76,9 @@ export class FormViewerComponent extends BaseComponent implements OnInit, OnDest
     // Set default values and re-fetch any data you need.
     const self = this;
 
-    self.id = +self._activatedRoute.snapshot.paramMap.get('formid');
+    self.viewModel.formId = +self._activatedRoute.snapshot.paramMap.get('formid');
     if(self.accountService.hasToken()) {
-      self.loadData();
+      self.fetchView();
     }
   }  
 
@@ -91,14 +88,15 @@ export class FormViewerComponent extends BaseComponent implements OnInit, OnDest
     this.eventService.removeAll(FormViewerComponent.name);
   }
 
-  loadData(): void {
+  fetchView(): void {
     let self = this;
     self.setBusy(true);
-    self.metaFormService.getMetaForm(self.id, 'expanded')
+    self.metaFormService.getMetaForm(self.viewModel.formId, 'expanded')
       .pipe(takeUntil(self._unsubscribeAll))
       .pipe(finalize(() => self.setBusy(false)))
       .subscribe(result => {
-        self.metaForm = result;
+        self.viewModel.metaForm = result;
+        self.CLog(result, 'result');
       }, error => {
         self.handleError(error, "Error fetching meta form");
       });
@@ -110,7 +108,7 @@ export class FormViewerComponent extends BaseComponent implements OnInit, OnDest
     let dialogRef: MatDialogRef<any> = self.dialog.open(FormPopupComponent, {
       width: '720px',
       disableClose: true,
-      data: { formId: self.id, title: title }
+      data: { formId: self.viewModel.formId, title: title }
     })
     dialogRef.afterClosed()
       .subscribe(res => {
@@ -122,13 +120,13 @@ export class FormViewerComponent extends BaseComponent implements OnInit, OnDest
       })
   }  
 
-  openDeletePopUp() {
+  openDeleteFormPopUp() {
     let self = this;
-    let title = 'Delete Page';
+    let title = 'Delete Form';
     let dialogRef: MatDialogRef<any> = self.dialog.open(GenericDeletePopupComponent, {
       width: '720px',
       disableClose: true,
-      data: { id: self.id, type: 'MetaForm', title: title, name: self.metaForm.formName }
+      data: { id: self.viewModel.formId, type: 'MetaForm', title: title, name: self.viewModel.metaForm.formName }
     })
     dialogRef.afterClosed()
       .subscribe(res => {
@@ -140,31 +138,13 @@ export class FormViewerComponent extends BaseComponent implements OnInit, OnDest
       })
   }
 
-  // openDeleteWidgetPopUp(id: number, widgetName: string) {
-  //   let self = this;
-  //   let title = 'Delete Widget';
-  //   let dialogRef: MatDialogRef<any> = self.dialog.open(GenericDeletePopupComponent, {
-  //     width: '720px',
-  //     disableClose: true,
-  //     data: { parentId: self.id, id: id, type: 'MetaWidget', title: title, name: widgetName }
-  //   })
-  //   dialogRef.afterClosed()
-  //     .subscribe(res => {
-  //       if(!res) {
-  //         // If user press cancel
-  //         return;
-  //       }
-  //       self.initialiseReport();
-  //     })
-  // }
-
-  openCategoryConfigurePopup(id: number) {
+  openCategoryConfigurePopup(category: any) {
     let self = this;
-    let title = id == 0 ? 'Add Category' : 'Update Category';
+    let title = category == null ? 'Add Category' : 'Update Category';
     let dialogRef: MatDialogRef<any> = self.dialog.open(CategoryConfigurePopupComponent, {
       width: '920px',
       disableClose: true,
-      data: { metaPageId: self.id, metaWidgetId: id, title: title }
+      data: { metaFormId: self.viewModel.formId, metaCategoryId: category == null ? 0 : category.id, title: title, payload: category }
     })
     dialogRef.afterClosed()
       .subscribe(result => {
@@ -175,4 +155,72 @@ export class FormViewerComponent extends BaseComponent implements OnInit, OnDest
         self.initialisetFormView();
       })
   }
+
+  openDeleteCategoryPopUp(category: any) {
+    let self = this;
+    let title = 'Delete Category';
+    let dialogRef: MatDialogRef<any> = self.dialog.open(CategoryDeletePopupComponent, {
+      width: '720px',
+      disableClose: true,
+      data: { metaFormId: self.viewModel.formId, metaCategoryId: category == null ? 0 : category.id, title: title, payload: category }
+    })
+    dialogRef.afterClosed()
+      .subscribe(res => {
+        if(!res) {
+          // If user press cancel
+          return;
+        }
+        self.initialisetFormView();
+      })
+  }  
+
+  openCategoryAttributeConfigurePopup(categoryAttribute: any) {
+    let self = this;
+    let title = !categoryAttribute.selected ? 'Add Category Attribute' : 'Update Category Attribute';
+    let dialogRef: MatDialogRef<any> = self.dialog.open(CategoryAttributeConfigurePopupComponent, {
+      width: '920px',
+      disableClose: true,
+      data: { metaFormId: self.viewModel.formId, metaCategoryId: self.viewModel.metaForm.categories[self.viewModel.currentStep].id, metaCategoryAttributeId: !categoryAttribute.selected ? 0 : categoryAttribute.id, title: title, payload: categoryAttribute }
+    })
+    dialogRef.afterClosed()
+      .subscribe(result => {
+        if(!result) {
+          // If user press cancel
+          return;
+        }
+        self.initialisetFormView();
+      })
+  }
+
+  deleteAttribute(categoryAttribute: any) {
+    let self = this;
+    self.setBusy(true);
+
+    self.metaFormService.deleteMetaCategoryAttribute(self.viewModel.formId, self.viewModel.metaForm.categories[self.viewModel.currentStep].id, categoryAttribute.id)
+    .pipe(finalize(() => self.setBusy(false)))
+    .subscribe(result => {
+      self.notify("Attribute deleted successfully", "Delete Attribute");
+      self.initialisetFormView();
+    }, error => {
+      this.handleError(error, "Error deleting attribute");
+    });    
+  }
+
+  filterSelectedAttributes(selected: boolean, attributes: any[]): any[] {
+    return attributes.filter(a => a.selected == selected);
+  }
+
+  nextStep(): void {
+    this.viewModel.currentStep ++;
+  }
+
+  previousStep(): void {
+    this.viewModel.currentStep --;
+  }  
+}
+
+class ViewModel {
+  formId: number;
+  metaForm: MetaFormExpandedModel;
+  currentStep = 0;
 }

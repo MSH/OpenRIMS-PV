@@ -57,7 +57,6 @@ export class MetaFormService extends BaseService {
       return this.Get<MetaFormDetailWrapperModel>('/metaforms', 'application/vnd.main.detail.v1+json', parameters);
     }
 
-
     getMetaForm(id: number, header: 'detail' | 'expanded' ): any {
       let parameters: ParameterKeyValueModel[] = [];
       parameters.push(<ParameterKeyValueModel> { key: 'id', value: id.toString() });
@@ -73,8 +72,45 @@ export class MetaFormService extends BaseService {
       else {
         return this.Put(`metaforms/${id}`, shallowModel);
       }
-    }     
+    }
+
+    deleteMetaForm(id: number): any {
+      return this.Delete(`metaforms/${id}`);
+    }    
+
+    // getMetaWidget(metaPageId: number, id: number, header: 'detail' ): any {
+    //   let parameters: ParameterKeyValueModel[] = [];
+    //   parameters.push(<ParameterKeyValueModel> { key: 'id', value: id.toString() });
   
+    //   return this.Get<MetaPageExpandedModel>(`/metapages/${metaPageId}/widgets`, `application/vnd.main.${header}.v1+json`, parameters);
+    // }
+  
+    saveMetaCategory(metaFormId: number, id: number, model: any): any {
+      if(id == 0) {
+        return this.Post(`metaforms/${metaFormId}/categories`, model);
+      }
+      else {
+        return this.Put(`metaforms/${metaFormId}/categories/${id}`, model);
+      }
+    }
+
+    deleteMetaCategory(metaFormId: number, id: number): any {
+      return this.Delete(`metaforms/${metaFormId}/categories/${id}`);
+    }    
+
+    saveMetaCategoryAttribute(metaFormId: number, metaCategoryId: number, id: number, model: any): any {
+      if(id == 0) {
+        return this.Post(`metaforms/${metaFormId}/categories/${metaCategoryId}/attributes`, model);
+      }
+      else {
+        return this.Put(`metaforms/${metaFormId}/categories/${metaCategoryId}/attributes/${id}`, model);
+      }
+    }
+
+    deleteMetaCategoryAttribute(metaFormId: number, metaCategoryId: number, id: number): any {
+      return this.Delete(`metaforms/${metaFormId}/categories/${metaCategoryId}/attributes/${id}`);
+    }
+    
     checkSynchRequired(): Promise<boolean> {
         this.getSynchStatus().then(result => {
             if(result == undefined) {
