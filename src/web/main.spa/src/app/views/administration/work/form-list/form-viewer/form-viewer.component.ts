@@ -162,7 +162,7 @@ export class FormViewerComponent extends BaseComponent implements OnInit, OnDest
     let dialogRef: MatDialogRef<any> = self.dialog.open(CategoryDeletePopupComponent, {
       width: '720px',
       disableClose: true,
-      data: { metaFormId: self.viewModel.formId, metaCategoryId: category == null ? 0 : category.id, title: title, payload: category }
+      data: { metaFormId: self.viewModel.formId, metaCategoryId: category.id, title: title, payload: category }
     })
     dialogRef.afterClosed()
       .subscribe(res => {

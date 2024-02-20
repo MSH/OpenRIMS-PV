@@ -64,7 +64,7 @@
                   <div class="mainButton">
                     <span fxFlex></span>
                     <button mat-mini-fab class="mr-05" color="" (click)="openCategoryConfigurePopup(category)" matTooltip="{{'Update Category' | translate }}"><mat-icon>settings</mat-icon></button>
-                    <button mat-mini-fab class="mr-05" color="warn" (click)="openDeleteWidgetPopUp(widget.id, widget.widgetName)" matTooltip="{{'Delete Widget' | translate }}"><mat-icon>delete</mat-icon></button>
+                    <button mat-mini-fab class="mr-05" color="warn" (click)="openDeleteCategoryPopUp(category)" matTooltip="{{'Delete Category' | translate }}"><mat-icon>delete</mat-icon></button>
                   </div>
                   <div class="mt-24 p-12 light-gray rounded">
                     <mat-icon class="mr-24">{{ category.icon }}</mat-icon>{{ category.help }} ...

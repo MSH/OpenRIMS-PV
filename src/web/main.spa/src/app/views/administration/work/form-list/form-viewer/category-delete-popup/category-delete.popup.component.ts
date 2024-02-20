@@ -35,7 +35,7 @@ export class CategoryDeletePopupComponent extends BasePopupComponent implements 
     const self = this;
 
     self.itemForm = this._formBuilder.group({
-      name: [this.data.payload.name],
+      name: [this.data.payload.categoryName],
     })
   }
 

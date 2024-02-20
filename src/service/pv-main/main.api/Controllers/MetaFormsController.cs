@@ -293,6 +293,32 @@ namespace OpenRIMS.PV.Main.API.Controllers
         }
 
         /// <summary>
+        /// Delete a meta form category
+        /// </summary>
+        /// <param name="metaFormId">The unique id of the meta form</param>
+        /// <param name="id">The unique id of the category</param>
+        /// <returns></returns>
+        [HttpDelete("{metaFormId}/categories/{id}", Name = "DeleteMetaFormCategory")]
+        public async Task<IActionResult> DeleteMetaFormCategory(int metaFormId, int id)
+        {
+            var command = new DeleteMetaFormCategoryCommand(
+                metaFormId,
+                id);
+
+            _logger.LogInformation(
+                $"----- Sending command: DeleteMetaFormCategoryCommand - {command.MetaFormCategoryId}");
+
+            var commandResult = await _mediator.Send(command);
+
+            if (!commandResult)
+            {
+                return BadRequest("Command not created");
+            }
+
+            return NoContent();
+        }
+
+        /// <summary>
         /// Create a new meta form category attribute
         /// </summary>
         /// <param name="metaFormId">The unique id of the meta form category</param>
