@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using OpenRIMS.PV.Main.Infrastructure;
 
@@ -10,9 +11,11 @@ using OpenRIMS.PV.Main.Infrastructure;
 namespace OpenRIMS.PV.Main.Infrastructure.MySQL.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    partial class MainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240219165535_CustomAttributeOnMetaCategoryAttributeNullable")]
+    partial class CustomAttributeOnMetaCategoryAttributeNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -436,24 +439,9 @@ namespace OpenRIMS.PV.Main.Infrastructure.MySQL.Migrations
                         .HasColumnType("int")
                         .HasColumnName("Configuration_Id");
 
-                    b.Property<int>("FormAttributeTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool?>("FutureDateOnly")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false);
-
                     b.Property<string>("Help")
                         .HasMaxLength(500)
                         .HasColumnType("varchar(500)");
-
-                    b.Property<bool?>("IsRequired")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false);
 
                     b.Property<string>("Label")
                         .IsRequired()
@@ -467,24 +455,6 @@ namespace OpenRIMS.PV.Main.Infrastructure.MySQL.Migrations
                     b.Property<int>("MetaFormCategoryId")
                         .HasColumnType("int")
                         .HasColumnName("MetaFormCategory_Id");
-
-                    b.Property<int?>("NumericMaxValue")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("NumericMinValue")
-                        .HasColumnType("int");
-
-                    b.Property<bool?>("PastDateOnly")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("tinyint(1)")
-                        .HasDefaultValue(false);
-
-                    b.Property<string>("SelectionDataItem")
-                        .HasColumnType("longtext");
-
-                    b.Property<int?>("StringMaxLength")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

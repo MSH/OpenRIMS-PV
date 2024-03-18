@@ -1,0 +1,62 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="itemForm">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1">
+        <div fxLayout="row wrap" fxLayout.lt-sm="column" fxLayoutAlign="start start">
+          <div fxFlex="100" class="pr-1" *ngIf="data.metaCategoryAttributeId > 0">
+            <mat-form-field class="p-8 full-width" appearance="fill">
+              <mat-label>{{'Identifier' | translate}}</mat-label>
+              <input matInput formControlName="metaFormCategoryAttributeGuid" readonly>
+            </mat-form-field>
+          </div>
+
+          <div fxFlex="100" class="pr-1">
+            <mat-form-field class="p-8 full-width" appearance="fill">
+              <mat-label>{{'Attribute' | translate}}</mat-label>
+              <input matInput formControlName="attributeName" readonly>
+            </mat-form-field>
+          </div>
+
+          <div fxFlex="100" class="pr-1">
+            <mat-form-field class="p-8 full-width" appearance="outline">
+              <mat-label>{{'Attribute label' | translate }}</mat-label>
+              <input matInput formControlName="label" required>
+              <mat-hint>{{'Maximum length' | translate}} 150</mat-hint> 
+              <mat-error *ngIf="itemForm.get('label').hasError('required')">
+                {{'This is a required field' | translate}}
+              </mat-error>            
+              <mat-error *ngIf="itemForm.get('label').hasError('maxlength')">
+                {{'Maximum length exceeded' | translate}}
+              </mat-error>            
+              <mat-error *ngIf="itemForm.get('label').hasError('pattern')">
+                {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space)
+              </mat-error>            
+            </mat-form-field>        
+          </div>
+
+          <div fxFlex="100" class="pr-1">
+            <mat-form-field class="p-8 full-width" appearance="outline">
+              <mat-label>{{'Additional help' | translate }}</mat-label>
+              <input matInput formControlName="help">
+              <mat-hint>{{'Maximum length' | translate}} 500</mat-hint> 
+              <mat-error *ngIf="itemForm.get('help').hasError('maxlength')">
+                {{'Maximum length exceeded' | translate}}
+              </mat-error>            
+              <mat-error *ngIf="itemForm.get('help').hasError('pattern')">
+                {{'Value contains invalid characters' | translate}} (A-Z, a-z, 0-9, space)
+              </mat-error>            
+            </mat-form-field>        
+          </div>
+        </div>
+      </div>
+      
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" (click)="submit()">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>
