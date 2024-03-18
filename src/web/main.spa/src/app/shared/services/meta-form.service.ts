@@ -57,7 +57,7 @@ export class MetaFormService extends BaseService {
       return this.Get<MetaFormDetailWrapperModel>('/metaforms', 'application/vnd.main.detail.v1+json', parameters);
     }
 
-    getMetaForm(id: number, header: 'detail' | 'expanded' ): any {
+    getMetaForm(id: number, header: 'detail' | 'expandedwithunmappedattributes' | 'expandedwithoutunmappedattributes' ): any {
       let parameters: ParameterKeyValueModel[] = [];
       parameters.push(<ParameterKeyValueModel> { key: 'id', value: id.toString() });
   

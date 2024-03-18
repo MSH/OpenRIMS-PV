@@ -8,4 +8,5 @@ export interface MetaFormCategoryModel {
     help: string;
     icon: string;
     attributes: MetaFormCategoryAttributeModel[];
+    unmappedAttributes: MetaFormCategoryAttributeModel[];
 }

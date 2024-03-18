@@ -39,23 +39,17 @@ export const _routes = {
       },      
       forms: {
           landing: `${_paths.clinical}/${_paths.clinicalPath.forms.landing}`,
+          formSelect(cohortGroupId: number): string {
+            return `${_paths.clinical}/${_paths.clinicalPath.forms.formselect.replace(':cohortGroupId', cohortGroupId.toString())}`;
+          },          
           listForm(type: string): string {
             return `${_paths.clinical}/${_paths.clinicalPath.forms.list.replace(':type', type)}`;
           },
           synchroniseForm(type: string): string {
             return `${_paths.clinical}/${_paths.clinicalPath.forms.synchronise.replace(':type', type)}`;
           },
-          viewFormA(formId: number): string {
-              return `${_paths.clinical}/${_paths.clinicalPath.forms.forma.replace(':formId', formId.toString())}`;
-          },
-          viewFormB(formId: number): string {
-              return `${_paths.clinical}/${_paths.clinicalPath.forms.formb.replace(':formId', formId.toString())}`;
-          },
-          viewFormC(formId: number): string {
-              return `${_paths.clinical}/${_paths.clinicalPath.forms.formc.replace(':formId', formId.toString())}`;
-          },
-          viewFormADR(formId: number): string {
-            return `${_paths.clinical}/${_paths.clinicalPath.forms.formadr.replace(':formId', formId.toString())}`;
+          viewFormDynamic(metaFormId: number, formId: number): string {
+            return `${_paths.clinical}/${_paths.clinicalPath.forms.formdynamic.replace(':metaFormId', metaFormId.toString()).replace(':formId', formId.toString())}`;
         }
       }
     },

@@ -44,13 +44,6 @@ import { DatasetPopupComponent } from 'app/views/administration/work/dataset-lis
 import { EncounterTypePopupComponent } from 'app/views/administration/work/encounter-type-list/encounter-type-popup/encounter-type.popup.component';
 import { EncounterTypeDeletePopupComponent } from 'app/views/administration/work/encounter-type-list/encounter-type-delete-popup/encounter-type-delete.popup.component';
 import { DatasetDeletePopupComponent } from 'app/views/administration/work/dataset-list/dataset-delete-popup/dataset-delete.popup.component';
-import { FormAConditionsPopupComponent } from 'app/views/clinical/form/form-a/form-a-conditions-popup/form-a-conditions.popup.component';
-import { FormALabsPopupComponent } from 'app/views/clinical/form/form-a/form-a-labs-popup/form-a-labs.popup.component';
-import { FormAMedicationsPopupComponent } from 'app/views/clinical/form/form-a/form-a-medications-popup/form-a-medications.popup.component';
-import { FormBConditionsPopupComponent } from 'app/views/clinical/form/form-b/form-b-conditions-popup/form-b-conditions.popup.component';
-import { FormBLabsPopupComponent } from 'app/views/clinical/form/form-b/form-b-labs-popup/form-b-labs.popup.component';
-import { FormBMedicationsPopupComponent } from 'app/views/clinical/form/form-b/form-b-medications-popup/form-b-medications.popup.component';
-import { FormBAdversePopupComponent } from 'app/views/clinical/form/form-b/form-b-adverse-popup/form-b-adverse.popup.component';
 import { FormCompletePopupComponent } from 'app/views/clinical/form/form-complete-popup/form-complete.popup.component';
 import { PingComponent } from './ping/ping.component';
 import { UserProfilePopupComponent } from 'app/views/security/user-profile/user-profile.popup.component';
@@ -91,13 +84,6 @@ const components = [
   UserProfilePopupComponent,
 
   // Form popups
-  FormAConditionsPopupComponent,
-  FormALabsPopupComponent,
-  FormAMedicationsPopupComponent,
-  FormBConditionsPopupComponent,
-  FormBLabsPopupComponent,
-  FormBMedicationsPopupComponent,
-  FormBAdversePopupComponent,
   FormCompletePopupComponent,
   
   // Patient view popups
@@ -159,13 +145,6 @@ const components = [
     InfoPopupComponent,
     UserProfilePopupComponent,
     
-    FormAConditionsPopupComponent,
-    FormALabsPopupComponent,
-    FormAMedicationsPopupComponent,
-    FormBConditionsPopupComponent,
-    FormBLabsPopupComponent,
-    FormBMedicationsPopupComponent,
-    FormBAdversePopupComponent,
     FormCompletePopupComponent,
 
     AttachmentPopupComponent,

@@ -34,13 +34,11 @@ export const _paths = {
           view: `cohortenrolment/:cohortGroupId`
       },
       forms: {
+          formselect: `form-select/:cohortGroupId`,
           list: `form-list/:type`,
           synchronise: `synchronise/:type`,
           landing: `form-landing`,
-          forma: `forma/:formId`,
-          formb: `formb/:formId`,
-          formc: `formc/:formId`,
-          formadr: `formadr/:formId`,
+          formdynamic: `form-dynamic/:metaFormId/:formId`,
       }
   },
   analytical: `analytical`,

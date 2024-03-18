@@ -57,5 +57,11 @@ namespace OpenRIMS.PV.Main.API.Models
         /// </summary>
         [DataMember]
         public ICollection<MetaFormCategoryAttributeDto> Attributes { get; set; } = new List<MetaFormCategoryAttributeDto>();
+
+        /// <summary>
+        /// A list of elements that have been associated to this category
+        /// </summary>
+        [DataMember]
+        public ICollection<MetaFormCategoryAttributeDto> UnmappedAttributes { get; set; } = new List<MetaFormCategoryAttributeDto>();
     }
 }

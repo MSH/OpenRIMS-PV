@@ -38,7 +38,7 @@ namespace OpenRIMS.PV.Main.API.Application.Commands.MetaFormAggregate
 
             _metaFormRepository.Delete(metaFormFromRepo);
 
-            _logger.LogInformation($"----- Meta form {message.Id} deleted");
+            _logger.LogInformation($"----- Meta form {message.MetaFormId} deleted");
 
             return await _unitOfWork.CompleteAsync();
         }

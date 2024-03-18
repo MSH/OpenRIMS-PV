@@ -13,9 +13,6 @@ import { EncounterSearchComponent } from './encounter/encounter-search/encounter
 import { AppointmentSearchComponent } from './appointment/appointment-search/appointment-search.component';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { EncounterViewComponent } from './encounter/encounter-view/encounter-view.component';
-import { FormAComponent } from './form/form-a/form-a.component';
-import { FormBComponent } from './form/form-b/form-b.component';
-import { FormCComponent } from './form/form-c/form-c.component';
 import { SynchroniseComponent } from './form/synchronise/synchronise.component';
 import { WebcamModule } from 'ngx-webcam';
 import { AttachmentCapturePopupComponent } from './form/form-list/attachment-capture-popup/attachment-capture.popup.component';
@@ -42,7 +39,6 @@ import { CohortPopupComponent } from './cohort/cohort-search/cohort-popup/cohort
 import { CohortDeletePopupComponent } from './cohort/cohort-search/cohort-delete-popup/cohort-delete.popup.component';
 import { CohortEnrolmentListComponent } from './cohort/cohort-enrolment-list/cohort-enrolment-list.component';
 import { FormADRComponent } from './form/form-adr/form-adr.component';
-import { LandingComponent } from './form/landing/landing.component';
 import { AttachmentAddPopupComponent } from './shared/attachment-add-popup/attachment-add.popup.component';
 import { ClinicalEventTaskPopupComponent } from './feedback/clinical-event-task-popup/clinical-event-task.popup.component';
 import { FormADRMedicationPopupComponent } from './shared/form-adr-medication-popup/form-adr-medication.popup.component';
@@ -51,7 +47,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { ClinicalEventViewPopupComponent } from './shared/clinical-event-view-popup/clinical-event-view.popup.component';
 import { AppointmentPopupComponent } from './patient/patient-view/appointment-popup/appointment.popup.component';
 import { FormGuidelinesPopupComponent } from './form/form-guidelines-popup/form-guidelines.popup.component';
-import { FormADRDynamicComponent } from './form/form-adr-dynamic/form-adr-dynamic.component';
+import { FormSelectComponent } from './form/form-select/form-select.component';
+import { FormDynamicComponent } from './form/form-dynamic/form-dynamic.component';
 
 @NgModule({
   imports: [
@@ -89,19 +86,16 @@ import { FormADRDynamicComponent } from './form/form-adr-dynamic/form-adr-dynami
     EncounterUpdatePopupComponent,
     EncounterViewComponent,
     FeedbackSearchComponent,
-    FormAComponent,
     FormADRComponent,
-    FormADRDynamicComponent,
     FormADRMedicationPopupComponent,
-    FormBComponent,
-    FormCComponent,
     FormDeletePopupComponent,
+    FormDynamicComponent,
     FormGuidelinesPopupComponent,
     FormListComponent,
+    FormSelectComponent,
     GenericArchivePopupComponent,
     GenericDeletePopupComponent,
     LabTestPopupComponent,
-    LandingComponent,
     MedicationPopupComponent,
     PatientAddPopupComponent,
     PatientSearchComponent,

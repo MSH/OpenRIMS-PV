@@ -91,7 +91,7 @@ export class FormViewerComponent extends BaseComponent implements OnInit, OnDest
   fetchView(): void {
     let self = this;
     self.setBusy(true);
-    self.metaFormService.getMetaForm(self.viewModel.formId, 'expanded')
+    self.metaFormService.getMetaForm(self.viewModel.formId, 'expandedwithunmappedattributes')
       .pipe(takeUntil(self._unsubscribeAll))
       .pipe(finalize(() => self.setBusy(false)))
       .subscribe(result => {

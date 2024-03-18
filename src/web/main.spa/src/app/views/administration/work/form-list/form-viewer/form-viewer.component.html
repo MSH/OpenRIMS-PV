@@ -74,24 +74,24 @@
                     <mat-tab label="{{'Form Attributes' | translate}}">
                       <mat-card class="p-12 rounded" [@animate]="{value:'50'}">
                         <mat-card-content class="text-center">
-                          <div class="light-gray p-12" *ngIf="filterSelectedAttributes(true, category.attributes)?.length == 0">
+                          <div class="light-gray p-12" *ngIf="category.attributes?.length == 0">
                             {{'No attributes have been selected yet. Please select an attribute from the unselected attributes tab ...' | translate}}
                           </div>
 
                           <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
-                            <div fxFlex="48" *ngFor="let attribute of filterSelectedAttributes(true, category.attributes)" class="m-02">
+                            <div fxFlex="48" *ngFor="let attribute of category.attributes" class="m-02">
                               <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
                                 <div fxFlex="100">
                                   <mat-form-field class="full-width" appearance="outline">
                                     <mat-label>{{attribute.label}}</mat-label>
-                                    <input matInput formControlName="{{attribute.id}}" readonly >
+                                    <input matInput readonly >
                                     <mat-hint>
                                       {{attribute.help}}
                                     </mat-hint>
                                     <mat-icon matPrefix style="cursor: pointer;" (click)="openCategoryAttributeConfigurePopup(attribute)">edit</mat-icon>
                                     <mat-icon matSuffix color="warn"  style="cursor: pointer;" (click)="deleteAttribute(attribute)">delete</mat-icon>
                                   </mat-form-field>                                  
-                              </div>
+                                </div>
                               </div>
                             </div>
                           </div>                          
@@ -100,7 +100,7 @@
                     </mat-tab>
 
                     <mat-tab label="{{'Unselected Attributes' | translate}}">
-                      <mat-card class="p-12 rounded" *ngIf="filterSelectedAttributes(false, category.attributes)?.length > 0" [@animate]="{value:'50'}">
+                      <mat-card class="p-12 rounded" *ngIf="category.unmappedAttributes?.length > 0" [@animate]="{value:'50'}">
                         <mat-card-title class="">
                           <div class="card-title-text">
                             Unselected Attributes
@@ -112,8 +112,12 @@
                           </div>
     
                           <div fxLayout="row wrap" fxLayout.xs="column" fxLayoutGap="1.0%" fxLayoutAlign="start">
-                            <div *ngFor="let attribute of filterSelectedAttributes(false, category.attributes)" class="p-05 m-02">
-                              <button mat-raised-button color="" (click)="openCategoryAttributeConfigurePopup(attribute)">
+                            <div *ngFor="let attribute of category.unmappedAttributes" class="p-05 m-02">
+                              <button mat-raised-button color="" (click)="openCategoryAttributeConfigurePopup(attribute)" *ngIf="attribute.attributeId == undefined">
+                                <mat-icon>add_circle</mat-icon>
+                                {{attribute.attributeName}}
+                              </button>
+                              <button mat-raised-button color="accent" (click)="openCategoryAttributeConfigurePopup(attribute)" *ngIf="attribute.attributeId != undefined">
                                 <mat-icon>add_circle</mat-icon>
                                 {{attribute.attributeName}}
                               </button>

@@ -195,6 +195,8 @@ namespace OpenRIMS.PV.Main.API
                     jsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.main.detail.v1+json");
                     jsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.main.summary.v1+json");
                     jsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.main.expanded.v1+json");
+                    jsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.main.expandedwithunmappedattributes.v1+json");
+                    jsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.main.expandedwithoutunmappedattributes.v1+json");
                     jsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.main.search.v1+json");
                     jsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.main.groupvalue.v1+json");
                     jsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.main.commonmeddra.v1+json");

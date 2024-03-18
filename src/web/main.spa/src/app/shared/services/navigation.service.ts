@@ -297,7 +297,7 @@ export class NavigationService {
         type: "link",
         tooltip: "View Forms for Capture",
         icon: "content_copy",
-        state: "clinical/form-landing"
+        state: "clinical/form-select"
       };      
       this.clinicalMenu.push(newMenu);
 

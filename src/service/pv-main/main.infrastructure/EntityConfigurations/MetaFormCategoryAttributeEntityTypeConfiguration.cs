@@ -18,10 +18,12 @@ namespace OpenRIMS.PV.Main.Infrastructure.EntityConfigurations
 
             configuration.Property(e => e.MetaFormCategoryAttributeGuid)
                 .IsRequired()
-                .HasColumnName("metaformcategory_guid");
+                .HasColumnName("metaformcategoryattribute_guid");
+
+            configuration.Property(e => e.AttributeName)
+                .IsRequired();
 
             configuration.Property(e => e.CustomAttributeConfigurationId)
-                .IsRequired()
                 .HasColumnName("Configuration_Id");
 
             configuration.Property(e => e.Label)
@@ -30,6 +32,21 @@ namespace OpenRIMS.PV.Main.Infrastructure.EntityConfigurations
 
             configuration.Property(e => e.Help)
                 .HasMaxLength(500);
+
+            configuration.Property(c => c.FormAttributeTypeId)
+                .IsRequired();
+
+            configuration.Property(c => c.IsRequired)
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            configuration.Property(c => c.FutureDateOnly)
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            configuration.Property(c => c.PastDateOnly)
+                .IsRequired()
+                .HasDefaultValue(false);
 
             configuration.HasOne(d => d.MetaFormCategory)
                 .WithMany(p => p.Attributes)

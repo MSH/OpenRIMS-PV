@@ -11,13 +11,17 @@ namespace OpenRIMS.PV.Main.API.Application.Queries.MetaFormAggregate
         [DataMember]
         public int MetaFormId { get; private set; }
 
+        [DataMember]
+        public bool IncludeUnmappedAttributes { get; private set; }
+
         public MetaFormExpandedQuery()
         {
         }
 
-        public MetaFormExpandedQuery(int metaFormId) : this()
+        public MetaFormExpandedQuery(int metaFormId, bool includeUnmappedAttributes) : this()
         {
             MetaFormId = metaFormId;
+            IncludeUnmappedAttributes = includeUnmappedAttributes;
         }
     }
 }

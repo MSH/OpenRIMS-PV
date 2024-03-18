@@ -154,24 +154,7 @@ export class SynchroniseComponent extends BaseComponent implements OnInit, After
   viewForm(model: GridRecordModel = null): void {
     const self = this;
     console.log(model);
-    switch(model.formType) { 
-      case 'FormA': { 
-        self._router.navigate([_routes.clinical.forms.viewFormA(model.id)]);
-         break; 
-      } 
-      case 'FormB': { 
-        self._router.navigate([_routes.clinical.forms.viewFormB(model.id)]);
-         break; 
-      } 
-      case 'FormC': { 
-        self._router.navigate([_routes.clinical.forms.viewFormC(model.id)]);
-         break; 
-      } 
-      case 'FormADR': { 
-        self._router.navigate([_routes.clinical.forms.viewFormADR(model.id)]);
-         break; 
-      } 
-   }     
+    self._router.navigate([_routes.clinical.forms.viewFormDynamic(0, model.id)]);
   }
 
   viewMessagesPopUp(data: string[]) {

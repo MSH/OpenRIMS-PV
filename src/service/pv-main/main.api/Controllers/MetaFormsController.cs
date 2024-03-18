@@ -96,15 +96,44 @@ namespace OpenRIMS.PV.Main.API.Controllers
         /// </summary>
         /// <param name="id">The unique identifier for the meta form</param>
         /// <returns>An ActionResult of type MetaFormExpandedDto</returns>
-        [HttpGet("{id}", Name = "GetMetaFormByExpanded")]
+        [HttpGet("{id}", Name = "GetMetaFormByExpandedWithMappedAttributes")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [Produces("application/vnd.main.expanded.v1+json", "application/vnd.main.expanded.v1+xml")]
+        [Produces("application/vnd.main.expandedwithunmappedattributes.v1+json", "application/vnd.main.expandedwithunmappedattributes.v1+xml")]
         [RequestHeaderMatchesMediaType("Accept",
-            "application/vnd.main.expanded.v1+json", "application/vnd.main.expanded.v1+xml")]
-        public async Task<ActionResult<MetaFormExpandedDto>> GetMetaFormByExpanded(int id)
+            "application/vnd.main.expandedwithunmappedattributes.v1+json", "application/vnd.main.expandedwithunmappedattributes.v1+xml")]
+        public async Task<ActionResult<MetaFormExpandedDto>> GetMetaFormByExpandedWithMappedAttributes(int id)
         {
-            var query = new MetaFormExpandedQuery(id);
+            var query = new MetaFormExpandedQuery(id, true);
+
+            _logger.LogInformation(
+                "----- Sending query: MetaFormExpandedQuery - {id}",
+                id);
+
+            var queryResult = await _mediator.Send(query);
+
+            if (queryResult == null)
+            {
+                return BadRequest("Query not created");
+            }
+
+            return Ok(queryResult);
+        }
+
+        /// <summary>
+        /// Get a single meta form unique ID and valid media type 
+        /// </summary>
+        /// <param name="id">The unique identifier for the meta form</param>
+        /// <returns>An ActionResult of type MetaFormExpandedDto</returns>
+        [HttpGet("{id}", Name = "GetMetaFormByExpandedWithoutMappedAttributes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [Produces("application/vnd.main.expandedwithoutunmappedattributes.v1+json", "application/vnd.main.expandedwithoutunmappedattributes.v1+xml")]
+        [RequestHeaderMatchesMediaType("Accept",
+            "application/vnd.main.expandedwithoutunmappedattributes.v1+json", "application/vnd.main.expandedwithoutunmappedattributes.v1+xml")]
+        public async Task<ActionResult<MetaFormExpandedDto>> GetMetaFormByExpandedWithoutMappedAttributes(int id)
+        {
+            var query = new MetaFormExpandedQuery(id, false);
 
             _logger.LogInformation(
                 "----- Sending query: MetaFormExpandedQuery - {id}",

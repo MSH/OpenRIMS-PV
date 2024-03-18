@@ -16,6 +16,7 @@ namespace OpenRIMS.PV.Main.API.MapperProfiles
                 .ForMember(dest => dest.System, opt => opt.MapFrom(src => src.IsSystem ? "Yes" : "No"));
             CreateMap<MetaForm, MetaFormExpandedDto>()
                 .ForMember(dest => dest.MetaFormGuid, opt => opt.MapFrom(src => src.MetaFormGuid))
+                .ForMember(dest => dest.CohortGroupId, opt => opt.MapFrom(src => src.CohortGroup.Id))
                 .ForMember(dest => dest.CohortGroup, opt => opt.MapFrom(src => src.CohortGroup.CohortName))
                 .ForMember(dest => dest.System, opt => opt.MapFrom(src => src.IsSystem ? "Yes" : "No"));
 
@@ -23,7 +24,9 @@ namespace OpenRIMS.PV.Main.API.MapperProfiles
                 .ForMember(dest => dest.MetaTableName, opt => opt.MapFrom(src => src.MetaTable.TableName));
 
             CreateMap<MetaFormCategoryAttribute, MetaFormCategoryAttributeDto>()
-                .ForMember(dest => dest.AttributeName, opt => opt.MapFrom(src => src.CustomAttributeConfiguration.AttributeKey));
+                .ForMember(dest => dest.AttributeId, opt => opt.MapFrom(src => src.CustomAttributeConfigurationId))
+                .ForMember(dest => dest.Selected, opt => opt.MapFrom(src => "true"))
+                .ForMember(dest => dest.FormAttributeType, opt => opt.MapFrom(src => FormAttributeType.From(src.FormAttributeTypeId).Name));
         }
     }
 }
