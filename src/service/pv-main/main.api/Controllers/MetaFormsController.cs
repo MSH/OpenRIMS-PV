@@ -102,6 +102,7 @@ namespace OpenRIMS.PV.Main.API.Controllers
         [Produces("application/vnd.main.expandedwithunmappedattributes.v1+json", "application/vnd.main.expandedwithunmappedattributes.v1+xml")]
         [RequestHeaderMatchesMediaType("Accept",
             "application/vnd.main.expandedwithunmappedattributes.v1+json", "application/vnd.main.expandedwithunmappedattributes.v1+xml")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<MetaFormExpandedDto>> GetMetaFormByExpandedWithMappedAttributes(int id)
         {
             var query = new MetaFormExpandedQuery(id, true);
@@ -131,6 +132,7 @@ namespace OpenRIMS.PV.Main.API.Controllers
         [Produces("application/vnd.main.expandedwithoutunmappedattributes.v1+json", "application/vnd.main.expandedwithoutunmappedattributes.v1+xml")]
         [RequestHeaderMatchesMediaType("Accept",
             "application/vnd.main.expandedwithoutunmappedattributes.v1+json", "application/vnd.main.expandedwithoutunmappedattributes.v1+xml")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult<MetaFormExpandedDto>> GetMetaFormByExpandedWithoutMappedAttributes(int id)
         {
             var query = new MetaFormExpandedQuery(id, false);
