@@ -33,6 +33,7 @@ import { FormCompletePopupComponent } from '../form-complete-popup/form-complete
 import * as _moment from 'moment';
 import { MetaFormExpandedModel } from 'app/shared/models/meta/meta-form.expanded.model';
 import { PatientLabTestForUpdateModel } from 'app/shared/models/patient/patient-lab-test-for-update.model';
+import { FormDynamicLabsPopupComponent } from './form-dynamic-labs-popup/form-dynamic-labs.popup.component';
 
 const moment =  _moment;
 
@@ -254,6 +255,52 @@ export class FormDynamicComponent extends BaseComponent implements OnInit, After
 
     this.notify("Medication removed successfully!", "Medication");
   }
+
+  openLabPopup(data: any = {}, isNew?) {
+    let self = this;
+    let title = isNew ? 'Add Test and Procedure' : 'Update Test and Procedure';
+    let indexToUse = isNew ? self.viewModel.labTests.length + 1 : data.index;
+    
+    let existingLabTest = null;
+    if (!isNew) {
+      let actualIndex = self.viewModel.labTests.findIndex(m => m.index == indexToUse);
+      self.CLog(actualIndex, 'actual index');
+      existingLabTest = self.viewModel.labTests[actualIndex];
+    }
+    
+    let dialogRef: MatDialogRef<any> = self.dialog.open(FormDynamicLabsPopupComponent, {
+      width: '920px',
+      disableClose: true,
+      data: { title: title, labTestId: isNew ? 0: existingLabTest.id, index: indexToUse, existingLabTest }
+    })
+    dialogRef.afterClosed()
+      .subscribe(res => {
+        if(!res) {
+          // If user press cancel
+          return;
+        }
+        if(isNew) {
+          self.viewModel.labTests.push(res);
+        }
+        else {
+          let actualIndex = self.viewModel.labTests.findIndex(m => m.index == indexToUse);
+          self.viewModel.labTests[actualIndex] = res;
+        }
+    
+        self.viewModel.labTestGrid.updateBasic(self.viewModel.labTests);
+        // self.fifthFormGroup.reset();
+      })
+  }
+
+  removeLabTest(index: number): void {
+    let self = this;
+
+    let actualIndex = self.viewModel.labTests.findIndex(m => m.index == index);
+    self.viewModel.labTests.splice(actualIndex, 1)
+    this.viewModel.labTestGrid.updateBasic(self.viewModel.labTests);
+
+    this.notify("Test and procedure removed successfully!", "Test and Procedure");
+  }  
 
   saveFormOnline(): void {
     // const self = this;
