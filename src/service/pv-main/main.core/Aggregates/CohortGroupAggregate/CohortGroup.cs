@@ -5,7 +5,7 @@ namespace OpenRIMS.PV.Main.Core.Entities
 {
     public partial class CohortGroup : EntityBase
     {
-        protected CohortGroup()
+        public CohortGroup()
         {
             CohortGroupEnrolments = new HashSet<CohortGroupEnrolment>();
             EncounterTypeWorkPlans = new HashSet<EncounterTypeWorkPlan>();

@@ -19,7 +19,7 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
 {
     public class MainContextSeed
     {
-        public async Task SeedAsync(MainDbContext context, IWebHostEnvironment env, bool seedData, ILogger<MainContextSeed> logger)
+        public async Task SeedAsync(MainDbContext context, IWebHostEnvironment env, bool seedData, bool seedTestData, ILogger<MainContextSeed> logger)
         {
             var policy = CreatePolicy(logger, nameof(MainContextSeed));
 
@@ -67,15 +67,18 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
                         context.MetaTables.AddRange(PrepareMetaTables(context));
                         await context.SaveEntitiesAsync();
 
-                        // test environment
-                        context.EncounterTypes.AddRange(PrepareEncounterTypes(context));
-                        context.TerminologyMedDras.AddRange(PrepareMeddraTerms(context));
-                        context.MedicationForms.AddRange(PrepareMedicationForms(context));
-                        await context.SaveEntitiesAsync();
-                        context.Conditions.AddRange(PrepareConditions(context));
-                        await context.SaveEntitiesAsync();
-                        context.CohortGroups.AddRange(PrepareCohortGroups(context));
-                        await context.SaveEntitiesAsync();
+                        if(seedTestData)
+                        {
+                            // test environment
+                            context.EncounterTypes.AddRange(PrepareEncounterTypes(context));
+                            context.TerminologyMedDras.AddRange(PrepareMeddraTerms(context));
+                            context.MedicationForms.AddRange(PrepareMedicationForms(context));
+                            await context.SaveEntitiesAsync();
+                            context.Conditions.AddRange(PrepareConditions(context));
+                            await context.SaveEntitiesAsync();
+                            context.CohortGroups.AddRange(PrepareCohortGroups(context));
+                            await context.SaveEntitiesAsync();
+                        }
                     }
                 }
             });

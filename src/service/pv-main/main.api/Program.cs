@@ -56,7 +56,13 @@ namespace OpenRIMS.PV.Main.API
                     var logger = services.GetService<ILogger<MainContextSeed>>();
 
                     new MainContextSeed()
-                        .SeedAsync(context, env, providerSettings.GetValue<bool>(key: "SeedData"), logger)
+                        .SeedAsync(
+                            context, 
+                            env, 
+                            providerSettings.GetValue<bool>(key: "SeedData"),
+                            providerSettings.GetValue<bool>(key: "SeedTestData"), 
+                            logger
+                        )
                         .Wait();
                 });
 
