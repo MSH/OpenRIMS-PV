@@ -63,6 +63,19 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
                         context.SiteContactDetails.AddRange(PrepareSiteContactDetails(context));
                         context.TreatmentOutcomes.AddRange(PrepareTreatmentOutcomes(context));
                         await context.SaveEntitiesAsync();
+
+                        context.MetaTables.AddRange(PrepareMetaTables(context));
+                        await context.SaveEntitiesAsync();
+
+                        // test environment
+                        context.EncounterTypes.AddRange(PrepareEncounterTypes(context));
+                        context.TerminologyMedDras.AddRange(PrepareMeddraTerms(context));
+                        context.MedicationForms.AddRange(PrepareMedicationForms(context));
+                        await context.SaveEntitiesAsync();
+                        context.Conditions.AddRange(PrepareConditions(context));
+                        await context.SaveEntitiesAsync();
+                        context.CohortGroups.AddRange(PrepareCohortGroups(context));
+                        await context.SaveEntitiesAsync();
                     }
                 }
             });
@@ -290,6 +303,34 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
             return careEvents;
         }
 
+        private static IEnumerable<CohortGroup> PrepareCohortGroups(MainDbContext context)
+        {
+            List<CohortGroup> cohorts = new List<CohortGroup>();
+
+            if (!context.CohortGroups.Any(ce => ce.CohortName == "Pyramax"))
+            {
+                var condition = context.Conditions.Single(c => c.Description == "TB");
+                cohorts.Add(new CohortGroup("Pyramax", "PYR", condition, DateTime.Now.Date, null));
+            }
+
+            return cohorts;
+        }
+
+        private static IEnumerable<Condition> PrepareConditions(MainDbContext context)
+        {
+            List<Condition> conditions = new List<Condition>();
+
+            if (!context.Conditions.Any(ce => ce.Description == "TB"))
+            {
+                var term = context.TerminologyMedDras.Single(t => t.MedDraTerm == "Tuberculosis");
+                var condition = new Condition { Description = "TB", Chronic = true, Active = true };
+                condition.ConditionMedDras.Add(new ConditionMedDra { TerminologyMedDra = term });
+                conditions.Add(condition);
+            }
+
+            return conditions;
+        }
+
         private static IEnumerable<Config> PrepareConfigs(MainDbContext context)
         {
             List<Config> configs = new List<Config>();
@@ -393,6 +434,25 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
                 datasetElementTypes.Add(new DatasetElementType { Description = "Generic" });
 
             return datasetElementTypes;
+        }
+
+        private static IEnumerable<EncounterType> PrepareEncounterTypes(MainDbContext context)
+        {
+            List<EncounterType> encounterTypes = new List<EncounterType>();
+
+            if (!context.EncounterTypes.Any(ce => ce.Description == "Pre-Treatment Visit"))
+                encounterTypes.Add(new EncounterType { Description = "Pre-Treatment Visit" });
+
+            if (!context.EncounterTypes.Any(ce => ce.Description == "Treatment Initiation Visit"))
+                encounterTypes.Add(new EncounterType { Description = "Treatment Initiation Visit" });
+
+            if (!context.EncounterTypes.Any(ce => ce.Description == "Scheduled Follow-Up Visit"))
+                encounterTypes.Add(new EncounterType { Description = "Scheduled Follow-Up Visit" });
+
+            if (!context.EncounterTypes.Any(ce => ce.Description == "Unscheduled Visit"))
+                encounterTypes.Add(new EncounterType { Description = "Unscheduled Visit" });
+
+            return encounterTypes;
         }
 
         private static IEnumerable<FacilityType> PrepareFacilityTypes(MainDbContext context)
@@ -612,6 +672,22 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
             return labTestUnits;
         }
 
+        private static IEnumerable<MedicationForm> PrepareMedicationForms(MainDbContext context)
+        {
+            List<MedicationForm> medicationForms = new List<MedicationForm>();
+
+            if (!context.MedicationForms.Any(ce => ce.Description == "Tablet"))
+                medicationForms.Add(new MedicationForm { Description = "Tablet" });
+
+            if (!context.MedicationForms.Any(ce => ce.Description == "Capsule"))
+                medicationForms.Add(new MedicationForm { Description = "Capsule" });
+
+            if (!context.MedicationForms.Any(ce => ce.Description == "Injection"))
+                medicationForms.Add(new MedicationForm { Description = "Injection" });
+
+            return medicationForms;
+        }
+
         private static IEnumerable<MetaColumnType> PrepareMetaColumnTypes(MainDbContext context)
         {
             List<MetaColumnType> metaColumnTypes = new List<MetaColumnType>();
@@ -668,6 +744,61 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
                 metaColumnTypes.Add(new MetaColumnType { MetaColumnTypeGuid = new Guid("289C8787-9103-44ED-B101-99C7BF2270DB"), Description = "varchar" });
 
             return metaColumnTypes;
+        }
+
+        private static IEnumerable<MetaTable> PrepareMetaTables(MainDbContext context)
+        {
+            List<MetaTable> metaTables = new List<MetaTable>();
+
+            if (!context.MetaTables.Any(mt => mt.TableName == "Patient"))
+            {
+                var tableType = context.MetaTableTypes.Single(t => t.Description == "Core");
+                metaTables.Add(new MetaTable { MetaTableGuid = new Guid("BF8CB037-CFE6-4904-99E2-A9AD5648C1E9"), TableName = "Patient", FriendlyName = "Patient", FriendlyDescription = "Core patient table", TableType = tableType });
+            }
+
+            if (!context.MetaTables.Any(mt => mt.TableName == "PatientClinicalEvent"))
+            {
+                var tableType = context.MetaTableTypes.Single(t => t.Description == "CoreChild");
+                metaTables.Add(new MetaTable { MetaTableGuid = new Guid("47B9AB15-D2F6-4A9E-BB5D-9ECB0BA4E962"), TableName = "PatientClinicalEvent", FriendlyName = "Patient Adverse Events", FriendlyDescription = "Patient adverse event history", TableType = tableType });
+            }
+
+            if (!context.MetaTables.Any(mt => mt.TableName == "PatientCondition"))
+            {
+                var tableType = context.MetaTableTypes.Single(t => t.Description == "CoreChild");
+                metaTables.Add(new MetaTable { MetaTableGuid = new Guid("198FC6F6-F3A3-4D14-957C-89D2036D70E9"), TableName = "PatientCondition", FriendlyName = "Patient Conditions", FriendlyDescription = "Patient condition history", TableType = tableType });
+            }
+
+            if (!context.MetaTables.Any(mt => mt.TableName == "PatientFacility"))
+            {
+                var tableType = context.MetaTableTypes.Single(t => t.Description == "History");
+                metaTables.Add(new MetaTable { MetaTableGuid = new Guid("7F5A0F37-11EE-425B-BC2B-BDF990BF5C86"), TableName = "PatientFacility", FriendlyName = "Current Facility", FriendlyDescription = "Current facility", TableType = tableType });
+            }
+
+            if (!context.MetaTables.Any(mt => mt.TableName == "PatientLabTest"))
+            {
+                var tableType = context.MetaTableTypes.Single(t => t.Description == "CoreChild");
+                metaTables.Add(new MetaTable { MetaTableGuid = new Guid("8C90FB6B-BCA8-4FEF-8EE2-020902A400DA"), TableName = "PatientLabTest", FriendlyName = "Patien Lab Tests", FriendlyDescription = "Patient evaluation history", TableType = tableType });
+            }
+
+            if (!context.MetaTables.Any(mt => mt.TableName == "PatientMedication"))
+            {
+                var tableType = context.MetaTableTypes.Single(t => t.Description == "CoreChild");
+                metaTables.Add(new MetaTable { MetaTableGuid = new Guid("A90FBBD8-DC06-41F4-B30E-681A68B5E1AE"), TableName = "PatientMedication", FriendlyName = "Patient Medications", FriendlyDescription = "Patient medication history", TableType = tableType });
+            }
+
+            if (!context.MetaTables.Any(mt => mt.TableName == "Encounter"))
+            {
+                var tableType = context.MetaTableTypes.Single(t => t.Description == "Child");
+                metaTables.Add(new MetaTable { MetaTableGuid = new Guid("047EDD87-0DAB-4A7E-ABD8-8AAAF8CCBFF6"), TableName = "Encounter", FriendlyName = "Patient Encounters", FriendlyDescription = "Patient encounter history", TableType = tableType });
+            }
+
+            if (!context.MetaTables.Any(mt => mt.TableName == "CohortGroupEnrolment"))
+            {
+                var tableType = context.MetaTableTypes.Single(t => t.Description == "CoreChild");
+                metaTables.Add(new MetaTable { MetaTableGuid = new Guid("EC1F2FFF-5416-4E63-855B-731872136C1A"), TableName = "CohortGroupEnrolment", FriendlyName = "Cohort Enrolment", FriendlyDescription = "Patient cohort enrolments", TableType = tableType });
+            }
+
+            return metaTables;
         }
 
         private static IEnumerable<MetaTableType> PrepareMetaTableTypes(MainDbContext context)
@@ -811,6 +942,19 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
             }
 
             return siteContactDetails;
+        }
+
+        private static IEnumerable<TerminologyMedDra> PrepareMeddraTerms(MainDbContext context)
+        {
+            List<TerminologyMedDra> terms = new List<TerminologyMedDra>();
+
+            if (!context.TerminologyMedDras.Any(ce => ce.MedDraTerm == "Tuberculosis"))
+                terms.Add(new TerminologyMedDra { MedDraTerm = "Tuberculosis", MedDraCode = "10044755", MedDraTermType = "LLT ", MedDraVersion = "23.0", Common = false });
+
+            if (!context.TerminologyMedDras.Any(ce => ce.MedDraTerm == "HIV infection"))
+                terms.Add(new TerminologyMedDra { MedDraTerm = "HIV infection", MedDraCode = "10020161", MedDraTermType = "LLT ", MedDraVersion = "23.0", Common = false });
+
+            return terms;
         }
 
         private static IEnumerable<TreatmentOutcome> PrepareTreatmentOutcomes(MainDbContext context)
