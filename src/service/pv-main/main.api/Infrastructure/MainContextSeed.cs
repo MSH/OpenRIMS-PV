@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using OpenRIMS.PV.Main.Core.Aggregates.ConceptAggregate;
 
 namespace OpenRIMS.PV.Main.API.Infrastructure
 {
@@ -54,6 +55,7 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
                         context.LabResults.AddRange(PrepareLabResults(context));
                         context.LabTestUnits.AddRange(PrepareLabTestUnits(context));
                         context.MetaColumnTypes.AddRange(PrepareMetaColumnTypes(context));
+                        context.MetaPages.AddRange(PrepareMetaPages(context));
                         context.MetaTableTypes.AddRange(PrepareMetaTableTypes(context));
                         context.MetaWidgetTypes.AddRange(PrepareMetaWidgetTypes(context));
                         context.OrgUnitTypes.AddRange(PrepareOrgUnitTypes(context));
@@ -73,11 +75,18 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
                             context.EncounterTypes.AddRange(PrepareEncounterTypes(context));
                             context.TerminologyMedDras.AddRange(PrepareMeddraTerms(context));
                             context.MedicationForms.AddRange(PrepareMedicationForms(context));
+                            context.Facilities.AddRange(PrepareFacilities(context));
+                            context.LabTests.AddRange(PrepareLabTests(context));
                             await context.SaveEntitiesAsync();
+                            context.Concepts.AddRange(PrepareConcepts(context));
                             context.Conditions.AddRange(PrepareConditions(context));
                             await context.SaveEntitiesAsync();
                             context.CohortGroups.AddRange(PrepareCohortGroups(context));
                             await context.SaveEntitiesAsync();
+
+                            // default meta page 
+                            // medication -  Pyramax China 
+                            // lab test - Sputum
                         }
                     }
                 }
@@ -319,6 +328,19 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
             return cohorts;
         }
 
+        private static IEnumerable<Concept> PrepareConcepts(MainDbContext context)
+        {
+            List<Concept> concepts = new List<Concept>();
+
+            if (!context.Concepts.Any(c => c.ConceptName == "Anti-malarial PYRAMAX"))
+            {
+                var medicationForm = context.MedicationForms.Single(mf => mf.Description == "Tablet");
+                concepts.Add(new Concept("Anti-malarial PYRAMAX", "180mg/60mg", medicationForm));
+            }
+
+            return concepts;
+        }
+
         private static IEnumerable<Condition> PrepareConditions(MainDbContext context)
         {
             List<Condition> conditions = new List<Condition>();
@@ -458,6 +480,27 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
             return encounterTypes;
         }
 
+        private static IEnumerable<Facility> PrepareFacilities(MainDbContext context)
+        {
+            List<Facility> facilities = new List<Facility>();
+
+            var type = context.FacilityTypes.Single(ft => ft.Description == "Unknown");
+
+            if (!context.Facilities.Any(f => f.FacilityName == "Centre de Santé et de Promotion Sociale (CSPS) de Nandiala"))
+                facilities.Add(new Facility("Centre de Santé et de Promotion Sociale (CSPS) de Nandiala", "CS1", type, "TBD", "TBD", "TBD", null));
+
+            if (!context.Facilities.Any(f => f.FacilityName == "CSPS d'Imasgho"))
+                facilities.Add(new Facility("CSPS d'Imasgho", "CS2", type, "TBD", "TBD", "TBD", null));
+
+            if (!context.Facilities.Any(f => f.FacilityName == "CSPS de Salbisgo"))
+                facilities.Add(new Facility("CSPS de Salbisgo", "CS3", type, "TBD", "TBD", "TBD", null));
+
+            if (!context.Facilities.Any(f => f.FacilityName == "Centre Médical (CM) de Koudougou"))
+                facilities.Add(new Facility("Centre Médical (CM) de Koudougou", "CS4", type, "TBD", "TBD", "TBD", null));
+
+            return facilities;
+        }
+
         private static IEnumerable<FacilityType> PrepareFacilityTypes(MainDbContext context)
         {
             List<FacilityType> facilityTypes = new List<FacilityType>();
@@ -546,6 +589,16 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
                 labResults.Add(new LabResult { Description = "Progressed" });
 
             return labResults;
+        }
+
+        private static IEnumerable<LabTest> PrepareLabTests(MainDbContext context)
+        {
+            List<LabTest> labTests = new List<LabTest>();
+
+            if (!context.LabTests.Any(lt => lt.Description == "Sputum"))
+                labTests.Add(new LabTest { Active = true, Description = "Sputum" });
+
+            return labTests;
         }
 
         private static IEnumerable<LabTestUnit> PrepareLabTestUnits(MainDbContext context)
@@ -747,6 +800,18 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
                 metaColumnTypes.Add(new MetaColumnType { MetaColumnTypeGuid = new Guid("289C8787-9103-44ED-B101-99C7BF2270DB"), Description = "varchar" });
 
             return metaColumnTypes;
+        }
+
+        private static IEnumerable<MetaPage> PrepareMetaPages(MainDbContext context)
+        {
+            List<MetaPage> metaPages = new List<MetaPage>();
+
+            if (!context.MetaPages.Any(mp => mp.PageName == "Home"))
+            {
+                metaPages.Add(new MetaPage { MetaPageGuid = new Guid("a63e9f29-a22f-43df-87a0-d0c8dec50548"), PageName = "Home", PageDefinition = "Home", MetaDefinition = "*** NOT DEFINED ***", Breadcrumb = "Home", IsSystem = true, IsVisible = true });
+            }
+
+            return metaPages;
         }
 
         private static IEnumerable<MetaTable> PrepareMetaTables(MainDbContext context)
@@ -956,6 +1021,9 @@ namespace OpenRIMS.PV.Main.API.Infrastructure
 
             if (!context.TerminologyMedDras.Any(ce => ce.MedDraTerm == "HIV infection"))
                 terms.Add(new TerminologyMedDra { MedDraTerm = "HIV infection", MedDraCode = "10020161", MedDraTermType = "LLT ", MedDraVersion = "23.0", Common = false });
+
+            if (!context.TerminologyMedDras.Any(ce => ce.MedDraTerm == "Malaria NOS"))
+                terms.Add(new TerminologyMedDra { MedDraTerm = "Malaria NOS", MedDraCode = "10025489", MedDraTermType = "LLT ", MedDraVersion = "23.0", Common = false });
 
             return terms;
         }
