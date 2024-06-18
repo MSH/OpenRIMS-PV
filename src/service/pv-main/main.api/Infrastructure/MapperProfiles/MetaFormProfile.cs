@@ -25,6 +25,7 @@ namespace OpenRIMS.PV.Main.API.MapperProfiles
 
             CreateMap<MetaFormCategoryAttribute, MetaFormCategoryAttributeDto>()
                 .ForMember(dest => dest.AttributeId, opt => opt.MapFrom(src => src.CustomAttributeConfigurationId))
+                .ForMember(dest => dest.Required, opt => opt.MapFrom(src => src.IsRequired))
                 .ForMember(dest => dest.Selected, opt => opt.MapFrom(src => "true"))
                 .ForMember(dest => dest.FormAttributeType, opt => opt.MapFrom(src => FormAttributeType.From(src.FormAttributeTypeId).Name));
         }

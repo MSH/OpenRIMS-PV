@@ -19,6 +19,7 @@ namespace OpenRIMS.PV.Main.API.Application.Queries.MetaFormAggregate
         : IRequestHandler<MetaFormExpandedQuery, MetaFormExpandedDto>
     {
         private readonly IRepositoryInt<CustomAttributeConfiguration> _customAttributeConfigurationRepository;
+        private readonly IRepositoryInt<Facility> _facilityRepository;
         private readonly IRepositoryInt<MetaForm> _metaFormRepository;
         private readonly IRepositoryInt<SelectionDataItem> _selectionDataItemRepository;
         private readonly ILinkGeneratorService _linkGeneratorService;
@@ -27,6 +28,7 @@ namespace OpenRIMS.PV.Main.API.Application.Queries.MetaFormAggregate
 
         public MetaFormExpandedQueryHandler(
             IRepositoryInt<CustomAttributeConfiguration> customAttributeConfigurationRepository,
+            IRepositoryInt<Facility> facilityRepository,
             IRepositoryInt<MetaForm> metaFormRepository,
             IRepositoryInt<SelectionDataItem> selectionDataItemRepository,
             ILinkGeneratorService linkGeneratorService,
@@ -34,6 +36,7 @@ namespace OpenRIMS.PV.Main.API.Application.Queries.MetaFormAggregate
             ILogger<MetaFormExpandedQueryHandler> logger)
         {
             _customAttributeConfigurationRepository = customAttributeConfigurationRepository ?? throw new ArgumentNullException(nameof(customAttributeConfigurationRepository));
+            _facilityRepository = facilityRepository ?? throw new ArgumentNullException(nameof(facilityRepository));
             _metaFormRepository = metaFormRepository ?? throw new ArgumentNullException(nameof(metaFormRepository));
             _selectionDataItemRepository = selectionDataItemRepository ?? throw new ArgumentNullException(nameof(selectionDataItemRepository));
             _linkGeneratorService = linkGeneratorService ?? throw new ArgumentNullException(nameof(linkGeneratorService));
@@ -119,7 +122,14 @@ namespace OpenRIMS.PV.Main.API.Application.Queries.MetaFormAggregate
         {
             foreach (var attribute in category.Attributes.Where(a => a.FormAttributeType == "DropDownList"))
             {
-                CreateSelectionValues(attribute);
+                if(attribute.AttributeName == "PatientFacilities")
+                {
+                    CreateSelectionValuesForFacility(attribute);
+                }
+                else
+                {
+                    CreateSelectionValues(attribute);
+                }
             }
 
             // include unmapped fields if required
@@ -195,6 +205,17 @@ namespace OpenRIMS.PV.Main.API.Application.Queries.MetaFormAggregate
                 {
                     SelectionKey = ss.SelectionKey,
                     Value = ss.Value
+                })
+                .ToList();
+        }
+
+        private void CreateSelectionValuesForFacility(MetaFormCategoryAttributeDto dto)
+        {
+            dto.SelectionDataItems = _facilityRepository.List()
+                .Select(ss => new SelectionDataItemDto()
+                {
+                    SelectionKey = ss.FacilityName.ToString(),
+                    Value = ss.FacilityName
                 })
                 .ToList();
         }
