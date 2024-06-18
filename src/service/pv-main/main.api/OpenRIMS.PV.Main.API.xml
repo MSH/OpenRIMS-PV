@@ -2656,6 +2656,62 @@
             Additional help associated to the category attribute
             </summary>
         </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryAttributeDto.Selected">
+            <summary>
+            Is the attribute a placeholder or has it been configured previously
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryAttributeDto.FormAttributeType">
+            <summary>
+            The type of attribute  
+            Valid options are string, selection, DateTime, Numeric
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryAttributeDto.Required">
+            <summary>
+            Is this attribute mandatory
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryAttributeDto.StringMaxLength">
+            <summary>
+            Maximum string length for string based attributes
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryAttributeDto.NumericMinValue">
+            <summary>
+            Minimum value in a min max range for numeric based attributes
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryAttributeDto.NumericMaxValue">
+            <summary>
+            Maximum value in a min max range for numeric based attributes
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryAttributeDto.SelectionDataItems">
+            <summary>
+            A list of selection values associated to the attribute (if applicable)
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryAttributeForUpdateDto.AttributeName">
+            <summary>
+            The unique name of the attribute, first class or custom attribute
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryAttributeForUpdateDto.CustomAttributeConfigurationId">
+            <summary>
+            The unique id of the custom attribute if one has been selected
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryAttributeForUpdateDto.Label">
+            <summary>
+            Label associated to the attribute
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryAttributeForUpdateDto.Help">
+            <summary>
+            Additional help for the attribute
+            </summary>
+        </member>
         <member name="T:OpenRIMS.PV.Main.API.Models.MetaFormCategoryDto">
             <summary>
             A meta form category representation containing a list of categories available in a form
@@ -2664,6 +2720,11 @@
         <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryDto.Id">
             <summary>
             The unique id of the category
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryDto.MetaTableId">
+            <summary>
+            The name of the meta table the category is associated to
             </summary>
         </member>
         <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryDto.MetaTableName">
@@ -2696,6 +2757,31 @@
             A list of elements that have been associated to this category
             </summary>
         </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryDto.UnmappedAttributes">
+            <summary>
+            A list of elements that have been associated to this category
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryForUpdateDto.MetaTableId">
+            <summary>
+            The unique id of the meta table
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryForUpdateDto.CategoryName">
+            <summary>
+            The name of the category
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryForUpdateDto.Help">
+            <summary>
+            Additional help for the caegory
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormCategoryForUpdateDto.Icon">
+            <summary>
+            Icon associated to the category
+            </summary>
+        </member>
         <member name="T:OpenRIMS.PV.Main.API.Models.MetaFormDetailDto">
             <summary>
             A meta form representation DTO - FULL DETAILS
@@ -2704,6 +2790,11 @@
         <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormDetailDto.System">
             <summary>
             Is this a system form
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormDetailDto.CohortGroupId">
+            <summary>
+            The unique id of the cohort group that the meta form belongs to
             </summary>
         </member>
         <member name="P:OpenRIMS.PV.Main.API.Models.MetaFormDetailDto.CohortGroup">
@@ -8046,7 +8137,14 @@
             <param name="id">The unique identifier for the meta form</param>
             <returns>An ActionResult of type MetaFormIdentifierDto</returns>
         </member>
-        <member name="M:OpenRIMS.PV.Main.API.Controllers.MetaFormsController.GetMetaFormByExpanded(System.Int32)">
+        <member name="M:OpenRIMS.PV.Main.API.Controllers.MetaFormsController.GetMetaFormByExpandedWithMappedAttributes(System.Int32)">
+            <summary>
+            Get a single meta form unique ID and valid media type 
+            </summary>
+            <param name="id">The unique identifier for the meta form</param>
+            <returns>An ActionResult of type MetaFormExpandedDto</returns>
+        </member>
+        <member name="M:OpenRIMS.PV.Main.API.Controllers.MetaFormsController.GetMetaFormByExpandedWithoutMappedAttributes(System.Int32)">
             <summary>
             Get a single meta form unique ID and valid media type 
             </summary>
@@ -8067,6 +8165,74 @@
             Create a new meta form
             </summary>
             <param name="metaFormForUpdate">The meta form payload</param>
+            <returns></returns>
+        </member>
+        <member name="M:OpenRIMS.PV.Main.API.Controllers.MetaFormsController.UpdateMetaForm(System.Int32,OpenRIMS.PV.Main.API.Models.MetaFormForUpdateDto)">
+            <summary>
+            Update a meta form
+            </summary>
+            <param name="id">The unique id of the meta form</param>
+            <param name="metaFormForUpdate">The meta form payload</param>
+            <returns></returns>
+        </member>
+        <member name="M:OpenRIMS.PV.Main.API.Controllers.MetaFormsController.DeleteMetaForm(System.Int32)">
+            <summary>
+            Delete a meta form
+            </summary>
+            <param name="id">The unique id of the form</param>
+            <returns></returns>
+        </member>
+        <member name="M:OpenRIMS.PV.Main.API.Controllers.MetaFormsController.CreateMetaFormCategory(System.Int32,OpenRIMS.PV.Main.API.Models.MetaFormCategoryForUpdateDto)">
+            <summary>
+            Create a new meta form category
+            </summary>
+            <param name="metaFormId">The unique id of the meta form</param>
+            <param name="metaFormCategoryForUpdate">The meta form category payload</param>
+            <returns></returns>
+        </member>
+        <member name="M:OpenRIMS.PV.Main.API.Controllers.MetaFormsController.UpdateMetaFormCategory(System.Int32,System.Int32,OpenRIMS.PV.Main.API.Models.MetaFormCategoryForUpdateDto)">
+            <summary>
+            Update a meta form category
+            </summary>
+            <param name="metaFormId">The unique id of the meta form</param>
+            <param name="id">The unique id of the meta form category</param>
+            <param name="metaFormCategoryForUpdate">The meta form category payload</param>
+            <returns></returns>
+        </member>
+        <member name="M:OpenRIMS.PV.Main.API.Controllers.MetaFormsController.DeleteMetaFormCategory(System.Int32,System.Int32)">
+            <summary>
+            Delete a meta form category
+            </summary>
+            <param name="metaFormId">The unique id of the meta form</param>
+            <param name="id">The unique id of the category</param>
+            <returns></returns>
+        </member>
+        <member name="M:OpenRIMS.PV.Main.API.Controllers.MetaFormsController.CreateMetaFormCategoryAttribute(System.Int32,System.Int32,OpenRIMS.PV.Main.API.Models.MetaFormCategoryAttributeForUpdateDto)">
+            <summary>
+            Create a new meta form category attribute
+            </summary>
+            <param name="metaFormId">The unique id of the meta form category</param>
+            <param name="metaFormCategoryId">The unique id of the meta form category</param>
+            <param name="metaFormCategoryAttributeForUpdate">The meta form category attribute payload</param>
+            <returns></returns>
+        </member>
+        <member name="M:OpenRIMS.PV.Main.API.Controllers.MetaFormsController.UpdateMetaFormCategoryAttribute(System.Int32,System.Int32,System.Int32,OpenRIMS.PV.Main.API.Models.MetaFormCategoryAttributeForUpdateDto)">
+            <summary>
+            Update a meta form category attribute
+            </summary>
+            <param name="metaFormId">The unique id of the meta form</param>
+            <param name="metaFormCategoryId">The unique id of the meta form category</param>
+            <param name="id">The unique id of the attribute</param>
+            <param name="metaFormCategoryAttributeForUpdate">The meta form category attribute payload</param>
+            <returns></returns>
+        </member>
+        <member name="M:OpenRIMS.PV.Main.API.Controllers.MetaFormsController.DeleteMetaFormCategoryAttribute(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Delete a meta form category attribute
+            </summary>
+            <param name="metaFormId">The unique id of the meta form</param>
+            <param name="metaFormCategoryId">The unique id of the meta form category</param>
+            <param name="id">The unique id of the attribute</param>
             <returns></returns>
         </member>
         <member name="M:OpenRIMS.PV.Main.API.Controllers.MetaFormsController.CreateForm(OpenRIMS.PV.Main.API.Models.FormForCreationDto)">
