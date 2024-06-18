@@ -38,8 +38,8 @@ namespace OpenRIMS.PV.Main.API.Application.Queries.EncounterAggregate
                 var wherePatient = searchPatientId.HasValue ? $"AND p.Id = {searchPatientId}" : "";
                 var whereFirstName = !String.IsNullOrWhiteSpace(searchFirstName) ? $"AND p.FirstName LIKE '%{searchFirstName}%'" : "";
                 var whereLastName = !String.IsNullOrWhiteSpace(searchLastName) ? $"AND p.Surname LIKE '%{searchLastName}%'" : "";
-                var whereSearchFrom = searchFrom.HasValue ? $"AND e.EncounterDate >= '%{searchFrom.Value.ToString("yyyy-MM-dd")}%'" : "";
-                var whereSearchTo = searchTo.HasValue ? $"AND e.EncounterDate <= '%{searchTo.Value.ToString("yyyy-MM-dd")}%'" : "";
+                var whereSearchFrom = searchFrom.HasValue ? $"AND e.EncounterDate >= '{searchFrom.Value.ToString("yyyy-MM-dd")}'" : "";
+                var whereSearchTo = searchTo.HasValue ? $"AND e.EncounterDate <= '{searchTo.Value.ToString("yyyy-MM-dd")}'" : "";
                 var whereCustomAttribute = !String.IsNullOrWhiteSpace(customAttributeKey) && !String.IsNullOrWhiteSpace(customAttributeValue) ? $"AND X.Y.value('(Key)[1]', 'VARCHAR(MAX)') = '%{customAttributeKey}%' AND X.Y.value('(Value)[1]', 'VARCHAR(MAX)')  LIKE '%{customAttributeValue}%'" : "";
 
                 var sql = $@"
