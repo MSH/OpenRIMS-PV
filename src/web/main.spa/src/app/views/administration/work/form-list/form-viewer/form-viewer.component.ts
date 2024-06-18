@@ -134,6 +134,7 @@ export class FormViewerComponent extends BaseComponent implements OnInit, OnDest
           // If user press cancel
           return;
         }
+        self.navigationSubscription.unsubscribe();
         self.navigationService.routeToAdminLanding();
       })
   }
