@@ -82,7 +82,7 @@ namespace OpenRIMS.PV.Main.API.MapperProfiles
                 .ForMember(dest => dest.EncounterTypeName, opt => opt.MapFrom(src => src.Description));
             CreateMap<EncounterType, EncounterTypeDetailDto>()
                 .ForMember(dest => dest.EncounterTypeName, opt => opt.MapFrom(src => src.Description))
-                .ForMember(dest => dest.WorkPlanName, opt => opt.MapFrom(src => src.EncounterTypeWorkPlans.First().WorkPlan.Description));
+                .ForMember(dest => dest.WorkPlanName, opt => opt.MapFrom(src => src.EncounterTypeWorkPlans.FirstOrDefault().WorkPlan.Description));
 
             CreateMap<WorkPlan, WorkPlanIdentifierDto>()
                 .ForMember(dest => dest.WorkPlanName, opt => opt.MapFrom(src => src.Description));
