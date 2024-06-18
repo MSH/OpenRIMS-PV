@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { PopupService } from 'app/shared/services/popup.service';
 import { egretAnimations } from 'app/shared/animations/egret-animations';
@@ -8,22 +8,19 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BaseComponent } from 'app/shared/base/base.component';
 import { EventService } from 'app/shared/services/event.service';
 import { PatientService } from 'app/shared/services/patient.service';
-import { concatMap, finalize, switchMap, takeUntil } from 'rxjs/operators';
+import { finalize, takeUntil, switchMap } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AttachmentAddPopupComponent } from '../../shared/attachment-add-popup/attachment-add.popup.component';
 import { FormAttachmentModel } from 'app/shared/models/form/form-attachment.model';
 import { GridModel } from 'app/shared/models/grid.model';
 import { PatientMedicationForUpdateModel } from 'app/shared/models/patient/patient-medication-for-update.model';
-import { PatientClinicalEventForUpdateModel } from 'app/shared/models/patient/patient-clinical-event-for-update.model';
-import { forkJoin, from, Observable, of } from 'rxjs';
+import { forkJoin, Observable, of} from 'rxjs';
 import { CustomAttributeDetailModel } from 'app/shared/models/custom-attribute/custom-attribute.detail.model';
 import { CustomAttributeService } from 'app/shared/services/custom-attribute.service';
 import { _routes } from 'app/config/routes';
 import { AttributeValueForPostModel } from 'app/shared/models/custom-attribute/attribute-value-for-post.model';
-import { PatientMedicationDetailModel } from 'app/shared/models/patient/patient-medication.detail.model';
 import { FormADRMedicationPopupComponent } from '../../shared/form-adr-medication-popup/form-adr-medication.popup.component';
 import { MetaFormService } from 'app/shared/services/meta-form.service';
-import { Form } from 'app/shared/indexed-db/appdb';
 import { FormCompletePopupComponent } from '../form-complete-popup/form-complete.popup.component';
 
 // Depending on whether rollup is used, moment needs to be imported differently.
@@ -32,8 +29,14 @@ import { FormCompletePopupComponent } from '../form-complete-popup/form-complete
 // the `default as` syntax.
 import * as _moment from 'moment';
 import { MetaFormExpandedModel } from 'app/shared/models/meta/meta-form.expanded.model';
+import { MetaFormCategoryAttributeModel } from 'app/shared/models/meta/meta-form-category-attribute.model';
 import { PatientLabTestForUpdateModel } from 'app/shared/models/patient/patient-lab-test-for-update.model';
 import { FormDynamicLabsPopupComponent } from './form-dynamic-labs-popup/form-dynamic-labs.popup.component';
+import { PatientForCreationModel } from 'app/shared/models/patient/patient-for-creation.model';
+import { PatientConditionForUpdateModel } from 'app/shared/models/patient/patient-condition-for-update.model';
+import { FormDynamicConditionsPopupComponent } from './form-dynamic-conditions-popup/form-dynamic-conditions.popup.component';
+import { PatientClinicalEventForUpdateModel } from 'app/shared/models/patient/patient-clinical-event-for-update.model';
+import { FormDynamicAdversePopupComponent } from './form-dynamic-adverse-popup/form-dynamic-adverse.popup.component';
 
 const moment =  _moment;
 
@@ -66,7 +69,8 @@ export class FormDynamicComponent extends BaseComponent implements OnInit, After
     protected patientService: PatientService,
     protected customAttributeService: CustomAttributeService,
     protected metaFormService: MetaFormService,
-    protected dialog: MatDialog) 
+    protected dialog: MatDialog,
+    protected datePipe: DatePipe) 
   { 
     super(_router, _location, popupService, accountService, eventService);
   }
@@ -74,12 +78,15 @@ export class FormDynamicComponent extends BaseComponent implements OnInit, After
   canDeactivate(): Observable<boolean> | boolean {
     // returning true will navigate without confirmation
     // returning false will show a confirm dialog before navigating away
-    Object.keys(this.viewModelForm.controls["formArray"]).forEach(key => {
-      if(this.viewModelForm.get(key).dirty) {
-        return false
-      };
-    });    
-    return true;
+    const arrayControl = <FormArray>this.viewModelForm.controls["formArray"];
+    var isClean = true;
+    arrayControl.controls.forEach(formGroup => {
+      if(!formGroup.pristine) {
+        isClean = false;
+      };      
+    });
+
+    return isClean;
   }  
 
   ngOnInit(): void {
@@ -91,6 +98,8 @@ export class FormDynamicComponent extends BaseComponent implements OnInit, After
       self.viewModel.connected = val;
     });
     
+    self.getCustomAttributeList();
+
     self.viewModel.attachmentGrid.setupBasic(null, null, null);    
   }
 
@@ -121,10 +130,14 @@ export class FormDynamicComponent extends BaseComponent implements OnInit, After
   }   
 
   nextStep(): void {
+    this.markCurrentFormsAsTouched();
     this.viewModel.currentStep ++;
   }
 
   previousStep(): void {
+    if(this.viewModel.currentStep < this.viewModel?.metaForm?.categories.length) {
+      this.markCurrentFormsAsTouched();
+    }
     this.viewModel.currentStep --;
   }
 
@@ -177,10 +190,53 @@ export class FormDynamicComponent extends BaseComponent implements OnInit, After
     //       self.fourthFormGroup.disable();
     //       self.sixthFormGroup.disable();
     //     }
+
+    // self.markAllFormsAsTouched();
+
     //     self.setBusy(false);
     // }, error => {
     //       self.throwError(error, error.statusText);
     // });
+  }
+
+  getCustomAttributeList(): void {
+    let self = this;
+
+    const requestArray = [];
+
+    requestArray.push(self.customAttributeService.getAllCustomAttributes('PatientLabTest'));
+    requestArray.push(self.customAttributeService.getAllCustomAttributes('PatientMedication'));
+    requestArray.push(self.customAttributeService.getAllCustomAttributes('PatientClinicalEvent'));
+    requestArray.push(self.customAttributeService.getAllCustomAttributes('Patient'));
+
+    forkJoin(requestArray)
+      .pipe(
+        switchMap((values: any[]) => {
+          const mergeAttributeList: CustomAttributeDetailModel[] = [];
+
+          values[0].forEach((attribute) => {
+            mergeAttributeList.push(attribute);
+          });
+          values[1].forEach((attribute) => {
+            mergeAttributeList.push(attribute);
+          });
+          values[2].forEach((attribute) => {
+            mergeAttributeList.push(attribute);
+          });
+          values[3].forEach((attribute) => {
+            mergeAttributeList.push(attribute);
+          });
+
+          return of(mergeAttributeList);
+        })
+      )
+      .subscribe(
+        data => {
+          self.viewModel.customAttributeList = data;
+        },
+        error => {
+          this.handleError(error, "Error loading attributes");
+        });    
   }  
 
   openAttachmentPopUp() {
@@ -300,23 +356,336 @@ export class FormDynamicComponent extends BaseComponent implements OnInit, After
     this.viewModel.labTestGrid.updateBasic(self.viewModel.labTests);
 
     this.notify("Test and procedure removed successfully!", "Test and Procedure");
+  }
+
+  openConditionPopup(data: any = {}, isNew?) {
+    let self = this;
+    let title = isNew ? 'Add Condition' : 'Update Condition';
+    let indexToUse = isNew ? self.viewModel.conditions.length + 1 : data.index;
+
+    let existingCondition = null;
+    if (!isNew) {
+      let actualIndex = self.viewModel.conditions.findIndex(c => c.index == indexToUse);
+      existingCondition = self.viewModel.conditions[actualIndex];
+    }
+
+    let dialogRef: MatDialogRef<any> = self.dialog.open(FormDynamicConditionsPopupComponent, {
+      width: '720px',
+      disableClose: true,
+      data: { title: title, conditionId: isNew ? 0: existingCondition.id, index: indexToUse, existingCondition }
+    })
+    dialogRef.afterClosed()
+      .subscribe(res => {
+        if(!res) {
+          // If user press cancel
+          return;
+        }
+        if(isNew) {
+          self.viewModel.conditions.push(res);
+        }
+        else {
+          let actualIndex = self.viewModel.conditions.findIndex(c => c.index == indexToUse);
+          self.viewModel.conditions[actualIndex] = res;
+        }
+
+        this.viewModel.conditionGrid.updateBasic(this.viewModel.conditions);
+        //this.viewConditionModelForm.reset();
+      })
+  }
+
+  removeCondition(index: number): void {
+    let self = this;
+
+    let actualIndex = self.viewModel.conditions.findIndex(m => m.index == index);
+    self.viewModel.conditions.splice(actualIndex, 1)
+    this.viewModel.conditionGrid.updateBasic(self.viewModel.conditions);
+
+    this.notify("Condition removed successfully!", "Condition");
+  }
+  
+  openAdversePopup(data: any = {}, isNew?) {
+    let self = this;
+    let title = isNew ? 'Add Adverse Event' : 'Update Adverse Event';
+    let indexToUse = isNew ? self.viewModel.adverseEvents.length + 1 : data.index;
+    
+    let existingClinicalEvent = null;
+    if (!isNew) {
+      let actualIndex = self.viewModel.adverseEvents.findIndex(m => m.index == indexToUse);
+      existingClinicalEvent = self.viewModel.adverseEvents[actualIndex];
+    }
+
+    let dialogRef: MatDialogRef<any> = self.dialog.open(FormDynamicAdversePopupComponent, {
+      width: '720px',
+      disableClose: true,
+      data: { title: title, clinicalEventId: isNew ? 0: existingClinicalEvent.id, index: indexToUse, existingClinicalEvent }
+    })
+    dialogRef.afterClosed()
+      .subscribe(res => {
+        if(!res) {
+          // If user press cancel
+          return;
+        }
+        if(isNew) {
+          self.viewModel.adverseEvents.push(res);
+        }
+        else {
+          let actualIndex = self.viewModel.adverseEvents.findIndex(m => m.index == indexToUse);
+          self.viewModel.adverseEvents[actualIndex] = res;
+        }
+
+        this.viewModel.adverseEventGrid.updateBasic(this.viewModel.adverseEvents);
+        //this.viewAdverseEventModelForm.reset();
+    })
   }  
 
-  saveFormOnline(): void {
-    // const self = this;
-    // self.viewModel.saving = true;
-    // from(self.viewModel.medications).pipe(
-    //   concatMap(medicationForUpdate => self.patientService.savePatientMedication(self.viewModel.patientId, medicationForUpdate.id, medicationForUpdate))
-    // ).pipe(
-    //   finalize(() => self.saveOnlineMedicationsComplete()),
-    // ).subscribe(
-    //   data => {
-    //     self.CLog('subscription to save meds');
-    //   },
-    //   error => {
-    //     this.handleError(error, "Error saving medications");
-    //   });    
+  removeAdverseEvent(index: number): void {
+    let self = this;
+
+    let actualIndex = self.viewModel.adverseEvents.findIndex(m => m.index == index);
+    self.viewModel.adverseEvents.splice(actualIndex, 1)
+    this.viewModel.adverseEventGrid.updateBasic(self.viewModel.adverseEvents);
+
+    this.notify("Adverse event removed successfully!", "Adverse Event");
   }
+
+  saveFormOnline(): void {
+    let self = this;
+
+    var patientForCreationModel = self.preparePatientForCreationModel();
+    self.CLog(patientForCreationModel, 'patientForCreationModel');
+    self.patientService.savePatient(patientForCreationModel)
+      .pipe(finalize(() => self.setBusy(false)))
+      .subscribe(result => {
+        self.CLog(result, 'saved');
+
+        self.saveOnlinePatientComplete(result.id);
+      }, error => {
+        this.handleError(error, "Error saving patient");
+      });   
+  }
+
+  checkFormError(index: number): boolean {
+    let self = this;
+
+    const arrayControl = <FormArray>this.viewModelForm.controls["formArray"];
+    const formGroup = arrayControl.controls[index];
+    return formGroup.invalid;
+  }
+
+  checkAnyFormError(): boolean {
+    let self = this;
+
+    const arrayControl = <FormArray>this.viewModelForm.controls["formArray"];
+    var hasError = false;
+    arrayControl.controls.forEach(formGroup => {
+      if(formGroup.invalid) {
+        hasError = true;
+      };
+    });
+
+    return hasError;
+  }
+
+  private preparePatientForCreationModel(): PatientForCreationModel {
+    let self = this;
+
+    const attributesForUpdate: AttributeValueForPostModel[] = [];
+
+    let categoryIndex = 0;
+    self.viewModel.metaForm.categories.forEach(category => {
+      if(category.metaTableName == 'Patient') {
+        category.attributes.filter(a => a.attributeId != null).forEach(attribute => {
+          self.prepareAttributeValue(attributesForUpdate, attribute.attributeName, attribute.id.toString(), categoryIndex);
+        })
+      }
+      categoryIndex ++;
+    })    
+
+    let currentDate = new Date();
+    let enroledDate = this.datePipe.transform(currentDate, 'yyyy-MM-dd');
+
+    const patientForCreationModel: PatientForCreationModel = 
+    {
+      firstName: '',
+      lastName: '',
+      middleName: '',
+      dateOfBirth: currentDate,
+      facilityName: '',
+      conditionGroupId: 1,
+      meddraTermId: 1,
+      cohortGroupId: 1,
+      enroledDate: enroledDate,
+      startDate: enroledDate,
+      caseNumber: '',
+      comments: '',
+      encounterTypeId: 1,
+      priorityId: 1,
+      encounterDate: enroledDate,
+      attributes: attributesForUpdate
+    };
+    self.prepareFirstClassValues(patientForCreationModel);
+
+    return patientForCreationModel;
+  }
+
+  private prepareAttributeValue(attributesForUpdate : AttributeValueForPostModel[], attributeKey: string, formKey: string, formId: number) {
+    const self = this;
+    let customAttribute = self.viewModel.customAttributeList.find(ca => ca.attributeKey.toLowerCase() == attributeKey.toLowerCase());
+    self.CLog(customAttribute, 'customAttribute ' + attributeKey);
+    if(customAttribute == null) {
+      return null;
+    }
+
+    let fieldValue = this.getFormValue(formId, formKey);
+    // console.log(fieldValue, 'fieldValue');
+    if(fieldValue != null) {
+      const attributeForPost: AttributeValueForPostModel = {
+        id: customAttribute.id,
+        value: fieldValue
+      }
+      
+      attributesForUpdate.push(attributeForPost);
+    }
+  }
+
+  private prepareFirstClassValues(patientForCreationModel: PatientForCreationModel) {
+    const self = this;
+
+    let categoryIndex = 0;
+    self.viewModel.metaForm.categories.forEach(category => {
+      if(category.metaTableName == 'Patient') {
+        let attribute = category.attributes.filter(a => a.attributeId == null && a.attributeName == 'FirstName')[0];
+        if(attribute != null) {
+          let fieldValue = this.getFormValue(categoryIndex, attribute.id.toString());
+
+          if(fieldValue != null) {
+            patientForCreationModel.firstName = fieldValue;
+          }
+        }
+      }
+      categoryIndex ++;
+    })
+
+    categoryIndex = 0;
+    self.viewModel.metaForm.categories.forEach(category => {
+      if(category.metaTableName == 'Patient') {
+        let attribute = category.attributes.filter(a => a.attributeId == null && a.attributeName == 'Surname')[0];
+        if(attribute != null) {
+          let fieldValue = this.getFormValue(categoryIndex, attribute.id.toString());
+
+          if(fieldValue != null) {
+            patientForCreationModel.lastName = fieldValue;
+          }
+        }
+      }
+      categoryIndex ++;
+    })
+
+    categoryIndex = 0;
+    self.viewModel.metaForm.categories.forEach(category => {
+      if(category.metaTableName == 'Patient') {
+        let attribute = category.attributes.filter(a => a.attributeId == null && a.attributeName == 'DateOfBirth')[0];
+        if(attribute != null) {
+          let fieldValue = this.getFormValue(categoryIndex, attribute.id.toString());
+
+          if(fieldValue != null) {
+            patientForCreationModel.dateOfBirth = fieldValue.format("YYYY-MM-DD");
+          }
+        }
+      }
+      categoryIndex ++;
+    })
+
+    categoryIndex = 0;
+    self.viewModel.metaForm.categories.forEach(category => {
+      if(category.metaTableName == 'Patient') {
+        let attribute = category.attributes.filter(a => a.attributeId != null && a.attributeName == 'Code ASS du patient')[0];
+        if(attribute != null) {
+          let fieldValue = this.getFormValue(categoryIndex, attribute.id.toString());
+
+          if(fieldValue != null) {
+            patientForCreationModel.caseNumber = fieldValue;
+          }
+        }
+      }
+      categoryIndex ++;
+    })
+
+    categoryIndex = 0;
+    self.viewModel.metaForm.categories.forEach(category => {
+      if(category.metaTableName == 'Patient') {
+        let attribute = category.attributes.filter(a => a.attributeId == null && a.attributeName == 'PatientFacilities')[0];
+        if(attribute != null) {
+          let fieldValue = this.getFormValue(categoryIndex, attribute.id.toString());
+
+          if(fieldValue != null) {
+            self.CLog(fieldValue, 'facilities')
+            patientForCreationModel.facilityName = fieldValue;
+          }
+        }
+      }
+      categoryIndex ++;
+    })
+
+  }
+
+  private getFormValue(formId: number, attributeId: string) {
+    const arrayControl = <FormArray>this.viewModelForm.controls["formArray"];
+    return arrayControl.controls[formId].get('attributes.' + attributeId.toString())?.value;
+  }
+
+  private saveOnlinePatientComplete(patientId: number): void {
+    const self = this;
+    const requestArray = [];
+
+    self.viewModel.medications.forEach(medicationForUpdate => {
+      requestArray.push(self.patientService.savePatientMedication(patientId, medicationForUpdate.id, medicationForUpdate));
+    });
+
+    self.viewModel.conditions.forEach(conditionForUpdate => {
+      requestArray.push(self.patientService.savePatientCondition(patientId, conditionForUpdate.id, conditionForUpdate));
+    });
+
+    self.viewModel.labTests.forEach(labTestForUpdate => {
+      requestArray.push(self.patientService.savePatientLabTest(patientId, labTestForUpdate.id, labTestForUpdate));
+    });
+
+    self.viewModel.adverseEvents.forEach(adverseEventForUpdate => {
+      requestArray.push(self.patientService.savePatientClinicalEvent(patientId, adverseEventForUpdate.id, adverseEventForUpdate));
+    });
+
+    const arrayControl = <FormArray>this.viewModelForm.controls["formArray"];
+    arrayControl.controls.forEach(formGroup => {
+      formGroup.markAsPristine();
+    });
+    self.CLog(requestArray, 'requestArray');
+
+    if(requestArray.length > 0) {
+      forkJoin(requestArray)
+        .subscribe(
+          data => {
+            self.setBusy(false);
+            self.notify('Form saved successfully!', 'Success');
+          },
+          error => {
+            this.handleError(error, "Error saving form");
+          });
+    }
+    else {
+      self.setBusy(false);
+      self.notify('Form saved successfully!', 'Success');
+    }
+
+    self._router.navigate([_routes.clinical.forms.landing]);
+  }
+
+  private markCurrentFormsAsTouched(): void {
+    let self = this;
+
+    const arrayControl = <FormArray>this.viewModelForm.controls["formArray"];
+    const formGroup = arrayControl.controls[self.viewModel.currentStep];
+    self.markFormGroupTouched(formGroup as FormGroup);
+  }  
   
   saveFormOffline(): void {
     const self = this;
@@ -413,7 +782,23 @@ export class FormDynamicComponent extends BaseComponent implements OnInit, After
 
   filterSelectedAttributes(selected: boolean, attributes: any[]): any[] {
     return attributes.filter(a => a.selected == selected);
+  }
+
+  attributeHasRequiredError(stepForm: FormGroup, attribute: MetaFormCategoryAttributeModel): boolean {
+    return stepForm.get('attributes.' + attribute.id.toString())?.hasError('required');
+  }
+
+  attributeHasMinRangeError(stepForm: FormGroup, attribute: MetaFormCategoryAttributeModel): boolean {
+    return stepForm.get('attributes.' + attribute.id.toString())?.hasError('min');
   }  
+
+  attributeHasMaxRangeError(stepForm: FormGroup, attribute: MetaFormCategoryAttributeModel): boolean {
+    return stepForm.get('attributes.' + attribute.id.toString())?.hasError('max');
+  }
+
+  attributeHasMaxLengthError(stepForm: FormGroup, attribute: MetaFormCategoryAttributeModel): boolean {
+    return stepForm.get('attributes.' + attribute.id.toString())?.hasError('maxlength');
+  }   
 
   private prepareFormArray(): void {
     let self = this;
@@ -428,10 +813,10 @@ export class FormDynamicComponent extends BaseComponent implements OnInit, After
         if(attribute.required) {
            validators.push(Validators.required);
         }
-        if(attribute.stringMaxLength != null) {
+        if(attribute.stringMaxLength != null && attribute.stringMaxLength > 0) {
            validators.push(Validators.maxLength(attribute.stringMaxLength));
         }
-        if(attribute.numericMinValue != null && attribute.numericMaxValue != null) {
+        if(attribute.numericMinValue != null && attribute.numericMinValue > 0 && attribute.numericMaxValue != null && attribute.numericMaxValue > 0) {
            validators.push(Validators.max(attribute.numericMaxValue));
            validators.push(Validators.min(attribute.numericMinValue));
         }
@@ -506,12 +891,18 @@ class ViewModel {
   conditionGrid: GridModel<ConditionGridRecordModel> =
   new GridModel<ConditionGridRecordModel>
       (['condition', 'actions']);
-  //conditions: PatientConditionForUpdateModel[] = [];
+  conditions: PatientConditionForUpdateModel[] = [];
 
   labTestGrid: GridModel<LabTestGridRecordModel> =
   new GridModel<LabTestGridRecordModel>
       (['lab-test', 'test-date', 'test-result', 'actions']);
   labTests: PatientLabTestForUpdateModel[] = [];
+
+  adverseEventGrid: GridModel<AdverseEventGridRecordModel> =
+  new GridModel<AdverseEventGridRecordModel>
+      (['adverse-event', 'onset-date', 'resolution-date', 'actions']);
+  adverseEvents: PatientClinicalEventForUpdateModel[] = [];
+
 }
 
 class ConditionGridRecordModel {
@@ -535,4 +926,12 @@ class MedicationGridRecordModel {
   doseUnit: string;
   startDate: string;
   endDate: string;
+}
+
+class AdverseEventGridRecordModel {
+  id: number;
+  index: number;
+  sourceDescription: string;
+  onsetDate: string;
+  resolutionDate?: string;
 }

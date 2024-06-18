@@ -1,0 +1,48 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="viewModelForm">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width" appearance="outline">
+          <mat-label>{{'Condition' | translate}}</mat-label>
+          <input type="text" aria-label="Number" matInput formControlName="condition" [matAutocomplete]="autoCondition" required>
+          <mat-autocomplete #autoCondition="matAutocomplete">
+              <mat-option value="Tuberculosis">Tuberculose</mat-option>
+              <mat-option value="Diabetes">Diabetes</mat-option>
+              <mat-option value="Cardiovascular disease">Doenca cardiovascular</mat-option>
+              <mat-option value="Liver disease">Doenca hepatica</mat-option>
+              <mat-option value="Mental disorder ">Desordem mental</mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="viewModelForm.get('condition').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+        </mat-form-field>              
+      </div>
+
+      <div fxFlex="100" class="pr-1">
+        <mat-form-field class="p-8 full-width" appearance="outline">
+          <mat-label>{{'Condition status' | translate}}</mat-label>          
+          <mat-select formControlName="conditionStatus" required>
+            <mat-option value=""></mat-option>
+            <mat-option value="Cured">  
+              {{'Cured' | translate}}
+            </mat-option>
+            <mat-option value="Continues">
+              {{'Continues' | translate}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="viewModelForm.get('conditionStatus').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="viewModelForm.invalid" (click)="addOrUpdateCondition()">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

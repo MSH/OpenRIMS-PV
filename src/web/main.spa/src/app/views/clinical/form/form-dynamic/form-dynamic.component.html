@@ -25,9 +25,15 @@
     <div fxLayout="row" fxLayoutAlign="start">
       <div fxFlex="20" class="mt-4">
         <div class="p-12">
+          <div fxLayout="row" fxLayoutGap="1.0%" fxLayoutAlign="center" class="p-12">
+            <button mat-raised-button color="" class="mr-12" (click)="previousStep()" [disabled]="viewModel.currentStep == 0" style="width: 120px;">Previous</button>
+            <button mat-raised-button color="accent" (click)="nextStep()" [disabled]="viewModel.currentStep >= viewModel?.metaForm?.categories.length" style="width: 120px;">Next</button>
+          </div>
           <div fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="start" class="p-05" *ngFor="let category of viewModel?.metaForm?.categories; ; let i = index;">
             <mat-icon color="primary" *ngIf="viewModel.currentStep == i" class="mr-12">brightness_1</mat-icon>
-            <mat-icon color="primary" *ngIf="viewModel.currentStep != i" class="mr-12">panorama_fish_eye</mat-icon>
+            <mat-icon color="primary" *ngIf="viewModel.currentStep < i" class="mr-12">panorama_fish_eye</mat-icon>
+            <mat-icon color="warn" *ngIf="viewModel.currentStep > i && checkFormError(i)" class="mr-12">error</mat-icon>
+            <mat-icon color="accent" *ngIf="viewModel.currentStep > i && !checkFormError(i)" class="mr-12">check_circle</mat-icon>
             <span [class.font-weight-bold]="viewModel.currentStep == i">{{ category.categoryName }}</span>
           </div>
           <div fxLayout="row" fxLayoutGap="0.5%" fxLayoutAlign="start" class="p-05">
@@ -40,7 +46,7 @@
             <button mat-raised-button color="accent" (click)="nextStep()" [disabled]="viewModel.currentStep >= viewModel?.metaForm?.categories.length" style="width: 120px;">Next</button>
           </div>
           <div fxLayout="row" fxLayoutGap="1.0%" fxLayoutAlign="center" class="p-2 mt-12">
-            <button mat-raised-button color="primary" class="mr-12" (click)="saveFormOnline()" *ngIf="viewModel.currentStep >= viewModel?.metaForm?.categories.length && viewModel.formId == 0 && viewModel.connected" [disabled]="viewModel.currentStep < viewModel?.metaForm?.categories.length || viewModel.isSynched || viewModel.saving" style="width: 120px;">{{'Save' | translate}}</button>
+            <button mat-raised-button color="primary" class="mr-12" (click)="saveFormOnline()" *ngIf="viewModel.currentStep >= viewModel?.metaForm?.categories.length && viewModel.formId == 0 && viewModel.connected" [disabled]="viewModel.currentStep >= viewModel?.metaForm?.categories.length && checkAnyFormError()" style="width: 120px;">{{'Save' | translate}}</button>
             <!-- <button mat-raised-button color="accent" class="mr-12" (click)="saveFormOffline()" *ngIf="(viewModel.formId == 0 && !viewModel.connected) || viewModel.formId > 0" [disabled]="viewModel.isSynched" style="width: 120px;">{{'Save' | translate}}</button> -->
             <!-- <button mat-raised-button color="primary" (click)="completeFormOffline()" *ngIf="(viewModel.formId == 0 && !viewModel.connected) || (viewModel.formId > 0 && !viewModel?.isComplete)" [disabled]="firstFormGroup.invalid || thirdFormGroup.invalid || fourthFormGroup.invalid || fifthFormGroup.invalid || sixthFormGroup.invalid || viewModel.isSynched" style="width: 120px;">{{'Complete' | translate}}</button> -->
           </div>
@@ -69,6 +75,12 @@
                           <mat-hint>
                             {{ attribute.help }}
                           </mat-hint>
+                          <mat-error *ngIf="attribute.required && attributeHasRequiredError(form, attribute)">
+                            {{'Field is required' | translate}}
+                          </mat-error>
+                          <mat-error *ngIf="attribute.stringMaxLength != null && attributeHasMaxLengthError(form, attribute)">
+                            {{'Maximum length exceeded' | translate}} ({{attribute.stringMaxLength}})
+                          </mat-error>                          
                         </mat-form-field>
                         <mat-form-field class="full-width" *ngIf="attribute.formAttributeType == 'NumericTextbox'" appearance="outline">
                           <mat-label>{{ attribute.label }}</mat-label>
@@ -76,13 +88,25 @@
                           <mat-hint>
                             {{ attribute.help }}
                           </mat-hint>
-                        </mat-form-field>        
+                          <mat-error *ngIf="attribute.required && attributeHasRequiredError(form, attribute)">
+                            {{'Field is required' | translate}}
+                          </mat-error>
+                          <mat-error *ngIf="attribute.numericMinValue != null && attributeHasMinRangeError(form, attribute)">
+                            {{'Minimum range exceeded' | translate}} ({{attribute.numericMinValue}})
+                          </mat-error>
+                          <mat-error *ngIf="attribute.numericMaxValue != null && attributeHasMaxRangeError(form, attribute)">
+                            {{'Maximum range exceeded' | translate}} ({{attribute.numericMaxValue}})
+                          </mat-error>
+                          </mat-form-field>        
                         <span *ngIf="attribute.formAttributeType == 'Date'">
                           <mat-form-field class="full-width" appearance="outline">
                             <mat-label>{{ attribute.label }}</mat-label>
                             <input matInput formControlName="{{attribute.id}}" [matDatepicker]="datepicker" [required]="attribute.required">
                             <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
-                          </mat-form-field>        
+                            <mat-error *ngIf="attribute.required && attributeHasRequiredError(form, attribute)">
+                              {{'Field is required' | translate}}
+                            </mat-error>
+                            </mat-form-field>        
                           <mat-datepicker #datepicker startView="multi-year"></mat-datepicker>
                         </span>
                         <mat-form-field class="full-width" *ngIf="attribute.formAttributeType == 'DropDownList'" appearance="outline">
@@ -91,7 +115,10 @@
                             <mat-option *ngFor="let item of attribute.selectionDataItems" value="{{item.selectionKey}}">
                               {{item.value | translate}}
                             </mat-option>
-                          </mat-select>                        
+                          </mat-select>
+                          <mat-error *ngIf="attribute.required && attributeHasRequiredError(form, attribute)">
+                            {{'Field is required' | translate}}
+                          </mat-error>
                         </mat-form-field>  
                       </div>
                     </div>
@@ -136,6 +163,56 @@
                   </div>
     
                   <div *ngIf="viewModel?.metaForm?.categories[i]?.metaTableName == 'PatientClinicalEvent'">
+                    <div class="ml-05 mr-05 mt-05 pb-1">
+                      <div class="p-12 table-container">
+                        <div class="p-12" fxLayoutAlign="end">
+                          <button mat-mini-fab (click)="openAdversePopup({}, true)"><mat-icon>add</mat-icon></button>
+                        </div>
+          
+                        <mat-table [dataSource]="viewModel?.adverseEventGrid?.records"
+                                  [@animate]="{value:'50'}">
+              
+                          <ng-container matColumnDef="adverse-event">
+                              <mat-header-cell *matHeaderCellDef>{{'Adverse event' | translate}}</mat-header-cell>
+                              <mat-cell *matCellDef="let record">
+                                  {{record.sourceDescription}}
+                              </mat-cell>
+                          </ng-container>
+          
+                          <ng-container matColumnDef="onset-date">
+                            <mat-header-cell *matHeaderCellDef>{{'Onset date' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                                {{record.onsetDate | date:'yyyy-MM-dd'}}
+                            </mat-cell>
+                          </ng-container>
+          
+                          <ng-container matColumnDef="resolution-date">
+                            <mat-header-cell *matHeaderCellDef>{{'Resolution date' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                              {{record.resolutionDate | date:'yyyy-MM-dd'}}
+                            </mat-cell>
+                          </ng-container>
+          
+                          <ng-container matColumnDef="actions">
+                            <mat-header-cell *matHeaderCellDef>{{'Actions' | translate}}</mat-header-cell>
+                            <mat-cell *matCellDef="let record">
+                              <button mat-icon-button color="primary" matTooltip="{{'Update Adverse Event' | translate }}"
+                                      (click)="openAdversePopup(record, false)">
+                                  <mat-icon>edit</mat-icon>
+                              </button>
+                              <button mat-icon-button color="warn" matTooltip="{{'Delete Adverse Event' | translate}}"
+                                  (click)="removeAdverseEvent(record.index)">
+                                  <mat-icon>delete</mat-icon>
+                              </button>
+                          </mat-cell>                    
+                          </ng-container>                        
+                        
+                          <mat-header-row *matHeaderRowDef="viewModel?.adverseEventGrid?.displayedColumns; sticky:true"></mat-header-row>
+                          <mat-row *matRowDef="let record; columns: viewModel?.adverseEventGrid?.displayedColumns;"></mat-row>
+                        </mat-table>
+                      </div>
+          
+                    </div>              
                   </div>
     
                   <div *ngIf="viewModel?.metaForm?.categories[i]?.metaTableName == 'PatientLabTest'">

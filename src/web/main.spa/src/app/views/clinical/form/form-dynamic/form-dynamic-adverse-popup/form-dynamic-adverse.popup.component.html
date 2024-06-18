@@ -1,0 +1,182 @@
+<h1 matDialogTitle>{{data.title | translate}}</h1>
+
+  <mat-progress-bar mode="indeterminate" color="primary" *ngIf="isBusy()"></mat-progress-bar>
+
+  <form [formGroup]="viewModelForm">
+    <div fxLayout="row wrap" fxLayout.lt-sm="column">
+      <div fxFlex="100" >
+        <mat-form-field class="full-width p-8" appearance="outline">
+          <mat-label>{{'Adverse event' | translate}}</mat-label>
+          <input type="text" matInput formControlName="sourceDescription" [matAutocomplete]="autoAdverseEvent">
+          <mat-autocomplete #autoAdverseEvent="matAutocomplete">
+            <mat-option value="Fatigue">Fatigue</mat-option>
+            <mat-option value="Weakness">Weakness</mat-option>
+            <mat-option value="Malaise">Malaise</mat-option>
+            <mat-option value="Anorexia">Anorexia</mat-option>
+            <mat-option value="Nausea">Nausea</mat-option>
+            <mat-option value="Vomiting">Vomiting</mat-option>
+            <mat-option value="Abdominal Pain">Abdominal Pain</mat-option>
+            <mat-option value="Dark Urine">Dark Urine</mat-option>
+            <mat-option value="Pale Stools">Pale Stools</mat-option>
+            <mat-option value="Jaundice">Jaundice</mat-option>
+            <mat-option value="Fever or Chills">Fever or Chills</mat-option>
+            <mat-option value="Flushing">Flushing</mat-option>
+            <mat-option value="Sweating">Sweating</mat-option>
+            <mat-option value="Syncope">Syncope</mat-option>
+            <mat-option value="Dizziness">Dizziness</mat-option>
+            <mat-option value="Headaches">Headaches</mat-option>
+            <mat-option value="Hypertension">Hypertension</mat-option>
+            <mat-option value="Tachycardia or Palpitations">Tachycardia or Palpitations</mat-option>
+            <mat-option value="Allergic Reaction">Allergic Reaction</mat-option>
+            <mat-option value="Bronchospasm">Bronchospasm</mat-option>
+            <mat-option value="Numbness and tingling of hands and/or feet ">Numbness and tingling of hands and/or feet </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="viewModelForm.get('sourceDescription').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+        </mat-form-field>              
+      </div>
+
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="full-width p-8" appearance="outline">
+          <mat-label>{{'Onset date' | translate}}</mat-label>
+          <input matInput formControlName="onsetDate" [matDatepicker]="aeStDatepicker" [max]="maxDate" required>
+          <mat-datepicker-toggle matSuffix [for]="aeStDatepicker"></mat-datepicker-toggle>
+          <mat-error *ngIf="viewModelForm.get('onsetDate').hasError('required')">
+            {{'This is a required field' | translate}}
+          </mat-error>            
+        </mat-form-field>
+        <mat-datepicker #aeStDatepicker></mat-datepicker>            
+      </div>
+
+      <div fxFlex="50">
+        <mat-form-field class="full-width p-8" appearance="outline">
+          <mat-label>{{'Resolution date' | translate}}</mat-label>
+          <input matInput formControlName="resolutionDate" [matDatepicker]="aeEdDatepicker" [max]="maxDate">
+          <mat-datepicker-toggle matSuffix [for]="aeEdDatepicker"></mat-datepicker-toggle>
+        </mat-form-field>
+        <mat-datepicker #aeEdDatepicker></mat-datepicker>            
+      </div>
+
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="full-width p-8" appearance="outline">
+          <mat-label>{{'Gravity' | translate}}</mat-label>
+          <mat-select formControlName="gravity">
+            <mat-option value=""></mat-option>
+            <mat-option value="1">  
+              {{'Mild' | translate}}
+            </mat-option>
+            <mat-option value="2">
+              {{'Moderate' | translate}}
+            </mat-option>
+            <mat-option value="3">
+              {{'Severe' | translate}}
+            </mat-option>
+          </mat-select>                        
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="50">
+        <mat-form-field class="full-width p-8" appearance="outline">
+          <mat-label>{{'Is serious' | translate}}</mat-label>
+          <mat-select formControlName="serious">
+            <mat-option value=""></mat-option>
+            <mat-option value="1">  
+              {{'Yes' | translate}}
+            </mat-option>
+            <mat-option value="2">
+              {{'No' | translate}}
+            </mat-option>
+          </mat-select>                        
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="50" class="pr-1">
+        <mat-form-field class="full-width p-8" appearance="outline">
+          <mat-label>{{'Severity' | translate}}</mat-label>
+          <mat-select formControlName="severity">
+            <mat-option value=""></mat-option>
+            <mat-option value="4">  
+              {{'Hospitalisation' | translate}}
+            </mat-option>
+            <mat-option value="5">
+              {{'Prolonged hospital stay' | translate}}
+            </mat-option>
+            <mat-option value="2">
+              {{'Permanent disability' | translate}}
+            </mat-option>
+            <mat-option value="1">
+              {{'Congenital malformations' | translate}}
+            </mat-option>
+            <mat-option value="6">
+              {{'Life risk' | translate}}
+            </mat-option>
+            <mat-option value="3">
+              {{'Death' | translate}}
+            </mat-option>
+          </mat-select>                        
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="50">
+        <mat-form-field class="full-width p-8" appearance="outline">
+          <mat-label>{{'Outcome' | translate}}</mat-label>
+          <mat-select formControlName="outcome">
+            <mat-option value=""></mat-option>
+            <mat-option value="Completely recovered">  
+              {{'Completely recovered' | translate}}
+            </mat-option>
+            <mat-option value="Recovered with sequelae">
+              {{'Recovered with sequelae' | translate}}
+            </mat-option>
+            <mat-option value="Convalescing">
+              {{'Convalescing' | translate}}
+            </mat-option>
+            <mat-option value="Did not recover">
+              {{'Did not recover' | translate}}
+            </mat-option>
+            <mat-option value="Unknown">
+              {{'Unknown' | translate}}
+            </mat-option>
+          </mat-select>                        
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100">
+        <mat-form-field class="full-width p-8" appearance="outline">
+          <mat-label>{{'Adverse event treatment' | translate}}</mat-label>
+          <mat-select formControlName="treatment">
+            <mat-option value=""></mat-option>
+            <mat-option value="None">  
+              {{'None' | translate}}
+            </mat-option>
+            <mat-option value="Reduced dose">
+              {{'Reduced dose' | translate}}
+            </mat-option>
+            <mat-option value="Switched to other ARV">
+              {{'Switched to other ARV' | translate}}
+            </mat-option>
+            <mat-option value="Stopped treatment">
+              {{'Stopped treatment' | translate}}
+            </mat-option>
+            <mat-option value="Use of medication">
+              {{'Use of medication' | translate}}
+            </mat-option>
+          </mat-select>                        
+        </mat-form-field>
+      </div>
+
+      <div fxFlex="100">
+        <mat-form-field class="full-width p-8" appearance="outline">
+          <mat-label>{{'Additional treatment details' | translate}}</mat-label>
+          <input matInput formControlName="treatmentDetail">
+        </mat-form-field>              
+      </div>
+
+      <div fxFlex="100" class="mt-1">
+        <button mat-raised-button color="primary" [disabled]="viewModelForm.invalid" (click)="addOrUpdateClinicalEvent()">{{"Save" | translate }}</button>
+        <span fxFlex></span>
+        <button mat-raised-button color="warn" type="button" (click)="dialogRef.close(false)">{{"Cancel" | translate }}</button>
+      </div>
+    </div>
+  </form>

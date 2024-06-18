@@ -49,6 +49,9 @@ import { AppointmentPopupComponent } from './patient/patient-view/appointment-po
 import { FormGuidelinesPopupComponent } from './form/form-guidelines-popup/form-guidelines.popup.component';
 import { FormSelectComponent } from './form/form-select/form-select.component';
 import { FormDynamicComponent } from './form/form-dynamic/form-dynamic.component';
+import { FormDynamicLabsPopupComponent } from './form/form-dynamic/form-dynamic-labs-popup/form-dynamic-labs.popup.component';
+import { FormDynamicConditionsPopupComponent } from './form/form-dynamic/form-dynamic-conditions-popup/form-dynamic-conditions.popup.component';
+import { FormDynamicAdversePopupComponent } from './form/form-dynamic/form-dynamic-adverse-popup/form-dynamic-adverse.popup.component';
 
 @NgModule({
   imports: [
@@ -90,6 +93,9 @@ import { FormDynamicComponent } from './form/form-dynamic/form-dynamic.component
     FormADRMedicationPopupComponent,
     FormDeletePopupComponent,
     FormDynamicComponent,
+    FormDynamicAdversePopupComponent,
+    FormDynamicConditionsPopupComponent,
+    FormDynamicLabsPopupComponent,
     FormGuidelinesPopupComponent,
     FormListComponent,
     FormSelectComponent,
@@ -116,6 +122,9 @@ import { FormDynamicComponent } from './form/form-dynamic/form-dynamic.component
     ConditionViewPopupComponent,
     FormADRMedicationPopupComponent,
     FormDeletePopupComponent,
+    FormDynamicAdversePopupComponent,
+    FormDynamicConditionsPopupComponent,
+    FormDynamicLabsPopupComponent,
     FormGuidelinesPopupComponent,
     PatientAddPopupComponent,
     PatientUpdatePopupComponent,
