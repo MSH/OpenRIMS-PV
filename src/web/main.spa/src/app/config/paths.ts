@@ -37,7 +37,7 @@ export const _paths = {
           formselect: `form-select/:cohortGroupId`,
           list: `form-list/:type`,
           synchronise: `synchronise/:type`,
-          landing: `form-landing`,
+          landing: `form-select`,
           formdynamic: `form-dynamic/:metaFormId/:formId`,
       }
   },
