@@ -23,6 +23,7 @@ namespace OpenRIMS.PV.Main.API.Application.Validations
             RuleFor(command => command.AttributeDetail)
                 .Length(0, 150)
                 .Matches(@"[a-zA-Z]")
+                .When(c => !string.IsNullOrEmpty(c.AttributeDetail))
                 .WithMessage("Attribute detail contains invalid characters (Enter A-Z, a-z)");
 
             logger.LogTrace("----- INSTANCE CREATED - {ClassName}", GetType().Name);
