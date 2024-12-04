@@ -8,7 +8,7 @@ namespace OpenRIMS.PV.Main.Core.Entities
 {
     public class PatientMedication : EntityBase, IExtendable
 	{
-        protected PatientMedication()
+        public PatientMedication()
         {
         }
 

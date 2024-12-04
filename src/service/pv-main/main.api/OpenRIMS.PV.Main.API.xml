@@ -404,6 +404,36 @@
             The reason for archiving the resource
             </summary>
         </member>
+        <member name="T:OpenRIMS.PV.Main.API.Models.ArtifactDto">
+            <summary>
+            An artifact representation containing detaails of the system file representing the artifact
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.ArtifactDto.FileName">
+            <summary>
+            The file name of the artifact
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.ArtifactDto.RelativePath">
+            <summary>
+            The relative path of the artifact
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.ArtifactDto.Path">
+            <summary>
+            The path of the artifact
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.ArtifactDto.MimeType">
+            <summary>
+            The mime type of the artifact
+            </summary>
+        </member>
+        <member name="P:OpenRIMS.PV.Main.API.Models.ArtifactDto.FullPath">
+            <summary>
+            The full path of the artifact
+            </summary>
+        </member>
         <member name="T:OpenRIMS.PV.Main.API.Models.AttachmentDetailDto">
             <summary>
             An attachment representation DTO - FULL DETAILS

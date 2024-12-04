@@ -7,7 +7,7 @@ namespace OpenRIMS.PV.Main.Core.Entities
 {
     public class PatientClinicalEvent : EntityBase, IExtendable
 	{
-        protected PatientClinicalEvent()
+        public PatientClinicalEvent()
         {
         }
 

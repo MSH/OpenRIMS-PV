@@ -7,7 +7,7 @@ namespace OpenRIMS.PV.Main.Core.Entities
 {
     public class PatientLabTest : EntityBase, IExtendable
 	{
-        protected PatientLabTest()
+        public PatientLabTest()
         {
         }
 

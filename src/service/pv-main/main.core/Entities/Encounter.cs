@@ -7,7 +7,7 @@ namespace OpenRIMS.PV.Main.Core.Entities
 {
 	public class Encounter : AuditedEntityBase, IHasCustomAttributes
 	{
-        protected Encounter()
+        public Encounter()
         { 
         }
 
