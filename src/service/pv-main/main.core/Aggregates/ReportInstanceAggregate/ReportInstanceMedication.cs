@@ -14,7 +14,7 @@ namespace OpenRIMS.PV.Main.Core.Aggregates.ReportInstanceAggregate
 
         public virtual ReportInstance ReportInstance { get; private set; }
 
-        protected ReportInstanceMedication()
+        public ReportInstanceMedication()
         {
         }
 

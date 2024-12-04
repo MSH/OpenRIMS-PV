@@ -170,11 +170,38 @@ namespace OpenRIMS.PV.Main.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var model = id == new Guid("4096D0A3-45F7-4702-BDA1-76AEDE41B986") 
-                ? _excelDocumentService.CreateSpontaneousDatasetForDownload() 
-                : _excelDocumentService.CreateActiveDatasetForDownload(new long[] { }, analyserDatasetResourceParameters?.CohortGroupId ?? 0);
+            if (id == new Guid("4096D0A3-45F7-4702-BDA1-76AEDE41B986"))
+            {
+                var spontaneousQuery = new WorkFlowDownloadSpontaneousDatasetQuery();
 
-            return PhysicalFile(model.FullPath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                _logger.LogInformation(
+                    $"----- Sending query: WorkFlowDownloadSpontaneousDatasetQuery - {spontaneousQuery}");
+
+                var spontaneousQueryResult = await _mediator.Send(spontaneousQuery);
+
+                if (spontaneousQueryResult == null)
+                {
+                    return BadRequest("WorkFlowDownloadSpontaneousDatasetQuery query not created");
+                }
+
+                return PhysicalFile(spontaneousQueryResult.FullPath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            }
+            else
+            {
+                var activeQuery = new WorkFlowDownloadActiveDatasetQuery(analyserDatasetResourceParameters.CohortGroupId);
+
+                _logger.LogInformation(
+                    $"----- Sending query: WorkFlowDownloadActiveDatasetQuery - {activeQuery}");
+
+                var activeQueryResult = await _mediator.Send(activeQuery);
+
+                if (activeQueryResult == null)
+                {
+                    return BadRequest("WorkFlowDownloadActiveDatasetQuery query not created");
+                }
+
+                return PhysicalFile(activeQueryResult.FullPath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            }
         }
     }
 }

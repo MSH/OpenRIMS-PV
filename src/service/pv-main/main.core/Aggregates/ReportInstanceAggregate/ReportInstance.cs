@@ -39,7 +39,7 @@ namespace OpenRIMS.PV.Main.Core.Aggregates.ReportInstanceAggregate
         private List<ReportInstanceTask> _tasks;
         public IEnumerable<ReportInstanceTask> Tasks => _tasks.AsReadOnly();
 
-        protected ReportInstance()
+        public ReportInstance()
         {
             _activities = new List<ActivityInstance>();
             _medications = new List<ReportInstanceMedication>();
