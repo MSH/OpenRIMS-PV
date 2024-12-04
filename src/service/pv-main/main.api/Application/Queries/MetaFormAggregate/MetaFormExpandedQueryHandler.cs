@@ -59,6 +59,11 @@ namespace OpenRIMS.PV.Main.API.Application.Queries.MetaFormAggregate
 
             var mappedMetaForm = _mapper.Map<MetaFormExpandedDto>(metaFormFromRepo);
 
+            foreach (var category in mappedMetaForm.Categories)
+            {
+                category.Attributes = category.Attributes.OrderBy(a => a.Id).ToList();
+            }
+
             await CustomMapAsync(mappedMetaForm, message.IncludeUnmappedAttributes);
 
             return CreateLinks(mappedMetaForm);
