@@ -206,7 +206,7 @@ namespace OpenRIMS.PV.Main.API.Application.Queries.WorkFlowAggregate
             {
                 throw new KeyNotFoundException("Unable to locate user");
             }
-            var validfacilities = userFromRepo.Facilities.Select(uf => uf.Facility.FacilityCode).ToArray();
+            var validfacilities = userFromRepo.Facilities.Select(uf => uf.Facility.FacilityName).ToArray();
             predicate = predicate.And(ri => validfacilities.Contains(ri.FacilityIdentifier));
             return predicate;
         }
