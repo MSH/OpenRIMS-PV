@@ -96,7 +96,7 @@ namespace OpenRIMS.PV.Main.API.Application.Commands.PatientAggregate
                 contextGuid: newPatientClinicalEvent.PatientClinicalEventGuid,
                 patientIdentifier: String.IsNullOrWhiteSpace(message.PatientIdentifier) ? patientFromRepo.FullName : $"{patientFromRepo.FullName} ({message.PatientIdentifier})",
                 sourceIdentifier: newPatientClinicalEvent.SourceTerminologyMedDra?.DisplayName ?? newPatientClinicalEvent.SourceDescription,
-                facilityIdentifier: patientFromRepo.CurrentFacilityCode);
+                facilityIdentifier: patientFromRepo.CurrentFacilityName);
 
             await LinkMedicationsToClinicalEvent(patientFromRepo, newPatientClinicalEvent.OnsetDate, newPatientClinicalEvent.PatientClinicalEventGuid);
 
